@@ -1,10 +1,22 @@
-import './globals.css';
-import { ReactNode } from 'react';
+// Общая обертка над каждой страницей
+import type {Metadata} from "next";
 
-export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
+export const metadata: Metadata = {
+  title: "Inctagram",
+  description: "Учебный проект",
+};
+
+export default function RootLayout({
+                                     children,
+                                   }: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+    <body>
+    <header>Header</header>
+    {children}
+    </body>
     </html>
   );
 }
