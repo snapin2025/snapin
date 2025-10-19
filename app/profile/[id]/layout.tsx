@@ -6,5 +6,5 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
       <nav>Sidebar профиля</nav>
       <div>{children}</div>
     </div>
-  )
+  );
 }

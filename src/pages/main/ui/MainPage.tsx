@@ -2,7 +2,7 @@
 // Доступна всем (в т.ч. авторизованным пользователям)
 // Отличается наличием сайдбара и кнопками в хедере
 
-export default function Home() {
+export function MainPage() {
   return (
     <div>
       Hello{/*Счетчик и 4 поста*/}

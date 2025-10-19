@@ -1,6 +1,7 @@
 // Обертка над всеми страницами настроек
+'use client'
 
-export default function SettingsLayout({children}: {
+export function SettingsLayout({children}: {
   children: React.ReactNode
 }) {
   return (
