@@ -5,8 +5,8 @@ import { dirname } from 'path'
 import { fileURLToPath } from 'url'
 import { FlatCompat } from '@eslint/eslintrc'
 import query from '@tanstack/eslint-plugin-query'
-import prettier from 'eslint-plugin-prettier'
-import prettierConfig from 'eslint-config-prettier'
+import prettierPlugin from 'eslint-plugin-prettier'
+import eslintConfigPrettier from 'eslint-config-prettier/flat'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -20,7 +20,7 @@ const eslintConfig = [
   {
     plugins: {
       '@tanstack/query': query,
-      prettier,
+      prettier: prettierPlugin,
     },
     rules: {
       // Включаем рекомендуемые правила
@@ -28,11 +28,11 @@ const eslintConfig = [
       'prettier/prettier': 'warn',
     },
   },
-    ...prettierConfig.rules,
   {
     ignores: ['node_modules/**', '.next/**', 'out/**', 'build/**', 'next-env.d.ts'],
   },
   ...storybook.configs['flat/recommended'],
+  eslintConfigPrettier,
 ]
 
 export default eslintConfig

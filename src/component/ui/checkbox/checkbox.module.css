@@ -65,7 +65,7 @@
     cursor: default;
   }
 
-  &[data-state="checked"] {
+  &[data-state='checked'] {
     border: 2px solid var(--color-light-100);
     background-color: var(--color-light-100);
   }
@@ -89,4 +89,3 @@
   color: var(--color-light-900) !important;
   cursor: default;
 }
-
