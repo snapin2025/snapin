@@ -1,7 +1,8 @@
 export default function Home() {
   return (
     <div>
-      <h1>new dev snapin</h1>
+      {/*  заглушка */}
+      {/*<h1>new dev snapin</h1>*/}
     </div>
   );
 }
