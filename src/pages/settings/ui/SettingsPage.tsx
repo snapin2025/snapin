@@ -1,10 +1,10 @@
 'use client'
 
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation';
 
 export const SettingsPage = () => {
-  const searchParams = useSearchParams()
-  const part = searchParams?.get('part') || 'info'
+  const searchParams = useSearchParams();
+  const part = searchParams?.get('part') || 'info';
 
   return (
     <section>
@@ -14,5 +14,5 @@ export const SettingsPage = () => {
       {part === 'subscriptions' && <p>Подписки</p>}
       {part === 'payments' && <p>История платежей</p>}
     </section>
-  )
-}
+  );
+};

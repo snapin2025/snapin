@@ -1,12 +1,15 @@
-.label {
-  color: var(--color-dark-300);
+.container {
+  display: flex;
+  align-items: center;
 }
 
-.defaultInput {
-  width: 100%;
-  padding: 6px 12px;
-  color: var(--color-dark-300);
-  text-decoration: none;
+.circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 100%;
   background-color: transparent;
   cursor: pointer;
 
@@ -75,20 +78,14 @@
   color: var(--color-dark-900);
 }
 
-.searchInput {
-  padding-right: 30px;
-  padding-left: 30px;
-}
-
-.eyesIcon {
+.checkboxLabel {
+  user-select: none;
   cursor: pointer;
-  position: absolute;
-  top: 28px;
-  right: 16px;
-  width: 10px;
-  height: 10px;
+  margin: 5px;
+  flex-shrink: 0;
 }
 
-.storyBook {
-  width: 200px;
+.labelDisabled {
+  color: var(--color-light-900) !important;
+  cursor: default;
 }

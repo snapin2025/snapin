@@ -8,6 +8,7 @@
     "build:production": "npm run build",
     "start": "next start",
     "lint": "eslint",
+    "prettier": "npx prettier . --write",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
