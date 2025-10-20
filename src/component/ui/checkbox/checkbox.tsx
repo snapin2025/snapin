@@ -1,9 +1,9 @@
 import { ComponentProps, useId } from 'react';
 import * as RadixCheckbox from '@radix-ui/react-checkbox';
-import { CheckIcon } from '@radix-ui/react-icons';
 import s from './checkbox.module.css';
 import { clsx } from 'clsx';
 import { Typography } from '@/component/ui/typography/typography';
+import { Check } from '../../../../public/assets/icons/check';
 
 export type CheckboxProps = ComponentProps<typeof RadixCheckbox.Root> & {
   labelClassName?: string;
@@ -36,7 +36,7 @@ export const Checkbox = ({
           {...rest}
         >
           <RadixCheckbox.Indicator className={s.indicator}>
-            <CheckIcon />
+            <Check />
           </RadixCheckbox.Indicator>
         </RadixCheckbox.Root>
       </div>
