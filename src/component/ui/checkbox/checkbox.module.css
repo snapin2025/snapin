@@ -1,92 +1,80 @@
-.container {
-  display: flex;
-  align-items: center;
+.label {
+  color: var(--color-dark-300);
 }
 
-.circle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 100%;
+.defaultInput {
+  width: 100%;
+  padding: 6px 12px;
+  color: var(--color-dark-300);
+  text-decoration: none;
   background-color: transparent;
+  border: 1px solid var(--color-dark-300);
+  border-radius: 2px;
+}
+.defaultInput:active {
+  color: var(--color-light-100);
+  border: 1px solid var(--color-light-100);
+}
+.defaultInput:hover {
+  color: var(--color-dark-100);
+  background: var(--color-dark-700);
+  border: 1px solid var(--color-dark-100);
+}
+.defaultInput:visited {
+  outline: 2px solid var(--color-info-700);
+}
+.defaultInput:disabled {
+  color: var(--color-dark-300);
+  border: 1px solid var(--color-dark-300);
+}
+
+.errorInput {
+  color: var(--color-danger-300);
+  border: 1px solid var(--color-danger-300);
+}
+
+.errorText {
+  font-size: 0.75rem;
+  color: var(--color-danger-300);
+}
+
+.wrapper {
+  position: relative;
+  display: inline;
+}
+
+.searchIcon {
   cursor: pointer;
-
-  &:hover {
-    background-color: var(--color-dark-100);
-  }
-
-  &:active {
-    background-color: var(--color-dark-100);
-  }
-
-  &:focus {
-    background-color: var(--color-dark-100);
-    outline: unset;
-  }
-
-  &.disabled {
-    cursor: default;
-    background-color: unset;
-  }
+  position: absolute;
+  top: 28px;
+  left: 4px;
+  width: 1.25rem;
+  height: 1.25rem;
 }
 
-.base {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  all: unset;
-  background-color: transparent;
-  width: 18px;
-  height: 18px;
-  border-radius: 4px;
-  border: 2px solid var(--color-light-900);
-  transition: border-color 0.2s ease;
+.crossIcon {
   cursor: pointer;
-
-  &:hover {
-    border: 2px solid var(--color-light-500);
-    background-color: var(--color-dark-100);
-  }
-
-  &:active {
-    background-color: var(--color-dark-100);
-  }
-
-  &:focus {
-    border: 2px solid var(--color-light-500);
-    background-color: var(--color-dark-500);
-  }
-
-  &:disabled {
-    border: 1px solid var(--color-light-900);
-    background-color: unset;
-    cursor: default;
-  }
-
-  &[data-state="checked"] {
-    border: 2px solid var(--color-light-100);
-    background-color: var(--color-light-100);
-  }
+  position: absolute;
+  top: 28px;
+  right: 4px;
+  width: 1.25rem;
+  height: 1.25rem;
 }
 
-.indicator {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--color-dark-900);
+.searchInput {
+  padding-right: 30px;
+  padding-left: 30px;
 }
 
-.checkboxLabel {
-  user-select: none;
+.eyesIcon {
   cursor: pointer;
-  margin: 5px;
-  flex-shrink: 0;
+  position: absolute;
+  top: 28px;
+  right: 16px;
+  width: 10px;
+  height: 10px;
 }
 
-.labelDisabled {
-  color: var(--color-light-900) !important;
-  cursor: default;
+.storyBook {
+  width: 200px;
 }
-
