@@ -1,6 +1,6 @@
-import type {Meta, StoryObj} from '@storybook/nextjs'
-import {fn} from 'storybook/test'
-import {Checkbox} from '@/component/ui/checkbox/checkbox'
+import type { Meta, StoryObj } from '@storybook/nextjs'
+import { fn } from 'storybook/test'
+import { Checkbox } from '@/component/ui/checkbox/checkbox'
 
 const meta = {
   title: 'UI/Checkbox',
@@ -91,7 +91,7 @@ export const LongLabel: Story = {
 // Несколько чекбоксов в группе
 export const Group: Story = {
   render: () => (
-    <div style={{display: 'flex', flexDirection: 'column', gap: '16px'}}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
       <Checkbox label="Первый пункт" checked={true} onCheckedChange={fn()} />
       <Checkbox label="Второй пункт" checked={false} onCheckedChange={fn()} />
       <Checkbox label="Третий пункт" checked={true} disabled onCheckedChange={fn()} />

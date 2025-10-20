@@ -1,9 +1,9 @@
-import {ComponentProps, useId} from 'react'
+import { ComponentProps, useId } from 'react'
 import * as RadixCheckbox from '@radix-ui/react-checkbox'
-import {CheckIcon} from '@radix-ui/react-icons'
+import { CheckIcon } from '@radix-ui/react-icons'
 import s from './checkbox.module.css'
-import {clsx} from 'clsx'
-import {Typography} from '@/component/ui/typography/typography'
+import { clsx } from 'clsx'
+import { Typography } from '@/component/ui/typography/typography'
 
 export type CheckboxProps = ComponentProps<typeof RadixCheckbox.Root> & {
   labelClassName?: string
@@ -25,7 +25,7 @@ export const Checkbox = ({
 
   return (
     <div className={clsx(s.container, className)}>
-      <div className={clsx(s.circle, {[s.disabled]: disabled})}>
+      <div className={clsx(s.circle, { [s.disabled]: disabled })}>
         <RadixCheckbox.Root
           id={id}
           disabled={disabled}
@@ -42,7 +42,7 @@ export const Checkbox = ({
       </div>
       {label && (
         <Typography variant="regular_14" color={'light'} asChild>
-          <label htmlFor={id} className={clsx(s.checkboxLabel, {[s.labelDisabled]: disabled}, labelClassName)}>
+          <label htmlFor={id} className={clsx(s.checkboxLabel, { [s.labelDisabled]: disabled }, labelClassName)}>
             {label}
           </label>
         </Typography>

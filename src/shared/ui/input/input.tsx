@@ -1,7 +1,7 @@
-import React, {forwardRef, ReactNode, useState} from 'react'
+import React, { forwardRef, ReactNode, useState } from 'react'
 import s from './input.module.css'
 import clsx from 'clsx'
-import {Close, Eye, EyeOff, Search} from '@/shared/ui/assets'
+import { Close, Eye, EyeOff, Search } from '@/shared/ui/assets'
 
 type InputProps = {
   placeholder?: string
@@ -22,7 +22,21 @@ type InputProps = {
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   (
-    {placeholder, type, id, label, error, isDisabled, value, onChange, onBlur, onClear, name, className, autoComplete},
+    {
+      placeholder,
+      type,
+      id,
+      label,
+      error,
+      isDisabled,
+      value,
+      onChange,
+      onBlur,
+      onClear,
+      name,
+      className,
+      autoComplete
+    },
     ref
   ) => {
     const [showPassword, setShowPassword] = useState(false)

@@ -1,7 +1,7 @@
 // Обертка над всеми страницами настроек
 'use client'
 
-export function SettingsLayout({children}: {children: React.ReactNode}) {
+export function SettingsLayout({ children }: { children: React.ReactNode }) {
   return (
     <div>
       {/*Возможность переключения вкладок*/}

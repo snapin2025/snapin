@@ -1,5 +1,5 @@
-import {Card} from './Card'
-import {Meta, StoryObj} from '@storybook/nextjs'
+import { Card } from './Card'
+import { Meta, StoryObj } from '@storybook/nextjs'
 
 const meta = {
   title: 'Components/Card',
@@ -49,10 +49,10 @@ export const AsSection: Story = {
 export const WithCustomContent: Story = {
   args: {
     children: (
-      <div style={{padding: '16px'}}>
-        <h2 style={{margin: '0 0 12px 0'}}>Заголовок карточки</h2>
-        <p style={{margin: 0, color: '#666'}}>Это карточка с более сложным содержимым, включая заголовок и текст.</p>
-        <button style={{marginTop: '12px', padding: '8px 16px'}}>Кнопка внутри карточки</button>
+      <div style={{ padding: '16px' }}>
+        <h2 style={{ margin: '0 0 12px 0' }}>Заголовок карточки</h2>
+        <p style={{ margin: 0, color: '#666' }}>Это карточка с более сложным содержимым, включая заголовок и текст.</p>
+        <button style={{ marginTop: '12px', padding: '8px 16px' }}>Кнопка внутри карточки</button>
       </div>
     )
   }

@@ -3,11 +3,11 @@
 'use client'
 
 type Props = {
-  params: {id: string}
-  searchParams?: {postId: string; action?: string}
+  params: { id: string }
+  searchParams?: { postId: string; action?: string }
 }
 
-export function ProfilePage({params, searchParams}: Props) {
+export function ProfilePage({ params, searchParams }: Props) {
   const userId = params.id
   const postId = searchParams?.postId
   const action = searchParams?.action

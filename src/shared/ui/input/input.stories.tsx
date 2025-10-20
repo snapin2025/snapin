@@ -1,6 +1,6 @@
-import type {Meta, StoryObj} from '@storybook/nextjs'
-import {Input} from './input'
-import {useState} from 'react'
+import type { Meta, StoryObj } from '@storybook/nextjs'
+import { Input } from './input'
+import { useState } from 'react'
 
 const meta: Meta<typeof Input> = {
   title: 'Components/Input',
