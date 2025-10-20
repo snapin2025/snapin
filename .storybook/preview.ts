@@ -1,6 +1,6 @@
-import type { Preview } from '@storybook/nextjs';
-import { color } from 'storybook/theming';
-import '../src/app/styles/index.css';
+import type { Preview } from '@storybook/nextjs'
+import { color } from 'storybook/theming'
+import '../src/app/styles/index.css'
 
 const preview: Preview = {
   parameters: {
@@ -14,6 +14,6 @@ const preview: Preview = {
       },
     },
   },
-};
+}
 
-export default preview;
+export default preview
