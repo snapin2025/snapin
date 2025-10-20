@@ -5,8 +5,8 @@ const config: StorybookConfig = {
   addons: [],
   framework: {
     name: '@storybook/nextjs',
-    options: {},
+    options: {}
   },
-  staticDirs: ['../public'],
+  staticDirs: ['../public']
 }
 export default config

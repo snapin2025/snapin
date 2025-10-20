@@ -17,5 +17,3 @@ export const Card = <T extends ElementType = 'div'>({ as, children, className, .
     </Component>
   )
 }
-
-

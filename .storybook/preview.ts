@@ -5,15 +5,15 @@ import '../src/app/styles/index.css'
 const preview: Preview = {
   parameters: {
     backgrounds: {
-      default: color, // Устанавливает тёмный фон по умолчанию
+      default: color // Устанавливает тёмный фон по умолчанию
     },
     controls: {
       matchers: {
         color: /(background|color)$/i,
-        date: /Date$/i,
-      },
-    },
-  },
+        date: /Date$/i
+      }
+    }
+  }
 }
 
 export default preview

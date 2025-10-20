@@ -3,9 +3,5 @@
 // Отличается наличием сайдбара и кнопками в хедере
 
 export function MainPage() {
-  return (
-    <div>
-      Hello{/*Счетчик и 4 поста*/}
-    </div>
-  )
+  return <div>Hello{/*Счетчик и 4 поста*/}</div>
 }
