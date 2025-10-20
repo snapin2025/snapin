@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/nextjs';
-import { fn } from 'storybook/test';
-import { Checkbox } from '@/component/ui/checkbox/checkbox';
+import type { Meta, StoryObj } from '@storybook/nextjs'
+import { fn } from 'storybook/test'
+import { Checkbox } from '@/component/ui/checkbox/checkbox'
 
 const meta = {
   title: 'UI/Checkbox',
@@ -30,10 +30,10 @@ const meta = {
   args: {
     onCheckedChange: fn(),
   },
-} satisfies Meta<typeof Checkbox>;
+} satisfies Meta<typeof Checkbox>
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+export default meta
+type Story = StoryObj<typeof meta>
 
 // Базовый чекбокс без лейбла
 export const Default: Story = {
@@ -41,7 +41,7 @@ export const Default: Story = {
     checked: false,
     disabled: false,
   },
-};
+}
 
 // Чекбокс с лейблом
 export const WithLabel: Story = {
@@ -50,7 +50,7 @@ export const WithLabel: Story = {
     disabled: false,
     label: 'Согласен с условиями',
   },
-};
+}
 
 // Отмеченный чекбокс
 export const Checked: Story = {
@@ -59,7 +59,7 @@ export const Checked: Story = {
     disabled: false,
     label: 'Отмеченный чекбокс',
   },
-};
+}
 
 // Отключенный чекбокс
 export const Disabled: Story = {
@@ -68,7 +68,7 @@ export const Disabled: Story = {
     disabled: true,
     label: 'Отключенный чекбокс',
   },
-};
+}
 
 // Отключенный и отмеченный чекбокс
 export const DisabledChecked: Story = {
@@ -77,7 +77,7 @@ export const DisabledChecked: Story = {
     disabled: true,
     label: 'Отключенный и отмеченный',
   },
-};
+}
 
 // Чекбокс с длинным лейблом
 export const LongLabel: Story = {
@@ -86,7 +86,7 @@ export const LongLabel: Story = {
     disabled: false,
     label: 'Я согласен с условиями использования сервиса и политикой конфиденциальности',
   },
-};
+}
 
 // Несколько чекбоксов в группе
 export const Group: Story = {
@@ -98,7 +98,7 @@ export const Group: Story = {
       <Checkbox label="Четвертый пункт" checked={false} disabled onCheckedChange={fn()} />
     </div>
   ),
-};
+}
 
 // Интерактивный пример
 export const Interactive: Story = {
@@ -114,4 +114,4 @@ export const Interactive: Story = {
       },
     },
   },
-};
+}
