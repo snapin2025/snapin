@@ -9,7 +9,6 @@ import prettierPlugin from 'eslint-plugin-prettier'
 import eslintConfigPrettier from 'eslint-config-prettier/flat'
 
 const __filename = fileURLToPath(import.meta.url)
-
 const __dirname = dirname(__filename)
 
 const compat = new FlatCompat({
