@@ -23,15 +23,6 @@ const meta: Meta<typeof Input> = {
 export default meta
 type Story = StoryObj<typeof Input>
 
-export const Text: Story = {
-  args: {
-    id: 'text-input',
-    type: 'text',
-    placeholder: 'Enter text...',
-    label: 'Text Input'
-  }
-}
-
 export const Email: Story = {
   args: {
     id: 'email-input',

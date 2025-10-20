@@ -1,5 +1,5 @@
 .label {
-  font-family: var(--font-family);
+  font-family: var(--font-family-primary);
   font-weight: 400;
   font-size: 14px;
   line-height: 171%;
@@ -29,15 +29,10 @@
   border: 1px solid var(--color-dark-100);
   border-radius: 2px;
   box-sizing: border-box;
-
-  font-family: var(--font-family);
+  font-family: var(--font-family-primary);
   font-weight: 400;
   font-size: 16px;
   line-height: 150%;
-
-  transition:
-    border-color 0.2s ease,
-    color 0.2s ease;
 }
 
 .defaultInput::placeholder {
@@ -58,6 +53,11 @@
 
 .defaultInput:focus {
   outline: none;
+  color: var(--color-light-100);
+  border: 1px solid var(--color-light-100);
+}
+
+.defaultInput:focus-visible {
   border: 2px solid var(--color-accent-500);
   padding: 5px 11px;
 }
@@ -84,14 +84,10 @@
   border-radius: 2px;
   box-sizing: border-box;
 
-  font-family: var(--font-family);
+  font-family: var(--font-family-primary);
   font-weight: 400;
   font-size: 16px;
   line-height: 150%;
-
-  transition:
-    border-color 0.2s ease,
-    color 0.2s ease;
 }
 
 .errorInput::placeholder {
@@ -100,6 +96,9 @@
 
 .errorInput:focus {
   outline: none;
+}
+
+.errorInput:focus-visible {
   border: 2px solid var(--color-danger-500);
   padding: 5px 11px;
 }
@@ -116,7 +115,7 @@
 
 /* Error Text */
 .errorText {
-  font-family: var(--font-family);
+  font-family: var(--font-family-primary);
   font-weight: 400;
   font-size: 14px;
   line-height: 171%;
@@ -130,7 +129,7 @@
   padding-left: 40px;
 }
 
-.searchInput:focus {
+.searchInput:focus-visible {
   padding-right: 39px;
   padding-left: 39px;
 }
@@ -219,6 +218,6 @@
   padding-right: 40px;
 }
 
-.passwordInput:focus {
+.passwordInput:focus-visible {
   padding-right: 39px;
 }
