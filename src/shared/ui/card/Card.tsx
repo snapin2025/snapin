@@ -1,5 +1,5 @@
-import { ComponentPropsWithoutRef, ElementType, PropsWithChildren } from 'react'
-import { clsx } from 'clsx'
+import {ComponentPropsWithoutRef, ElementType, PropsWithChildren} from 'react'
+import {clsx} from 'clsx'
 import s from './card.module.css'
 
 type CardProps<T extends ElementType> = {
@@ -8,7 +8,7 @@ type CardProps<T extends ElementType> = {
 
 type Props<T extends ElementType> = PropsWithChildren<CardProps<T>> & ComponentPropsWithoutRef<T>
 
-export const Card = <T extends ElementType = 'div'>({ as, children, className, ...restPtops }: Props<T>) => {
+export const Card = <T extends ElementType = 'div'>({as, children, className, ...restPtops}: Props<T>) => {
   const Component = as || 'div'
 
   return (
@@ -17,5 +17,3 @@ export const Card = <T extends ElementType = 'div'>({ as, children, className, .
     </Component>
   )
 }
-
-

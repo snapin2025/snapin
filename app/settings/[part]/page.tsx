@@ -1,1 +1,1 @@
-export { SettingsPage as default, metadata } from '@/pages/settings'
+export {SettingsPage as default, metadata} from '@/pages/settings'

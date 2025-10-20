@@ -1,7 +1,7 @@
-import s from './typography.module.css';
-import {clsx} from 'clsx';
-import {Slot} from '@radix-ui/react-slot';
-import {TypographyProps} from '@/component/ui/typography/typography.types';
+import s from './typography.module.css'
+import {clsx} from 'clsx'
+import {Slot} from '@radix-ui/react-slot'
+import {TypographyProps} from '@/component/ui/typography/typography.types'
 
 export const Typography = ({
   className,
@@ -12,7 +12,7 @@ export const Typography = ({
   asChild,
   ...restProps
 }: TypographyProps) => {
-  const Component = asChild ? Slot : 'p';
+  const Component = asChild ? Slot : 'p'
   return (
     <Component
       className={clsx(
@@ -26,5 +26,5 @@ export const Typography = ({
     >
       {children}
     </Component>
-  );
-};
+  )
+}
