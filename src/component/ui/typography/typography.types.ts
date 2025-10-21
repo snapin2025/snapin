@@ -1,4 +1,4 @@
-import { ComponentProps } from 'react';
+import { ComponentProps } from 'react'
 
 type TypographyVariant =
   | 'large'
@@ -13,13 +13,13 @@ type TypographyVariant =
   | 'small'
   | 'bold_small'
   | 'regular_link'
-  | 'small_link';
-type TypographyColors = 'light' | 'dark' | 'blue' | 'lightBlue' | 'deepBlue' | 'error' | 'disabled';
-type TypographyAlign = 'inherit' | 'left' | 'center' | 'right' | 'justify' | 'initial' | 'unset';
+  | 'small_link'
+type TypographyColors = 'light' | 'dark' | 'blue' | 'lightBlue' | 'deepBlue' | 'error' | 'disabled'
+type TypographyAlign = 'inherit' | 'left' | 'center' | 'right' | 'justify' | 'initial' | 'unset'
 
 export type TypographyProps = {
-  variant?: TypographyVariant;
-  color?: TypographyColors;
-  textAlign?: TypographyAlign;
-  asChild?: boolean;
-} & ComponentProps<'p'>;
+  variant?: TypographyVariant
+  color?: TypographyColors
+  textAlign?: TypographyAlign
+  asChild?: boolean
+} & ComponentProps<'p'>
