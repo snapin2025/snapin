@@ -1,5 +1,3 @@
-// В Header.stories.tsx используй относительный путь:
-
 import Header from '@/widgets/header/Header';
 
 export default {
