@@ -22,4 +22,4 @@ export type TypographyProps = {
   color?: TypographyColors
   textAlign?: TypographyAlign
   asChild?: boolean
-} & ComponentProps<'p'>
+} & ComponentProps<'div'>
