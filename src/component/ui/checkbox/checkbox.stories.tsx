@@ -1,92 +1,92 @@
-import type { Meta, StoryObj } from '@storybook/nextjs';
-import { fn } from 'storybook/test';
-import { Checkbox } from '@/component/ui/checkbox/checkbox';
+import type { Meta, StoryObj } from '@storybook/nextjs'
+import { fn } from 'storybook/test'
+import { Checkbox } from '@/component/ui/checkbox/checkbox'
 
 const meta = {
   title: 'UI/Checkbox',
   component: Checkbox,
   parameters: {
-    layout: 'centered',
+    layout: 'centered'
   },
   tags: ['autodocs'],
   argTypes: {
     checked: {
       control: 'boolean',
-      description: 'Состояние чекбокса (отмечен/не отмечен)',
+      description: 'Состояние чекбокса (отмечен/не отмечен)'
     },
     disabled: {
       control: 'boolean',
-      description: 'Отключен ли чекбокс',
+      description: 'Отключен ли чекбокс'
     },
     label: {
       control: 'text',
-      description: 'Текст лейбла рядом с чекбоксом',
+      description: 'Текст лейбла рядом с чекбоксом'
     },
     onCheckedChange: {
       action: 'checked changed',
-      description: 'Обработчик изменения состояния',
-    },
+      description: 'Обработчик изменения состояния'
+    }
   },
   args: {
-    onCheckedChange: fn(),
-  },
-} satisfies Meta<typeof Checkbox>;
+    onCheckedChange: fn()
+  }
+} satisfies Meta<typeof Checkbox>
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+export default meta
+type Story = StoryObj<typeof meta>
 
 // Базовый чекбокс без лейбла
 export const Default: Story = {
   args: {
     checked: false,
-    disabled: false,
-  },
-};
+    disabled: false
+  }
+}
 
 // Чекбокс с лейблом
 export const WithLabel: Story = {
   args: {
     checked: false,
     disabled: false,
-    label: 'Согласен с условиями',
-  },
-};
+    label: 'Согласен с условиями'
+  }
+}
 
 // Отмеченный чекбокс
 export const Checked: Story = {
   args: {
     checked: true,
     disabled: false,
-    label: 'Отмеченный чекбокс',
-  },
-};
+    label: 'Отмеченный чекбокс'
+  }
+}
 
 // Отключенный чекбокс
 export const Disabled: Story = {
   args: {
     checked: false,
     disabled: true,
-    label: 'Отключенный чекбокс',
-  },
-};
+    label: 'Отключенный чекбокс'
+  }
+}
 
 // Отключенный и отмеченный чекбокс
 export const DisabledChecked: Story = {
   args: {
     checked: true,
     disabled: true,
-    label: 'Отключенный и отмеченный',
-  },
-};
+    label: 'Отключенный и отмеченный'
+  }
+}
 
 // Чекбокс с длинным лейблом
 export const LongLabel: Story = {
   args: {
     checked: false,
     disabled: false,
-    label: 'Я согласен с условиями использования сервиса и политикой конфиденциальности',
-  },
-};
+    label: 'Я согласен с условиями использования сервиса и политикой конфиденциальности'
+  }
+}
 
 // Несколько чекбоксов в группе
 export const Group: Story = {
@@ -97,21 +97,21 @@ export const Group: Story = {
       <Checkbox label="Третий пункт" checked={true} disabled onCheckedChange={fn()} />
       <Checkbox label="Четвертый пункт" checked={false} disabled onCheckedChange={fn()} />
     </div>
-  ),
-};
+  )
+}
 
 // Интерактивный пример
 export const Interactive: Story = {
   args: {
     label: 'Интерактивный чекбокс',
     checked: false,
-    disabled: false,
+    disabled: false
   },
   parameters: {
     docs: {
       description: {
-        story: 'Попробуйте кликнуть на чекбокс или лейбл для изменения состояния',
-      },
-    },
-  },
-};
+        story: 'Попробуйте кликнуть на чекбокс или лейбл для изменения состояния'
+      }
+    }
+  }
+}

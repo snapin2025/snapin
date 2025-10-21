@@ -8,5 +8,5 @@ export default function Home() {
         XXXX
       </Button>
     </div>
-  );
+  )
 }

@@ -1,15 +1,12 @@
-.container {
-  display: flex;
-  align-items: center;
+.label {
+  color: var(--color-dark-300);
 }
 
-.circle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 100%;
+.defaultInput {
+  width: 100%;
+  padding: 6px 12px;
+  color: var(--color-dark-300);
+  text-decoration: none;
   background-color: transparent;
   cursor: pointer;
 
@@ -65,7 +62,7 @@
     cursor: default;
   }
 
-  &[data-state="checked"] {
+  &[data-state='checked'] {
     border: 2px solid var(--color-light-100);
     background-color: var(--color-light-100);
   }
@@ -78,15 +75,20 @@
   color: var(--color-dark-900);
 }
 
-.checkboxLabel {
-  user-select: none;
+.searchInput {
+  padding-right: 30px;
+  padding-left: 30px;
+}
+
+.eyesIcon {
   cursor: pointer;
-  margin: 5px;
-  flex-shrink: 0;
+  position: absolute;
+  top: 28px;
+  right: 16px;
+  width: 10px;
+  height: 10px;
 }
 
-.labelDisabled {
-  color: var(--color-light-900) !important;
-  cursor: default;
+.storyBook {
+  width: 200px;
 }
-
