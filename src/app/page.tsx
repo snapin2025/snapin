@@ -3,5 +3,5 @@ export default function Home() {
     <div>
       <h1>new dev snapin</h1>
     </div>
-  );
+  )
 }

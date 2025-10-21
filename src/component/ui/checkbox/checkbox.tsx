@@ -1,14 +1,14 @@
-import { ComponentProps, useId } from 'react';
-import * as RadixCheckbox from '@radix-ui/react-checkbox';
-import s from './checkbox.module.css';
-import { clsx } from 'clsx';
-import { Typography } from '@/component/ui/typography/typography';
-import { Check } from '../../../../public/assets/icons/check';
+import { ComponentProps, useId } from 'react'
+import * as RadixCheckbox from '@radix-ui/react-checkbox'
+import { CheckIcon } from '@radix-ui/react-icons'
+import s from './checkbox.module.css'
+import { clsx } from 'clsx'
+import { Typography } from '@/component/ui/typography/typography'
 
 export type CheckboxProps = ComponentProps<typeof RadixCheckbox.Root> & {
-  labelClassName?: string;
-  label?: string;
-};
+  labelClassName?: string
+  label?: string
+}
 
 export const Checkbox = ({
   className,
@@ -20,8 +20,8 @@ export const Checkbox = ({
   disabled = false,
   ...rest
 }: CheckboxProps) => {
-  const generatedId = useId();
-  const id = rest.id || generatedId;
+  const generatedId = useId()
+  const id = rest.id || generatedId
 
   return (
     <div className={clsx(s.container, className)}>
@@ -36,7 +36,7 @@ export const Checkbox = ({
           {...rest}
         >
           <RadixCheckbox.Indicator className={s.indicator}>
-            <Check />
+            <CheckIcon />
           </RadixCheckbox.Indicator>
         </RadixCheckbox.Root>
       </div>
@@ -48,5 +48,5 @@ export const Checkbox = ({
         </Typography>
       )}
     </div>
-  );
-};
+  )
+}
