@@ -12,6 +12,6 @@ export const HeaderLogIn = () => (
 )
 export const HeaderSignUp = () => (
   <Header>
-    <button>Log Up</button>
+    <button>Sign up</button>
   </Header>
 )
