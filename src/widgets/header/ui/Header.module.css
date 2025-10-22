@@ -1,0 +1,32 @@
+/* Стили только для хедера */
+.header {
+    width: 100%;
+    background-color: #0d0d0d;
+    border-bottom: 1px solid #333333;
+    padding: 12px 0;
+}
+
+.container {
+    display: flex;
+    width: 100%;
+    margin: 0 auto;
+    max-width: 1280px;
+    padding: 0 62px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.box {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 45px;
+}
+
+.logo {
+    font-size: 26px;
+    font-weight: 600;
+    color: #fff;
+    line-height: 36px;
+    cursor: pointer;
+}
