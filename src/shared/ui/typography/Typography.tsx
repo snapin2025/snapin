@@ -12,7 +12,7 @@ export const Typography = ({
   asChild,
   ...restProps
 }: TypographyProps) => {
-  const Component = asChild ? Slot : 'div'
+  const Component = asChild ? Slot : 'p'
   return (
     <Component
       className={clsx(

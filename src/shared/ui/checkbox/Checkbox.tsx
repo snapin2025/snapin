@@ -25,7 +25,7 @@ export const Checkbox = ({
 
   return (
     <div className={clsx(s.container, className)}>
-      <div className={s.buttonWrapper}>
+      <div className={clsx(s.buttonWrapper, { [s.disabled]: disabled })}>
         <RadixCheckbox.Root
           id={id}
           disabled={disabled}
