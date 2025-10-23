@@ -2,11 +2,12 @@ import type { Meta, StoryObj } from '@storybook/nextjs'
 import { Button } from '@/shared/ui/button/Button'
 
 const meta = {
+  title: 'Components/Button',
   component: Button,
   parameters: {
     layout: 'centered'
   }
-} satisfies Meta<typeof Button>
+} //satisfies Meta<typeof Button>
 
 export default meta
 
