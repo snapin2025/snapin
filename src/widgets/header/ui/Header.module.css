@@ -25,8 +25,8 @@
 
 .logo {
     font-size: 26px;
-    font-weight: 600;
+    font-weight: var(--font-weight-semi-bold);
     color: var(--color-light-100);
-    line-height: 36px;
+    line-height: var(--line-height-l);
     cursor: pointer;
 }
