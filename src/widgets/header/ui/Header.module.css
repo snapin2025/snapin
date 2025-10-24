@@ -24,7 +24,7 @@
 }
 
 .logo {
-    font-size: 26px;
+    font-size: var(--font-size-xxl);
     font-weight: var(--font-weight-semi-bold);
     color: var(--color-light-100);
     line-height: var(--line-height-l);
