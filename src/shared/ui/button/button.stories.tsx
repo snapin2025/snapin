@@ -1,5 +1,5 @@
 import type { StoryObj } from '@storybook/nextjs'
-import { Button } from '@/shared/ui/button/Button'
+import { Button } from '@/shared/ui'
 
 const meta = {
   title: 'Components/Button',
