@@ -1,7 +1,9 @@
 import React, { ReactNode, useState } from 'react'
 import s from './input.module.css'
 import clsx from 'clsx'
-import { Close, Eye, EyeOff, Search } from '@/shared/ui/assets'
+import { Close, Eye, EyeOff, Search } from '@/shared/ui'
+
+
 
 type InputProps = {
   placeholder?: string
