@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/nextjs'
-import { Button } from '@/shared/ui/button/Button'
+import type { StoryObj } from '@storybook/nextjs'
+import { Button } from '@/shared/ui'
 
 const meta = {
   title: 'Components/Button',
@@ -7,7 +7,7 @@ const meta = {
   parameters: {
     layout: 'centered'
   }
-} //satisfies Meta<typeof Button>
+}
 
 export default meta
 
