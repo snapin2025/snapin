@@ -21,7 +21,6 @@
 /* Default Input */
 .defaultInput {
   width: 100%;
-  height: 36px;
   padding: 6px 12px;
   color: var(--color-light-900);
   text-decoration: none;
@@ -45,7 +44,7 @@
   border: 1px solid var(--color-light-900);
 }
 
-.defaultInput:active:not(:disabled),
+.defaultInput:not(:disabled),
 .defaultInput:not(:placeholder-shown):not(:disabled) {
   color: var(--color-light-100);
   border: 1px solid var(--color-light-100);
@@ -54,12 +53,7 @@
 .defaultInput:focus {
   outline: none;
   color: var(--color-light-100);
-  border: 1px solid var(--color-light-100);
-}
-
-.defaultInput:focus-visible {
-  border: 2px solid var(--color-accent-500);
-  padding: 5px 11px;
+  border: 1px solid var(--color-accent-500);
 }
 
 .defaultInput:disabled {
@@ -75,7 +69,6 @@
 /* Error Input */
 .errorInput {
   width: 100%;
-  height: 36px;
   padding: 6px 12px;
   color: var(--color-light-100);
   text-decoration: none;
@@ -96,11 +89,6 @@
 
 .errorInput:focus {
   outline: none;
-}
-
-.errorInput:focus-visible {
-  border: 2px solid var(--color-danger-500);
-  padding: 5px 11px;
 }
 
 .errorInput:disabled {
@@ -127,11 +115,6 @@
 .searchInput {
   padding-right: 40px;
   padding-left: 40px;
-}
-
-.searchInput:focus-visible {
-  padding-right: 39px;
-  padding-left: 39px;
 }
 
 /* Hide native browser clear button for search inputs */
@@ -216,8 +199,4 @@
 /* Password input with icon padding */
 .passwordInput {
   padding-right: 40px;
-}
-
-.passwordInput:focus-visible {
-  padding-right: 39px;
 }
