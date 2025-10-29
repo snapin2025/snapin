@@ -1,5 +1,5 @@
 :root {
-  --font-family-primary: 'Inter', sans-serif;
+  --font-family-inter: 'Inter';
 
   /* Высота строк */
   --line-height-s: 16px;

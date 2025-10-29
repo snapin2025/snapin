@@ -1,6 +1,8 @@
 // Обертка над всеми страницами профиля
 
-export default function ProfileLayout({ children }: { children: React.ReactNode }) {
+import { ReactNode } from 'react'
+
+export default function ProfileLayout({ children }: { children: ReactNode }) {
   return (
     <div>
       <nav>Sidebar профиля</nav>

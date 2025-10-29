@@ -1,3 +1,5 @@
+"use client"
+
 import React, { ReactNode, useState } from 'react'
 import s from './input.module.css'
 import clsx from 'clsx'
