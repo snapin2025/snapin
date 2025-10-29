@@ -1,11 +1,9 @@
-"use client"
+'use client'
 
 import React, { ReactNode, useState } from 'react'
 import s from './input.module.css'
 import clsx from 'clsx'
-import { Close, Eye, EyeOff, Search } from '@/shared/ui'
-
-
+import { Close, Eye, EyeOff, Search, Typography } from '@/shared/ui'
 
 type InputProps = {
   placeholder?: string
@@ -61,9 +59,11 @@ export const Input = ({
   return (
     <div>
       {label && (
-        <label htmlFor={id} className={labelClassName}>
-          {label}
-        </label>
+        <Typography variant={'regular_14'} color={'dark'} asChild>
+          <label htmlFor={id} className={labelClassName}>
+            {label}
+          </label>
+        </Typography>
       )}
       <div className={s.wrapper}>
         {type === 'search' && (
@@ -112,7 +112,11 @@ export const Input = ({
           </button>
         )}
       </div>
-      {error && <span className={s.errorText}>{error}</span>}
+      {error && (
+        <Typography variant={'regular_14'} color={'error'} asChild>
+          <span className={s.errorText}>{error}</span>
+        </Typography>
+      )}
     </div>
   )
 }
