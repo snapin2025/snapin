@@ -16,7 +16,6 @@ export const Typography = ({
   return (
     <Component
       className={clsx(
-        s.base,
         s[`variant-${variant}`],
         color && s[`color-${color}`],
         textAlign && s[`align-${textAlign}`],
