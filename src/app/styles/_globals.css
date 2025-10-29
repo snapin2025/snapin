@@ -67,7 +67,6 @@ body {
   margin: 0 auto;
   padding: 0;
 
-
   line-height: var(--line-height-m);
   color: var(--color-light-100, #fff);
   background-color: var(--color-dark-900);

@@ -4,7 +4,6 @@ import s from './checkbox.module.css'
 import { clsx } from 'clsx'
 import { Checkmark, Typography } from '@/shared/ui'
 
-
 export type CheckboxProps = ComponentProps<typeof RadixCheckbox.Root> & {
   labelClassName?: string
   label?: string

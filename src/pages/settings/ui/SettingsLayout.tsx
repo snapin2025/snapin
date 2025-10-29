@@ -5,10 +5,7 @@ export function SettingsLayout({ children }: { children: React.ReactNode }) {
   return (
     <div>
       {/*Возможность переключения вкладок*/}
-      <nav>
-        <a href="/settings?part=info">Инфо</a> | <a href="/settings?part=devices">Устройства</a> |{' '}
-        <a href="/settings?part=subscriptions">Подписки</a> | <a href="/settings?part=payments">Платежи</a>
-      </nav>
+      <nav></nav>
 
       <div>
         {/*Рендер текущей вкладки */}

@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/nextjs'
-import { Typography } from './Typography'
+import { Typography } from '@/shared/ui'
 
 const meta = {
   title: 'Components/Typography',
   component: Typography,
   parameters: {
-    layout: 'centered',
+    layout: 'centered'
   },
   tags: ['autodocs'],
   argTypes: {
@@ -24,37 +24,21 @@ const meta = {
         'small',
         'bold_small',
         'regular_link',
-        'small_link',
-      ],
+        'small_link'
+      ]
     },
     color: {
       control: 'select',
-      options: [
-        'light',
-        'dark',
-        'blue',
-        'lightBlue',
-        'deepBlue',
-        'error',
-        'disabled',
-      ],
+      options: ['light', 'dark', 'blue', 'lightBlue', 'deepBlue', 'error', 'disabled']
     },
     textAlign: {
       control: 'select',
-      options: [
-        'inherit',
-        'left',
-        'center',
-        'right',
-        'justify',
-        'initial',
-        'unset',
-      ],
+      options: ['inherit', 'left', 'center', 'right', 'justify', 'initial', 'unset']
     },
     asChild: {
-      control: 'boolean',
-    },
-  },
+      control: 'boolean'
+    }
+  }
 } satisfies Meta<typeof Typography>
 
 export default meta
@@ -63,8 +47,8 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   args: {
     children: 'The quick brown fox jumps over the lazy dog',
-    variant: 'small',
-  },
+    variant: 'small'
+  }
 }
 
 export const AllVariants: Story = {
@@ -84,7 +68,7 @@ export const AllVariants: Story = {
       <Typography variant="regular_link">Regular link</Typography>
       <Typography variant="small_link">Small link</Typography>
     </div>
-  ),
+  )
 }
 
 export const AllColors: Story = {
@@ -112,7 +96,7 @@ export const AllColors: Story = {
         Disabled color text
       </Typography>
     </div>
-  ),
+  )
 }
 
 export const TextAlignment: Story = {
@@ -131,24 +115,6 @@ export const TextAlignment: Story = {
         Justified text - This text should spread to fill the entire container width.
       </Typography>
     </div>
-  ),
+  )
 }
 
-export const WithCustomElement: Story = {
-  args: {
-    asChild: true,
-    children: (
-      <a href="#custom" style={{ textDecoration: 'none' }}>
-        This is rendered as an anchor tag
-      </a>
-    ),
-  },
-}
-
-export const InteractiveExample: Story = {
-  args: {
-    variant: 'regular_link',
-    color: 'blue',
-    children: 'Interactive Typography component',
-  },
-}

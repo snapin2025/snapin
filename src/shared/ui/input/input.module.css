@@ -128,7 +128,8 @@
 }
 
 /* Cross Icon (Clear button) */
-.crossIcon, .eyesIcon {
+.crossIcon,
+.eyesIcon {
   cursor: pointer;
   position: absolute;
   top: 50%;
