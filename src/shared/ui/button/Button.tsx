@@ -15,5 +15,3 @@ export const Button = (props: Props) => {
 
   return <Component className={clsx(s.button, s[variant], className)} {...rest} />
 }
-
-
