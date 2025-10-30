@@ -7,13 +7,11 @@
   min-width: 100px;
   border-radius: 2px;
   text-align: center;
-  font-family: var(--font-family-primary);
   font-weight: var(--font-weight-semi-bold);
   line-height: 150%;
   padding: 6px 24px;
   border: 1px solid transparent;
 }
-
 
 /* ========== PRIMARY ========== */
 .primary {
@@ -36,7 +34,6 @@
   background-color: var(--color-accent-900);
 }
 
-
 /* ========== SECONDARY ========== */
 
 .secondary {
@@ -45,7 +42,6 @@
 
 .secondary:active {
   background-color: var(--color-dark-500);
-
 }
 
 .secondary:hover {
@@ -55,14 +51,11 @@
 
 .secondary:focus {
   background-color: var(--color-dark-300);
-
 }
 
 .secondary:disabled {
   background-color: var(--color-dark-500);
-
 }
-
 
 /* ========== OUTLINED ========== */
 .outlined {
