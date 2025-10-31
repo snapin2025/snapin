@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs'
-import { Input } from './Input'
 import { useState } from 'react'
+import { Input } from '@/shared/ui/input/Input'
 
 const meta: Meta<typeof Input> = {
   title: 'Components/Input',
@@ -11,7 +11,7 @@ const meta: Meta<typeof Input> = {
       control: 'select',
       options: ['text', 'email', 'password', 'search']
     },
-    isDisabled: {
+    disabled: {
       control: 'boolean'
     },
     error: {
@@ -25,7 +25,7 @@ type Story = StoryObj<typeof Input>
 
 export const Email: Story = {
   args: {
-    id: 'email-input',
+    id: 'email-Input',
     type: 'email',
     placeholder: 'Epam@epam.com',
     label: 'Email'
@@ -34,7 +34,7 @@ export const Email: Story = {
 
 export const Password: Story = {
   args: {
-    id: 'password-input',
+    id: 'password-Input',
     type: 'password',
     placeholder: 'Epam@epam.com',
     label: 'Password'
@@ -48,36 +48,36 @@ export const Search: Story = {
     return <Input {...args} value={value} onChange={(e) => setValue(e.target.value)} onClear={() => setValue('')} />
   },
   args: {
-    id: 'search-input',
+    id: 'search-Input',
     type: 'search',
-    placeholder: 'Input search',
+    placeholder: '_Input search',
     label: 'Search'
   }
 }
 
 export const WithError: Story = {
   args: {
-    id: 'error-input',
+    id: 'error-Input',
     type: 'text',
     placeholder: 'Enter text...',
-    label: 'Input with Error',
+    label: '_Input with Error',
     error: 'Error text'
   }
 }
 
 export const Disabled: Story = {
   args: {
-    id: 'disabled-input',
+    id: 'disabled-Input',
     type: 'text',
-    placeholder: 'Disabled input',
+    placeholder: 'Disabled Input',
     label: 'Disabled Input',
-    isDisabled: true
+    disabled: true
   }
 }
 
 export const WithoutLabel: Story = {
   args: {
-    id: 'no-label-input',
+    id: 'no-label-Input',
     type: 'text',
     placeholder: 'Input without label'
   }
@@ -95,11 +95,11 @@ export const PasswordWithError: Story = {
 
 export const DisabledWithValue: Story = {
   args: {
-    id: 'disabled-value-input',
+    id: 'disabled-value-Input',
     type: 'text',
     placeholder: 'Disabled with value',
     label: 'Disabled Input',
-    isDisabled: true,
+    disabled: true,
     value: 'Epam@epam.com'
   }
 }

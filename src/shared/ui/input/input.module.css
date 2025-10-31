@@ -1,4 +1,8 @@
 .label {
+  font-family: var(--font-family-inter);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-s);
+  line-height: var(--line-height-m);
   color: var(--color-light-900);
   margin-bottom: 2px;
 }
@@ -14,7 +18,7 @@
   width: 100%;
 }
 
-/* Default Input */
+/* Default _Input */
 .defaultInput {
   width: 100%;
   padding: 6px 12px;
@@ -24,6 +28,7 @@
   border: 1px solid var(--color-dark-100);
   border-radius: 2px;
   box-sizing: border-box;
+  font-family: var(--font-family-inter);
   font-weight: var(--font-weight-regular);
   font-size: var(--font-size-m);
   line-height: var(--line-height-m);
@@ -39,16 +44,21 @@
   border: 1px solid var(--color-light-900);
 }
 
-.defaultInput:not(:disabled),
+/*.defaultInput:not(:disabled),         */
 .defaultInput:not(:placeholder-shown):not(:disabled) {
   color: var(--color-light-100);
-  border: 1px solid var(--color-light-100);
+  /*border: 1px solid var(--color-light-100);*/
 }
 
 .defaultInput:focus {
   outline: none;
   color: var(--color-light-100);
   border: 1px solid var(--color-accent-500);
+}
+
+.defaultInput:active {
+  outline: none;
+  border: 1px solid var(--color-light-100);
 }
 
 .defaultInput:disabled {
@@ -61,7 +71,7 @@
   color: var(--color-dark-100);
 }
 
-/* Error Input */
+/* Error _Input */
 .errorInput {
   width: 100%;
   padding: 6px 12px;
@@ -71,6 +81,11 @@
   border: 1px solid var(--color-danger-500);
   border-radius: 2px;
   box-sizing: border-box;
+
+  font-family: var(--font-family-inter);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 150%;
 }
 
 .errorInput::placeholder {
@@ -93,11 +108,15 @@
 
 /* Error Text */
 .errorText {
+  font-family: var(--font-family-inter)      ;
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-s);
+  line-height: var(--line-height-m);
   color: var(--color-danger-500);
   margin-top: 2px;
 }
 
-/* Search Input with padding for icons */
+/* Search _Input with padding for icons */
 .searchInput {
   padding-right: 40px;
   padding-left: 40px;
@@ -128,8 +147,7 @@
 }
 
 /* Cross Icon (Clear button) */
-.crossIcon,
-.eyesIcon {
+.crossIcon {
   cursor: pointer;
   position: absolute;
   top: 50%;
@@ -154,6 +172,24 @@
 .crossIcon:disabled {
   cursor: not-allowed;
   color: var(--color-dark-100);
+}
+
+.eyesIcon {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 12px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-light-900);
+  background: none;
+  border: none;
+  padding: 0;
+  transition: opacity 0.2s ease;
 }
 
 .eyesIcon:hover:not(:disabled) {
