@@ -17,14 +17,17 @@ export const RegisterForm = () => {
     handleSubmit,
     control,
     formState: { errors }
-  } = useForm<Props>()
+  } = useForm<Props>({
+    defaultValues: { email: '', password: '', agree: false, confirmPassword: '', userName: '' }
+  })
+  console.log(errors)
 
   const onSubmit = (data: Props) => {
     console.log(data)
   }
 
   return (
-    <Card className={s.card} as="form" onSubmit={handleSubmit(onSubmit)}>
+    <Card className={s.card} as="form" noValidate onSubmit={handleSubmit(onSubmit)}>
       <h2>Sign Up</h2>
       <div className={s.containerBtn}>
         <Google />
@@ -46,6 +49,7 @@ export const RegisterForm = () => {
           type={'email'}
           id={'Email'}
           placeholder={'Epam@epam.com'}
+          error={errors.email?.message}
           {...register('email')}
           className={s.inputCustom}
         />
