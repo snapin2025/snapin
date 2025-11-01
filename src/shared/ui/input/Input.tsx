@@ -1,42 +1,33 @@
-'use client'
-
-import React, { ReactNode, useState } from 'react'
+import React, { ComponentPropsWithRef, ReactNode, useState } from 'react'
 import s from './input.module.css'
 import clsx from 'clsx'
-import { Close, Eye, EyeOff, Search, Typography } from '@/shared/ui'
+import { Close, Eye, EyeOff, Search } from '@/shared/ui'
 
-type InputProps = {
-  placeholder?: string
+type InputProps = ComponentPropsWithRef<'input'> & {
   type: 'email' | 'password' | 'search' | 'text'
-  id: string
   label?: string | ReactNode
-  error?: string
-  isDisabled?: boolean
-  value?: string
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
-  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void
-  onClear?: () => void
-  name?: string
   className?: string
-  autoComplete?: string
-  ref?: React.RefObject<HTMLInputElement>
+  error?: boolean | string
+  onClear?: () => void
+  id: string
 }
 
 export const Input = ({
-  placeholder,
   type,
-  id,
   label,
+  className,
+  ref,
   error,
-  isDisabled,
+  disabled,
+  onClear,
+  id,
+  placeholder,
+  autoComplete,
   value,
   onChange,
   onBlur,
-  onClear,
   name,
-  className,
-  autoComplete,
-  ref
+  ...rest
 }: InputProps) => {
   const [showPassword, setShowPassword] = useState(false)
 
@@ -46,7 +37,7 @@ export const Input = ({
     type === 'password' && s.passwordInput,
     className
   )
-  const labelClassName = clsx(s.label, isDisabled && s.labelDisabled)
+  const labelClassName = clsx(s.label, disabled && s.labelDisabled)
 
   const inputType = type === 'password' && showPassword ? 'text' : type
 
@@ -59,11 +50,9 @@ export const Input = ({
   return (
     <div>
       {label && (
-        <Typography variant={'regular_14'} color={'dark'} asChild>
-          <label htmlFor={id} className={labelClassName}>
-            {label}
-          </label>
-        </Typography>
+        <label htmlFor={id} className={labelClassName}>
+          {label}
+        </label>
       )}
       <div className={s.wrapper}>
         {type === 'search' && (
@@ -77,13 +66,14 @@ export const Input = ({
           type={inputType}
           placeholder={placeholder}
           className={inputClassName}
-          disabled={isDisabled}
+          disabled={disabled}
           autoComplete={autoComplete}
           ref={ref}
           value={value}
           onChange={onChange}
           onBlur={onBlur}
           name={name}
+          {...rest}
         />
 
         {type === 'password' && (
@@ -91,7 +81,7 @@ export const Input = ({
             type="button"
             className={s.eyesIcon}
             onClick={() => setShowPassword(!showPassword)}
-            disabled={isDisabled}
+            disabled={disabled}
             tabIndex={-1}
             aria-label={showPassword ? 'Hide password' : 'Show password'}
           >
@@ -104,7 +94,7 @@ export const Input = ({
             type="button"
             className={s.crossIcon}
             onClick={handleClear}
-            disabled={isDisabled}
+            disabled={disabled}
             tabIndex={-1}
             aria-label="Clear input"
           >
@@ -112,11 +102,7 @@ export const Input = ({
           </button>
         )}
       </div>
-      {error && (
-        <Typography variant={'regular_14'} color={'error'} asChild>
-          <span className={s.errorText}>{error}</span>
-        </Typography>
-      )}
+      {error && <span className={s.errorText}>{error}</span>}
     </div>
   )
 }
