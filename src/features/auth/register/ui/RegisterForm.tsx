@@ -2,28 +2,33 @@ import { Card, Checkbox, Github, Google, Input } from '@/shared/ui'
 import s from './RegisterForm.module.css'
 import { Button } from '@/shared/ui/button/Button'
 import { Controller, useForm } from 'react-hook-form'
+import { z } from 'zod/v4'
+import { registerSchema } from '@/features/auth/register/lib/shemas/registerShema'
+import { zodResolver } from '@hookform/resolvers/zod'
+
+type FormValue = z.infer<typeof registerSchema>
 
 type Props = {
-  userName: string
-  email: string
-  password: string
-  confirmPassword: string
-  agree: boolean
+  error?: string
+  onSubmit: (data: FormValue) => void
 }
 
-export const RegisterForm = () => {
+export const RegisterForm = ({ error }: Props) => {
   const {
     register,
     handleSubmit,
+    reset,
     control,
     formState: { errors }
-  } = useForm<Props>({
-    defaultValues: { email: '', password: '', agree: false, confirmPassword: '', userName: '' }
+  } = useForm<FormValue>({
+    defaultValues: { email: '', password: '', agree: false, confirmPassword: '', userName: '' },
+    resolver: zodResolver(registerSchema)
   })
   console.log(errors)
 
   const onSubmit = (data: Props) => {
     console.log(data)
+    reset()
   }
 
   return (
@@ -39,6 +44,7 @@ export const RegisterForm = () => {
           type={'text'}
           id={'Username'}
           placeholder={'Epam11'}
+          error={errors.userName?.message || error}
           {...register('userName')}
           className={s.inputCustom}
         />
@@ -60,6 +66,7 @@ export const RegisterForm = () => {
           type={'password'}
           id={'Password'}
           placeholder={'******************'}
+          error={errors.password?.message}
           {...register('password')}
           className={s.inputCustom}
         />
@@ -70,6 +77,7 @@ export const RegisterForm = () => {
           type={'password'}
           id={'confirmPassword'}
           placeholder={'******************'}
+          error={errors.confirmPassword?.message}
           {...register('confirmPassword')}
           className={s.inputCustom}
         />
