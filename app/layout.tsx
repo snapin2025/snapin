@@ -1,7 +1,8 @@
-// Общая обертка над каждой страницей
 import type { Metadata } from 'next'
-import { ReactNode } from 'react'
 import localFont from 'next/font/local'
+import { ReactNode } from 'react'
+import { Providers } from '@/shared/lib'
+
 import '../src/app/styles/index.css'
 
 const interFont = localFont({
@@ -12,7 +13,7 @@ const interFont = localFont({
     { path: '../public/fonts/Inter-Bold.woff2', weight: '700', style: 'normal' }
   ],
   display: 'swap', // улучшает UX и performance
-  preload: true // автоматически вставит <link rel="preload">
+  preload: true //
 })
 
 export const metadata: Metadata = {
@@ -28,8 +29,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={interFont.className}>
       <body>
-        <header>Header</header>
-        {children}
+        <Providers>
+          <header>Header</header>
+          {children}
+        </Providers>
       </body>
     </html>
   )
