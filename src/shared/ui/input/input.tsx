@@ -17,7 +17,6 @@ type InputProps = {
   name?: string
   className?: string
   autoComplete?: string
-  ref?: React.RefObject<HTMLInputElement>
 }
 
 export const Input = ({
@@ -33,8 +32,7 @@ export const Input = ({
   onClear,
   name,
   className,
-  autoComplete,
-  ref
+  autoComplete
 }: InputProps) => {
   const [showPassword, setShowPassword] = useState(false)
 
@@ -75,7 +73,6 @@ export const Input = ({
           className={inputClassName}
           disabled={isDisabled}
           autoComplete={autoComplete}
-          ref={ref}
           value={value}
           onChange={onChange}
           onBlur={onBlur}
