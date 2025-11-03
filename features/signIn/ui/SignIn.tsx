@@ -2,9 +2,9 @@
 
 import { useForm, Controller } from 'react-hook-form'
 import { useRouter } from 'next/router'
-import { Card } from '@/shared/ui'
+import { Card, Input } from '@/shared/ui'
 import Link from 'next/link'
-import { Input } from '@/shared/ui/input/input'
+
 import { Button } from '@/shared/ui/button/Button'
 import s from './signIn.module.css'
 import { SignInFormTypes, signInSchema } from '../model/validation'

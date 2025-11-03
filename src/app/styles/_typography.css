@@ -1,10 +1,5 @@
 :root {
-  --font-family-primary: 'Inter', sans-serif;
-
-  /* Высота строк */
-  --line-height-s: 16px;
-  --line-height-m: 24px;
-  --line-height-l: 36px;
+  --font-family-inter: 'Inter';
 
   /* Размеры шрифтов */
   --font-size-xs: 12px;
@@ -15,8 +10,13 @@
   --font-size-xxl: 26px;
 
   /* Начертания шрифтов */
-  --font-weight-thin: 400;
+  --font-weight-regular: 400;
   --font-weight-medium: 500;
   --font-weight-semi-bold: 600;
   --font-weight-bold: 700;
+
+  /* Высота строк */
+  --line-height-s: 16px;
+  --line-height-m: 24px;
+  --line-height-l: 36px;
 }
