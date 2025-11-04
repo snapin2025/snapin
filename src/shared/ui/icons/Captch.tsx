@@ -1,6 +1,6 @@
 import type { SVGProps } from 'react'
 export const Captch = (props: SVGProps<SVGSVGElement>) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="none" viewBox="0 0 30 31" {...props}>
+  <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" viewBox="0 0 30 31" {...props}>
     <g filter="url(#captch_svg__a)">
       <path
         fill="#B5B6B5"

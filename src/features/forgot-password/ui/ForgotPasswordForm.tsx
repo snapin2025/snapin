@@ -1,9 +1,8 @@
 import Link from 'next/link'
-import { Input } from '@/shared/ui/input/input'
+import { Captch, Input, Typography } from '@/shared/ui'
 import { Button } from '@/shared/ui/button/Button'
 import s from './ForgotPasswordForm.module.css'
 import { Card } from '@/shared/ui'
-import { CaptchaIcon } from '@/shared/ui/assets/icons/captcha'
 
 import { useForm } from 'react-hook-form'
 
@@ -21,7 +20,8 @@ export const ForgotPasswordForm = () => {
 
   return (
     <Card as="form" className={s.form}>
-      <h2 className={s.title}>Forgot Password</h2>
+      <Typography variant="h1">Forgot Password</Typography>
+      {/*<h2 className={s.title}>Forgot Password</h2>*/}
 
       {/* Email поле */}
       <div className={s.field}>
@@ -49,7 +49,7 @@ export const ForgotPasswordForm = () => {
 
         {/* Капча справа с иконкой и текстом */}
         <div className={s.captchaLogo}>
-          <CaptchaIcon /> {/* ← ЗАМЕНИ ВЕСЬ SVG НА ЭТУ КОМПОНЕНТУ */}
+          <Captch className={s.captch} />
           <div className={s.captchaTextWrapper}>
             <span className={s.captchaLine1}>reCAPTCHA</span>
             <span className={s.captchaLine2}>Privacy - Terms</span>
