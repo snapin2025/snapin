@@ -1,7 +1,3 @@
-// Главная страница
-// Доступна всем (в т.ч. авторизованным пользователям)
-// Отличается наличием сайдбара и кнопками в хедере
-
 export function MainPage() {
-  return <div>Hello{/*Счетчик и 4 поста*/}</div>
+  return <section>Hello MainPage</section>
 }
