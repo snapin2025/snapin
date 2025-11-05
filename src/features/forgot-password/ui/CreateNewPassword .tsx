@@ -1,7 +1,6 @@
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { Card, Input, Button, Typography } from '@/shared/ui'
 import s from './ForgotPasswordForm.module.css'
-import { Tapestry } from 'next/dist/compiled/@next/font/dist/google'
 
 type CreatePasswordInput = {
   password: string

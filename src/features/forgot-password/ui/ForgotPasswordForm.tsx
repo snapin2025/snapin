@@ -3,12 +3,12 @@ import { Captch, Input, Typography } from '@/shared/ui'
 import { Button } from '@/shared/ui/button/Button'
 import s from './ForgotPasswordForm.module.css'
 import { Card } from '@/shared/ui'
-
-import { useForm } from 'react-hook-form'
+import { useForm, SubmitHandler } from 'react-hook-form' // ← ДОБАВЛЕНО
 
 type ForgotPasswordInputs = {
   email: string
 }
+
 export const ForgotPasswordForm = () => {
   const {
     register,
@@ -18,13 +18,37 @@ export const ForgotPasswordForm = () => {
     defaultValues: { email: '' }
   })
 
+  // ← ДОБАВЛЕНО
+  const onSubmit: SubmitHandler<ForgotPasswordInputs> = (data) => {
+    console.log(data)
+    // Здесь будет API запрос
+  }
+
   return (
-    <Card as="form" className={s.form}>
+    // ← ДОБАВЛЕНО onSubmit
+    <Card as="form" className={s.form} onSubmit={handleSubmit(onSubmit)}>
       <Typography variant="h1">Forgot Password</Typography>
+
       {/* Email поле */}
       <div className={s.field}>
-        <Input id="email" label="Email" type="email" placeholder="Epam@epam.com" {...register('email')} />
+        <Input
+          id="email"
+          label="Email"
+          type="email"
+          placeholder="Epam@epam.com"
+          error={!!errors.email}
+          {...register('email', {
+            required: 'Email is required',
+            pattern: {
+              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+              message: 'Invalid email address'
+            }
+          })}
+        />
+        {/* ← ДОБАВЛЕНО ОТОБРАЖЕНИЕ ОШИБКИ */}
+        {errors.email && <span className={s.errorMessage}>{errors.email.message}</span>}
       </div>
+
       <p className={s.text}>Enter your email address and we will send you further instructions</p>
 
       {/* Кнопка отправки */}
