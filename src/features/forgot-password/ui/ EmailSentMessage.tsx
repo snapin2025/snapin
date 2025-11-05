@@ -17,7 +17,7 @@ export const EmailSentMessage = ({ onResendClick }: Props) => {
 
       <p className={s.text}>Enter your email address and we will send you further instructions</p>
 
-      <p className={s.textlink}>The link has been sent by email. If you don&apos;t receive an email send link again</p>
+      <p className={s.textLink}>The link has been sent by email. If you don&apos;t receive an email send link again</p>
 
       <Button variant="primary" className={s.button}>
         Send Link Again

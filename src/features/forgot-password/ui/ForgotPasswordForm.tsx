@@ -21,8 +21,6 @@ export const ForgotPasswordForm = () => {
   return (
     <Card as="form" className={s.form}>
       <Typography variant="h1">Forgot Password</Typography>
-      {/*<h2 className={s.title}>Forgot Password</h2>*/}
-
       {/* Email поле */}
       <div className={s.field}>
         <Input id="email" label="Email" type="email" placeholder="Epam@epam.com" {...register('email')} />
