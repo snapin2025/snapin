@@ -5,7 +5,7 @@ import { Button, Typography } from '@/shared/ui'
 export default function LinkOldPage() {
   return (
     <div className={s.container}>
-      <div className={s.content}>
+      <div className={s.contentPage}>
         <Typography variant="h1">Email verification link expired</Typography>
         <p className={s.textPage}>
           Looks like the verification link has expired. Not to worry, we can send the link again

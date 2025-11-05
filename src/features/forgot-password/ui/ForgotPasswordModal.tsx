@@ -1,12 +1,11 @@
 import s from './ForgotPasswordForm.module.css'
 import { useState } from 'react'
 import { Modal } from '@/features/forgot-password/ui/ResendLinkModal'
-
 import { Button } from '@/shared/ui'
 import { EmailSentMessage } from '@/features/forgot-password/ui/ EmailSentMessage'
 
 export const ForgotPasswordModal = () => {
-  const [showModal, setShowModal] = useState(false) //если заменить на true будет открываться
+  const [showModal, setShowModal] = useState(true) //если заменить на true будет открываться
 
   return (
     <>

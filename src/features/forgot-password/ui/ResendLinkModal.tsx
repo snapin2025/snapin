@@ -1,5 +1,5 @@
 import s from './ForgotPasswordForm.module.css'
-import { Button, Closes, Typography } from '@/shared/ui'
+import { Closes, Typography } from '@/shared/ui'
 import { ReactNode } from 'react'
 
 type Props = {
@@ -16,11 +16,10 @@ export const Modal = ({ onClose, open, modalTitle, children }: Props) => {
       {open && (
         <div className={s.overlayModal}>
           <div className={s.contentModal}>
-            <button className={s.closeIcon} onClick={onClose}>
-              <Closes />
-            </button>
-            {/*<h3 className={s.title3}>{modalTitle}</h3>*/}
-            <Typography variant="h1">{modalTitle}</Typography>
+            <Closes className={s.closeIcon} onClick={onClose} />
+            <Typography className={s.titleModal} variant="h1">
+              {modalTitle}
+            </Typography>
             <hr />
             {children}
             {/*<p className={s.textModal}>We have sent a link to confirm your email to epam@epam.com</p>*/}

@@ -13,6 +13,7 @@ export const ForgotPasswordForm = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors }
   } = useForm<ForgotPasswordInputs>({
     defaultValues: { email: '' }
@@ -20,6 +21,7 @@ export const ForgotPasswordForm = () => {
 
   const onSubmit: SubmitHandler<ForgotPasswordInputs> = (data) => {
     console.log(data)
+    reset() //для очистки полей
     // Здесь будет API запрос
   }
 
