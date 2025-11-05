@@ -1,9 +1,9 @@
 import Link from 'next/link'
-import { Captch, Input, Typography } from '@/shared/ui'
+import { Captch, Checkbox, Input, Typography } from '@/shared/ui'
 import { Button } from '@/shared/ui/button/Button'
 import s from './ForgotPasswordForm.module.css'
 import { Card } from '@/shared/ui'
-import { useForm, SubmitHandler } from 'react-hook-form' // ← ДОБАВЛЕНО
+import { useForm, SubmitHandler } from 'react-hook-form'
 
 type ForgotPasswordInputs = {
   email: string
@@ -18,7 +18,6 @@ export const ForgotPasswordForm = () => {
     defaultValues: { email: '' }
   })
 
-  // ← ДОБАВЛЕНО
   const onSubmit: SubmitHandler<ForgotPasswordInputs> = (data) => {
     console.log(data)
     // Здесь будет API запрос
@@ -65,16 +64,16 @@ export const ForgotPasswordForm = () => {
       <div className={s.captchaContainer}>
         {/* Чекбокс слева */}
         <label className={s.captchaLabel}>
-          <input type="checkbox" name="captcha" className={s.captchaCheckbox} />
+          <Checkbox name="captcha" className={s.captchaCheckbox} />
           <span className={s.checkboxText}>I&apos;m not a robot</span>
         </label>
 
         {/* Капча справа с иконкой и текстом */}
         <div className={s.captchaLogo}>
-          <Captch className={s.captch} />
+          <Captch />
           <div className={s.captchaTextWrapper}>
             <span className={s.captchaLine1}>reCAPTCHA</span>
-            <span className={s.captchaLine2}>Privacy - Terms</span>
+            <span className={s.captchaLine2}>Privacy-Terms</span>
           </div>
         </div>
       </div>
