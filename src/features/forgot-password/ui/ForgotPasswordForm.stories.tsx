@@ -13,7 +13,7 @@ import { ForgotPasswordForm } from './ForgotPasswordForm'
 import { ForgotPasswordModal } from './ForgotPasswordModal'
 import LinkOldPage from './LinkOldPage'
 import { EmailSentMessage } from '@/features/forgot-password/ui/ EmailSentMessage'
-import { CreateNewPassword } from '@/features/forgot-password/ui/CreateNewPassword ' // ← ДОБАВЬ ЭТОТ ИМПОРТ
+import { CreateNewPassword } from '@/features/forgot-password/ui/CreateNewPassword '
 
 export default {
   title: 'Features/ForgotPassword',
