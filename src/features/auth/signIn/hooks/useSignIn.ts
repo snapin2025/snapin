@@ -1,10 +1,14 @@
 import { useMutation } from '@tanstack/react-query'
 import { signIn } from '../api'
-import type { SignInRequest, SignInResponse } from '../api'
 
 export const useSignIn = () => {
-  const mutation = useMutation<SignInResponse, unknown, SignInRequest>({
-    mutationFn: signIn
+  const mutation = useMutation({
+    mutationFn: signIn,
+    onSuccess: (data) => {
+      if (typeof window !== 'undefined' && data?.accessToken) {
+        localStorage.setItem('accessToken', data.accessToken)
+      }
+    }
   })
 
   return mutation

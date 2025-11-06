@@ -1,56 +1,13 @@
 'use client'
 
-import { useForm } from 'react-hook-form'
 import { Card, Github, Google, Input, Typography } from '@/shared/ui'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { Button } from '@/shared/ui/button/Button'
 import s from './signIn.module.css'
 
-import { zodResolver } from '@hookform/resolvers/zod'
-
-import { SignInForm, signInSchema } from '@/features/auth/signIn/model'
-import { getMe, SignInRequest, useSignIn } from '@/features/auth/signIn'
+import { useSignInForm } from '@/features/auth/signIn/hooks/useSignInForm'
 export const SignIn = () => {
-  const {
-    register,
-    setValue,
-    clearErrors,
-    handleSubmit,
-    setError,
-    formState: { errors }
-  } = useForm<SignInForm>({
-    resolver: zodResolver(signInSchema),
-    mode: 'onBlur',
-    reValidateMode: 'onChange',
-
-    defaultValues: {
-      email: '',
-      password: ''
-    }
-  })
-
-  const { mutateAsync, isPending } = useSignIn()
-  const router = useRouter()
-
-  const onSubmit = async (data: SignInForm) => {
-    const payload: SignInRequest = { email: data.email, password: data.password }
-    try {
-      const res = await mutateAsync(payload)
-
-      if (typeof window !== 'undefined' && res?.accessToken) {
-        localStorage.setItem('accessToken', res.accessToken)
-      }
-      const me = await getMe()
-      if (me?.userId) {
-        router.push(`/profile/${me.userId}`)
-      }
-    } catch (e) {
-      const error = e as { response?: { data?: { messages?: string } } }
-      const message = error?.response?.data?.messages || 'Authentication failed'
-      setError('password', { type: 'server', message })
-    }
-  }
+  const { register, setValue, clearErrors, errors, isPending, onSubmit } = useSignInForm()
 
   return (
     <Card className={s.card}>
@@ -65,7 +22,7 @@ export const SignIn = () => {
           <Github name={'github'} width={'36px'} height={'36px'} />
         </Link>
       </div>
-      <form onSubmit={handleSubmit(onSubmit)} className={s.form}>
+      <form onSubmit={onSubmit} className={s.form}>
         <div className={s.fieldsWrapper}>
           <Input
             label={'Email'}
