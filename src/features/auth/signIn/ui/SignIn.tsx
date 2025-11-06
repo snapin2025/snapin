@@ -22,7 +22,7 @@ export const SignIn = () => {
   } = useForm<SignInForm>({
     resolver: zodResolver(signInSchema),
     mode: 'onBlur',
-    reValidateMode: 'onSubmit',
+    reValidateMode: 'onChange',
 
     defaultValues: {
       email: '',
@@ -37,6 +37,7 @@ export const SignIn = () => {
     const payload: SignInRequest = { email: data.email, password: data.password }
     try {
       const res = await mutateAsync(payload)
+
       if (typeof window !== 'undefined' && res?.accessToken) {
         localStorage.setItem('accessToken', res.accessToken)
       }
@@ -74,7 +75,7 @@ export const SignIn = () => {
             error={errors.email?.message}
             {...register('email')}
             onChange={(e) => {
-              setValue('email', e.target.value)
+              setValue('email', e.target.value, { shouldValidate: true })
               clearErrors('email')
             }}
           />
@@ -87,7 +88,7 @@ export const SignIn = () => {
             error={errors.password?.message}
             {...register('password')}
             onChange={(e) => {
-              setValue('password', e.target.value)
+              setValue('password', e.target.value, { shouldValidate: true })
               clearErrors('password')
             }}
           />
