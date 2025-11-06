@@ -24,9 +24,8 @@ export const RegisterForm = ({ error }: Props) => {
     defaultValues: { email: '', password: '', agree: false, confirmPassword: '', userName: '' },
     resolver: zodResolver(registerSchema)
   })
-  console.log(errors)
 
-  const onSubmit = (data: Props) => {
+  const onSubmit = (data: FormValue) => {
     console.log(data)
     reset()
   }

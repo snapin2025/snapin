@@ -10,7 +10,7 @@
 }
 
 h2 {
-  font-family: var(--font-family-primary);
+  font-family: var(--font-family-inter);
   font-weight: var(--font-weight-bold);
   font-size: var(--font-size-xl);
   line-height: var(--line-height-l);
@@ -46,8 +46,8 @@ h2 {
 }
 
 span {
-  font-family: var(--font-family-primary);
-  font-weight: var(--font-weight-thin);
+  font-family: var(--font-family-inter);
+  font-weight: var(--font-weight-regular);
   font-size: var(--font-size-xs);
   line-height: var(--line-height-s);
   color: var(--color-light-100);
@@ -60,8 +60,8 @@ span a {
 }
 
 p {
-  font-family: var(--font-family-primary);
-  font-weight: var(--font-weight-thin);
+  font-family: var(--font-weight-regular);
+  font-weight: var(--font-weight-regular);
   font-size: var(--font-size-m);
   line-height: var(--line-height-m);
   text-align: center;
