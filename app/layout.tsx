@@ -1,6 +1,8 @@
 // Общая обертка над каждой страницей
 import type { Metadata } from 'next'
 import './styles/index.css'
+import { QueryProvider } from '@/shared/providers/ReactQueryProvider'
+
 export const metadata: Metadata = {
   title: 'Inctagram',
   description: 'Учебный проект'
@@ -14,8 +16,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <header>Header</header>
-        {children}
+        <QueryProvider>
+          <header>Header</header>
+          {children}
+        </QueryProvider>
       </body>
     </html>
   )
