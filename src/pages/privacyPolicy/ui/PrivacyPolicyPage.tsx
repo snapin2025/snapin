@@ -2,9 +2,9 @@ import { Typography } from '@/shared/ui'
 import Image from 'next/image'
 import Link from 'next/link'
 import linkSvg from '../../../shared/ui/assets/svg/arrowLeft.svg'
-import s from './TermsOfServicePage.module.css'
+import s from './PrivacyPolicyPage.module.css'
 
-export const TermsOfServicePage = () => {
+export const PrivacyPolicyPage = () => {
   return (
     <main className={s.main}>
       <div className={s.nav}>
@@ -17,7 +17,7 @@ export const TermsOfServicePage = () => {
       </div>
 
       <section className={s.section}>
-        <Typography variant="h1">Terms of Service</Typography>
+        <Typography variant="h1">Privacy Policy</Typography>
 
         <Typography variant="regular_14" className={s.content}>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
