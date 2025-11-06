@@ -1,0 +1,34 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.section {
+  max-width: 1138px;
+  margin: 0 auto;
+}
+
+.wrapperLink {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.styleLink {
+  font-family: var(--font-family-inter);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-s);
+  line-height: var(--line-height-m);
+  color: var(--color-light-100);
+  display: inline-block;
+  margin-left: 12px;
+}
+
+.wrapperButton {
+  margin: 24px 0;
+}
+
+.content {
+  max-width: 936px;
+}
