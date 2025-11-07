@@ -1,5 +1,5 @@
 // Обертка над всеми страницами настроек
-'use client'
+'use client';
 
 export function SettingsLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -12,5 +12,5 @@ export function SettingsLayout({ children }: { children: React.ReactNode }) {
         {children}
       </div>
     </div>
-  )
+  );
 }
