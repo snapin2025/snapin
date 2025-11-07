@@ -1,6 +1,6 @@
 import type { Preview } from '@storybook/nextjs'
 import { color } from 'storybook/theming'
-import '../src/app/styles/index.css'
+import '@/app/ui/styles/index.css'
 
 const preview: Preview = {
   parameters: {

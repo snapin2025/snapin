@@ -1,7 +1,17 @@
-// Главная страница
-// Доступна всем (в т.ч. авторизованным пользователям)
-// Отличается наличием сайдбара и кнопками в хедере
+'use client'
+import { useQuery } from '@tanstack/react-query'
+import { TypedAuthApiClient } from '@/shared/api/client/api-typed-client'
+
+const apiClient = new TypedAuthApiClient({ baseUrl: 'https://snapin.ru' })
 
 export function MainPage() {
-  return <div>Hello{/*Счетчик и 4 поста*/}</div>
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['me'],
+    queryFn: () => apiClient.getTyped('/api/v1/auth/me', 'GET')
+  })
+
+  if (isLoading) return <div>Loading...</div>
+  if (error) return <div>Error</div>
+
+  return <div>{}</div>
 }
