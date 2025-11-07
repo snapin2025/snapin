@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { ReactNode } from 'react';
 import localFont from 'next/font/local';
 import '../src/app/styles/index.css';
-import { ReactQueryProvider } from '@/app/providers/ReactQueryProvider';
+import { Index } from '@/app/providers/query-provider';
 
 const interFont = localFont({
   src: [
@@ -29,10 +29,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={interFont.className}>
     <body>
-    <ReactQueryProvider>
+    <Index>
       <header>Header</header>
       {children}
-    </ReactQueryProvider>
+    </Index>
     </body>
     </html>
   );
