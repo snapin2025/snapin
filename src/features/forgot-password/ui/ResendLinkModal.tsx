@@ -22,8 +22,6 @@ export const Modal = ({ onClose, open, modalTitle, children }: Props) => {
             </Typography>
             <hr />
             {children}
-            {/*<p className={s.textModal}>We have sent a link to confirm your email to epam@epam.com</p>*/}
-            {/*<Button className={s.buttonModal}>Ok</Button>*/}
           </div>
         </div>
       )}

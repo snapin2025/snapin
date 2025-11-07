@@ -1,11 +1,11 @@
 import { ForgotPasswordForm } from './ForgotPasswordForm'
 import { ForgotPasswordModal } from './ForgotPasswordModal'
 import LinkOldPage from './LinkOldPage'
-import { EmailSentMessage } from '@/features/forgot-password/ui/ EmailSentMessage'
-import { CreateNewPassword } from '@/features/forgot-password/ui/CreateNewPassword '
+import { EmailSentMessage } from '@/features/forgot-password/ui/EmailSentMessage'
 import s from './ForgotPasswordForm.module.css'
 import { Button } from '@/shared/ui'
 import { Modal } from '@/features/forgot-password/ui/ResendLinkModal'
+import { CreateNewPassword } from '@/features/forgot-password/ui/CreateNewPassword'
 
 export default {
   title: 'Features/ForgotPassword',
@@ -34,5 +34,5 @@ export const ModalStory = () => (
 // 4. Модальное окно  на поверх на форме
 export const ModalWindow = () => <ForgotPasswordModal />
 
-// 5. Ссылка устарела ← ДОБАВЬ ЭТОТ КОМПОНЕНТ
+// 5. Ссылка устарела
 export const LinkExpired = () => <LinkOldPage />
