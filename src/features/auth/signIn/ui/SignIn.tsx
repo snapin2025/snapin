@@ -4,10 +4,10 @@ import { Card, Github, Google, Input, Typography } from '@/shared/ui'
 import Link from 'next/link'
 import { Button } from '@/shared/ui/button/Button'
 import s from './signIn.module.css'
+import { useSignInForm } from '@/features/auth/signIn'
 
-import { useSignInForm } from '@/features/auth/signIn/hooks/useSignInForm'
 export const SignIn = () => {
-  const { register, setValue, clearErrors, errors, isPending, onSubmit } = useSignInForm()
+  const { register, errors, isPending, onSubmit } = useSignInForm()
 
   return (
     <Card className={s.card}>
@@ -31,10 +31,6 @@ export const SignIn = () => {
             type={'email'}
             error={errors.email?.message}
             {...register('email')}
-            onChange={(e) => {
-              setValue('email', e.target.value, { shouldValidate: true })
-              clearErrors('email')
-            }}
           />
 
           <Input
@@ -44,10 +40,6 @@ export const SignIn = () => {
             type={'password'}
             error={errors.password?.message}
             {...register('password')}
-            onChange={(e) => {
-              setValue('password', e.target.value, { shouldValidate: true })
-              clearErrors('password')
-            }}
           />
         </div>
         <Typography asChild className={s.forgotPasswordLink} variant={'regular_link'}>

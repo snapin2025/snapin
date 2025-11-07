@@ -1,16 +1,11 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
-import { useMe } from './useMe'
-import { useSignIn } from './useSignIn'
-import type { SignInForm } from '../model'
-import { signInSchema } from '../model'
+import { SignInForm, signInSchema, useMe, useSignIn } from '@/features/auth/signIn'
 
 export const useSignInForm = () => {
   const {
     register,
-    setValue,
-    clearErrors,
     handleSubmit,
     setError,
     formState: { errors }
@@ -41,8 +36,6 @@ export const useSignInForm = () => {
 
   return {
     register,
-    setValue,
-    clearErrors,
     errors,
     isPending,
     onSubmit
