@@ -108,7 +108,7 @@
 
 /* Error Text */
 .errorText {
-  font-family: var(--font-family-inter)      ;
+  font-family: var(--font-family-inter);
   font-weight: var(--font-weight-regular);
   font-size: var(--font-size-s);
   line-height: var(--line-height-m);
