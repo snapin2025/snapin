@@ -4,15 +4,13 @@ import { Button } from '@/shared/ui/button/Button';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SignUpForm, SignUpSchema } from '@/features/auth/signUp/model';
-import { SignUpErrorResponse, SignUpSuccessResponse } from '@/features/auth/signUp/api';
+import { SignUpResponse } from '@/features/auth/signUp';
 
-
-export type RegisterResponse = SignUpErrorResponse | SignUpSuccessResponse
 
 type Props = {
   error?: string | null
   isLoading?: boolean
-  onSubmit: (data: SignUpForm) => Promise<RegisterResponse>
+  onSubmit: (data: SignUpForm) => Promise<SignUpResponse>
 }
 
 export const SignUp = ({ error, isLoading = false, onSubmit }: Props) => {

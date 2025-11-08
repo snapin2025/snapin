@@ -1,12 +1,10 @@
 import { api } from '@/shared/api'
-import type { SignInRequest, SignInResponse, UserMeResponse } from './types'
+import type { SignUpRequest, SignUpResponse } from './types'
 
-export const signIn = async (payload: SignInRequest) => {
-  const { data } = await api.post<SignInResponse>('/auth/login', payload)
-  return data
-}
-
-export const getMe = async () => {
-  const { data } = await api.get<UserMeResponse>('/auth/me')
-  return data
+export const signUp = async (payload: SignUpRequest): Promise<SignUpResponse> => {
+  const res = await api.post<SignUpResponse>('/auth/registration', payload)
+  if (res.status === 204) {
+    return {statusCode: 204}
+  }
+  return res.data
 }

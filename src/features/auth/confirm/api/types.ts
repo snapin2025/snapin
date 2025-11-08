@@ -1,4 +1,8 @@
-export type ConfirmationSchema = {
+export type ConfirmRequest = {
+  "confirmationCode": string
+}
+
+export type ConfirmErrorResponse = {
   statusCode: number;
   messages: {
     message: string;
@@ -6,3 +10,5 @@ export type ConfirmationSchema = {
   }[];
   error: string;
 }
+
+export type ConfirmResponse =  void | ConfirmErrorResponse

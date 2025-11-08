@@ -1,9 +1,7 @@
-
 export type SignUpRequest = {
   userName: string
   email: string
   password: string
-  baseUrl: string
 }
 
 export type SignUpSuccessResponse = {
@@ -18,3 +16,5 @@ export type  SignUpErrorResponse = {
   }[];
   error: string; // "Bad Request"
 }
+
+export type SignUpResponse = SignUpErrorResponse | SignUpSuccessResponse

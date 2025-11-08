@@ -1,9 +1,9 @@
 'use client';
 
 import { useSignUp } from '@/features/auth/signUp/hooks/useSignUp';
-import { RegistrationSchema } from '@/shared/api/responseTypes/RegistrationSchema';
 import { SignUpForm } from '@/features/auth/signUp/model';
 import { SignUp } from '@/features/auth/signUp/ui';
+import { SignUpErrorResponse } from '@/features/auth/signUp/api';
 
 
 export function RegisterPage() {
@@ -29,13 +29,21 @@ export function RegisterPage() {
         email: formData.email,
         password: formData.password,
       });
-      if ('statusCode' in result && result.statusCode === 204) {
+
+      if (result && 'statusCode' in result && result.statusCode === 204) {
         //вызов кастомной компоненты алерта
         alert(`We have sent a link to confirm your email to ${formData.email}`);
       }
       return result;
     } catch (err) {
-      return err as RegistrationSchema;
+      const e = err as Error | SignUpErrorResponse;
+      if ('messages' in e) {
+        e.messages.forEach(({ field, message }) => {
+          // Можно передавать ошибки в форму через setError
+          console.log(`Field: ${field}, Error: ${message}`);
+        });
+      }
+      return err as SignUpErrorResponse;
     }
   };
 
@@ -43,7 +51,7 @@ export function RegisterPage() {
     <SignUp
       onSubmit={handleRegister}
       isLoading={isPending}
-      error={error ? (error as Error).message : null}
+      error={errorMessage}
     />
   );
 }

@@ -2,12 +2,12 @@
 
 import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useConfirmRegistrationMutation } from '@/features/auth/confirm/model/useConfirmRegistrationMutation';
+import { ConfirmErrorResponse, useConfirm } from '@/features/auth/confirm';
 
 export function ConfirmPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { mutateAsync, isPending } = useConfirmRegistrationMutation();
+  const { mutateAsync, isPending } = useConfirm();
 
   useEffect(() => {
     const code = searchParams?.get('code');
@@ -20,11 +20,16 @@ export function ConfirmPage() {
 
     const confirm = async () => {
       try {
-        await mutateAsync({confirmationCode: code});
-        alert('🎉 Congratulations! Your email has been confirmed!')
+        await mutateAsync({ confirmationCode: code });
+        alert('🎉 Congratulations! Your email has been confirmed!');
         router.push('/signIn');
-        } catch (err: any) {
-        alert(err?.messages?.[0]?.message ?? err?.message ?? 'Something went wrong');
+      } catch (err) {
+        const e = err as Error | ConfirmErrorResponse;
+        if ('messages' in e) {
+          alert(e.messages?.[0]?.message ?? 'Something went wrong');
+        } else {
+          alert(e.message ?? 'Something went wrong');
+        }
         router.push('/signUp');
       }
     };
