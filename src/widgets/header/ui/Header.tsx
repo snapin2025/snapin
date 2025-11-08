@@ -1,3 +1,4 @@
+'use client'
 import s from './header.module.css'
 import Link from 'next/link'
 import { ReactNode } from 'react'

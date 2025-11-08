@@ -4,6 +4,7 @@ import { ReactNode } from 'react'
 
 import '@/app/ui/styles/index.css'
 import { Providers } from '@/app/providers/query-provider'
+import { Header } from '@/widgets'
 
 const interFont = localFont({
   src: [
@@ -26,7 +27,7 @@ export const RootLayout = ({ children }: Readonly<{ children: ReactNode }>) => {
     <html lang="en" className={interFont.className}>
       <body>
         <Providers>
-          <header>Header</header>
+          <Header />
           <main>{children}</main>
         </Providers>
       </body>
