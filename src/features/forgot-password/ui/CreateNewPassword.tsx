@@ -1,11 +1,9 @@
 import { SubmitHandler, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Card, Input, Button, Typography } from '@/shared/ui'
 import s from './ForgotPasswordForm.module.css'
-
-type CreatePasswordInput = {
-  password: string
-  password_confirmation: string
-}
+import { useSetNewPassword } from '@/features/forgot-password/hooks/use-reset-password'
+import { passwordSchema, type CreatePasswordInput } from '../model'
 
 export const CreateNewPassword = () => {
   const {
@@ -14,15 +12,28 @@ export const CreateNewPassword = () => {
     reset,
     formState: { errors }
   } = useForm<CreatePasswordInput>({
+    resolver: zodResolver(passwordSchema),
     defaultValues: {
       password: '',
       password_confirmation: ''
     }
   })
 
+  const { mutate: setNewPassword, isPending } = useSetNewPassword()
+
   const onSubmit: SubmitHandler<CreatePasswordInput> = (data) => {
-    console.log(data)
-    reset() // Очищаем форму после сабмита  отправки
+    setNewPassword(
+      {
+        newPassword: data.password,
+        recoveryCode: 'mock-recovery-code'
+      },
+      {
+        onSuccess: () => {
+          console.log('Пароль успешно изменен!')
+          reset()
+        }
+      }
+    )
   }
 
   return (
@@ -36,17 +47,7 @@ export const CreateNewPassword = () => {
           type="password"
           placeholder="******************"
           error={!!errors.password}
-          {...register('password', {
-            required: 'Password is required',
-            minLength: {
-              value: 6,
-              message: 'Password must be at least 6 characters'
-            },
-            maxLength: {
-              value: 20,
-              message: 'Password must be no more than 20 characters'
-            }
-          })}
+          {...register('password')}
         />
         {errors.password && <span className={s.errorMessage}>{errors.password.message}</span>}
       </div>
@@ -58,18 +59,15 @@ export const CreateNewPassword = () => {
           type="password"
           placeholder="******************"
           error={!!errors.password_confirmation}
-          {...register('password_confirmation', {
-            required: 'Please confirm your password',
-            validate: (value, formValues) => value === formValues.password || 'The passwords must match'
-          })}
+          {...register('password_confirmation')}
         />
         {errors.password_confirmation && <span className={s.errorMessage}>{errors.password_confirmation.message}</span>}
       </div>
 
       <p className={s.text}>Your password must be between 6 and 20 characters</p>
 
-      <Button variant="primary" className={s.buttonPassword} type="submit">
-        Create new password
+      <Button variant="primary" className={s.buttonPassword} type="submit" disabled={isPending}>
+        {isPending ? 'Creating...' : 'Create new password'}
       </Button>
     </Card>
   )

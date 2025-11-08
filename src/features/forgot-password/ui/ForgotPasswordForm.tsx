@@ -4,6 +4,7 @@ import { Button } from '@/shared/ui/button/Button'
 import s from './ForgotPasswordForm.module.css'
 import { Card } from '@/shared/ui'
 import { useForm, SubmitHandler } from 'react-hook-form'
+import { useForgotPassword } from '@/features/forgot-password/hooks/use-forgot-password'
 
 type ForgotPasswordInputs = {
   email: string
@@ -19,14 +20,18 @@ export const ForgotPasswordForm = () => {
     defaultValues: { email: '' }
   })
 
+  const { mutate: sendRecoveryEmail, isPending } = useForgotPassword() // ← ДОБАВИЛ ХУК
+
   const onSubmit: SubmitHandler<ForgotPasswordInputs> = (data) => {
-    console.log(data)
-    reset() //для очистки полей
-    // Здесь будет API запрос
+    sendRecoveryEmail(data.email, {
+      onSuccess: () => {
+        console.log('Email отправлен!')
+        reset() //для очистки полей
+      }
+    })
   }
 
   return (
-    // ← ДОБАВЛЕНО onSubmit
     <Card as="form" className={s.form} onSubmit={handleSubmit(onSubmit)}>
       <Typography variant="h1">Forgot Password</Typography>
 
@@ -46,15 +51,19 @@ export const ForgotPasswordForm = () => {
             }
           })}
         />
-        {/* ← ДОБАВЛЕНО ОТОБРАЖЕНИЕ ОШИБКИ */}
         {errors.email && <span className={s.errorMessage}>{errors.email.message}</span>}
       </div>
 
       <p className={s.text}>Enter your email address and we will send you further instructions</p>
 
       {/* Кнопка отправки */}
-      <Button variant="primary" type={'submit'} className={s.button}>
-        Send Link
+      <Button
+        variant="primary"
+        type={'submit'}
+        className={s.button}
+        disabled={isPending} // ← ДОБАВИЛ disabled при загрузке
+      >
+        {isPending ? 'Sending...' : 'Send Link'} {/* ← Меняем текст при загрузке */}
       </Button>
 
       {/* Ссылка назад */}
