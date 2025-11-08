@@ -11,7 +11,6 @@ export function ProfilePage({ params, searchParams }: Props) {
   const userId = params.id
   const postId = searchParams?.postId
   const action = searchParams?.action
-
   // Проверка если одновременно есть postId и action=create — удаляем action из URL
   if (postId && action === 'create') {
     {

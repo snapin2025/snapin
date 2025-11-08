@@ -14,23 +14,18 @@ export const useSignIn = () => {
   return mutation
 }
 
-// export const useSignIn = () => {
-//   const queryClient = useQueryClient()
+// export const useLoginMutation = () => {
+//   const qc = useQueryClient()
+//   return useMutation({
+//     mutationFn: signIn
+//       })
 //
-//   const { mutateAsync, isPending } = useMutation<SignInResponse, Error, SignInData>({
-//     mutationKey: ['signIn'],
-//     mutationFn: signIn,
-//     onSuccess: (data) => {
-//       if (typeof window !== 'undefined' && data?.accessToken) {
-//         localStorage.setItem('accessToken', data.accessToken)
-//       }
-//       queryClient.invalidateQueries({ queryKey: ['me'] })
-//     },
-//     onError: (error) => {
-//       console.error('Sign-in error:', error)
-//       // обработка UI-ошибки
-//     },
-//   })
+//     onSuccess: async (data) => {
+//   localStorage.setItem('accessToken', data.accessToken)
 //
-//   return { mutateAsync, isPending }
+//       await qc.invalidateQueries({ queryKey: ['auth', 'me'] })
+//
+//       await qc.invalidateQueries()
+//     },
+//
 // }
