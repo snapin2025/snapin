@@ -20,7 +20,7 @@ export const Modal = ({ onClose, open, modalTitle, children }: Props) => {
             <Typography className={s.titleModal} variant="h1">
               {modalTitle}
             </Typography>
-            <hr />
+            <hr className={s.hr} />
             {children}
           </div>
         </div>

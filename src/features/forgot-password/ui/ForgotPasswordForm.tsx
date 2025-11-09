@@ -1,3 +1,5 @@
+'use client'
+
 import Link from 'next/link'
 import { Captch, Checkbox, Input, Typography } from '@/shared/ui'
 import { Button } from '@/shared/ui/button/Button'

@@ -1,3 +1,5 @@
+'use client'
+
 import s from './ForgotPasswordForm.module.css'
 import Image from 'next/image'
 import { Button, Typography } from '@/shared/ui'

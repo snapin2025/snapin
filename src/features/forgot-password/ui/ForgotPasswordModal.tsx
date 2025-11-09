@@ -1,3 +1,4 @@
+'use client'
 import s from './ForgotPasswordForm.module.css'
 import { useState } from 'react'
 import { Modal } from '@/features/forgot-password/ui/ResendLinkModal'
