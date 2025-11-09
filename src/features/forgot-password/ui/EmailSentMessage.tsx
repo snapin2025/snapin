@@ -5,7 +5,7 @@ import { Button } from '@/shared/ui/button/Button'
 import s from './ForgotPasswordForm.module.css'
 import { Card, Input, Typography } from '@/shared/ui'
 import { useResendRecoveryEmail } from '../hooks/use-reset-password'
-import { useForm } from 'react-hook-form'
+import { SubmitHandler, useForm } from 'react-hook-form'
 
 type ForgotPasswordInputs = {
   email: string
@@ -18,26 +18,29 @@ type Props = {
 export const EmailSentMessage = ({ onResendClick }: Props) => {
   const {
     register,
+    // hendlerResend,
+    handleSubmit,
+    reset,
     formState: { errors }
   } = useForm<ForgotPasswordInputs>({
-    // ← ТЕПЕРЬ С ТИПОМ ForgotPasswordInputs
     defaultValues: { email: '' }
   })
 
   const { mutate: resendEmail, isPending } = useResendRecoveryEmail()
 
-  const hendlerResend = () => {
-    resendEmail('vikcoding24@gmail.com')
-    // {
-    // ← временно хардкод email
-    // onSuccess: () => {
-    //   console.log('Письмо отправлено повторно!')
-    //   onResendClick?.() // ← показываем модалку
-    // }
-    // })
+  const onSubmit: SubmitHandler<ForgotPasswordInputs> = (data) => {
+    resendEmail(data.email, {
+      //хардкодированный email 'vikcoding24@gmail.com'
+      onSuccess: () => {
+        console.log('Письмо отправлено повторно!')
+        onResendClick?.() // ← показываем модалку
+        reset()
+      }
+    })
   }
+
   return (
-    <Card className={s.form}>
+    <Card as="form" className={s.form} onSubmit={handleSubmit(onSubmit)}>
       <Typography variant="h1">Forgot Password</Typography>
       <div className={s.field}>
         <Input
@@ -62,13 +65,9 @@ export const EmailSentMessage = ({ onResendClick }: Props) => {
       <p className={s.textLink}>The link has been sent by email. If you don&apos;t receive an email send link again</p>
 
       {/*изменим обшую кнопку для разных состояний*/}
-      <Button variant="primary" className={s.button} onClick={hendlerResend} disabled={isPending}>
+      <Button variant="primary" className={s.button} type={'submit'} disabled={isPending}>
         {isPending ? 'Sending...' : 'Send Link Again'}
       </Button>
-
-      {/*<Button variant="primary" className={s.button}>*/}
-      {/*  Send Link Again*/}
-      {/*</Button>*/}
 
       <Link href="/signin" className={s.backLink}>
         Back to Sign In

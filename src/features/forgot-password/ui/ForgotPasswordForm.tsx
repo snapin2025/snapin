@@ -22,13 +22,13 @@ export const ForgotPasswordForm = () => {
     defaultValues: { email: '' }
   })
 
-  const { mutate: sendRecoveryEmail, isPending } = useForgotPassword() // ← ДОБАВИЛ ХУК
+  const { mutate: sendRecoveryEmail, isPending } = useForgotPassword() // ХУК
 
   const onSubmit: SubmitHandler<ForgotPasswordInputs> = (data) => {
     sendRecoveryEmail(data.email, {
       onSuccess: () => {
         console.log('Email отправлен!')
-        reset() //для очистки полей
+        reset()
       }
     })
   }
@@ -59,12 +59,7 @@ export const ForgotPasswordForm = () => {
       <p className={s.text}>Enter your email address and we will send you further instructions</p>
 
       {/* Кнопка отправки */}
-      <Button
-        variant="primary"
-        type={'submit'}
-        className={s.button}
-        disabled={isPending} // ← ДОБАВИЛ disabled при загрузке
-      >
+      <Button variant="primary" type={'submit'} className={s.button} disabled={isPending}>
         {isPending ? 'Sending...' : 'Send Link'} {/* ← Меняем текст при загрузке */}
       </Button>
 
