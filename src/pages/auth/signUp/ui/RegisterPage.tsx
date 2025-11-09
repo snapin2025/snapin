@@ -36,6 +36,7 @@ export function RegisterPage() {
       }
       return result;
     } catch (err) {
+      console.log(err);
       const e = err as Error | SignUpErrorResponse;
       if ('messages' in e) {
         e.messages.forEach(({ field, message }) => {
@@ -43,6 +44,7 @@ export function RegisterPage() {
           console.log(`Field: ${field}, Error: ${message}`);
         });
       }
+      console.log(err);
       return err as SignUpErrorResponse;
     }
   };

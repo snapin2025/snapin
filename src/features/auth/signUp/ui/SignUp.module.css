@@ -9,8 +9,7 @@
   width: 100%;
 }
 
-h2 {
-  font-family: var(--font-family-primary);
+.title {
   font-weight: var(--font-weight-bold);
   font-size: var(--font-size-xl);
   line-height: var(--line-height-l);
@@ -45,23 +44,7 @@ h2 {
   padding-bottom: 12px;
 }
 
-span {
-  font-family: var(--font-family-primary);
-  font-weight: var(--font-weight-thin);
-  font-size: var(--font-size-xs);
-  line-height: var(--line-height-s);
-  color: var(--color-light-100);
-}
-
-span a {
-  text-decoration: underline;
-  text-decoration-skip-ink: none;
-  color: var(--color-accent-300);
-}
-
-p {
-  font-family: var(--font-family-primary);
-  font-weight: var(--font-weight-thin);
+.paragraph {
   font-size: var(--font-size-m);
   line-height: var(--line-height-m);
   text-align: center;
@@ -69,6 +52,18 @@ p {
   padding: 18px 0 6px;
 }
 
-.buttonFoolWidth {
+.link {
+  text-decoration: underline;
+  text-decoration-skip-ink: none;
+  color: var(--color-accent-300);
+}
+
+.textSmall {
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-s);
+  color: var(--color-light-100);
+}
+
+.buttonFullWidth {
   width: 100%;
 }

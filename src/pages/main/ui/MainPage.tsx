@@ -12,9 +12,10 @@ export function MainPage() {
 
   useEffect(() => {
     const code = searchParams?.get('code');
-    if (code) {
+    const email = searchParams?.get('email');
+    if (code && email) {
       // Перенаправляем на страницу подтверждения регистрации
-      router.replace(`/confirm?code=${code}`);
+      router.replace(`/auth/confirm?code=${code}&email=${email}`);
     }
   }, [searchParams, router]);
 

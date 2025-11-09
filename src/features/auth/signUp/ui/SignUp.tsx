@@ -5,6 +5,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SignUpForm, SignUpSchema } from '@/features/auth/signUp/model';
 import { SignUpResponse } from '@/features/auth/signUp';
+import Link from 'next/link';
 
 
 type Props = {
@@ -20,10 +21,12 @@ export const SignUp = ({ error, isLoading = false, onSubmit }: Props) => {
     reset,
     control,
     setError,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<SignUpForm>({
     defaultValues: { email: '', password: '', agree: false, confirmPassword: '', userName: '' },
     resolver: zodResolver(SignUpSchema),
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
   });
 
   const handleFormSubmit = async (data: SignUpForm) => {
@@ -32,7 +35,6 @@ export const SignUp = ({ error, isLoading = false, onSubmit }: Props) => {
 
       if (!res) {
         reset();
-        console.log(res);
         return;
       }
 
@@ -40,44 +42,50 @@ export const SignUp = ({ error, isLoading = false, onSubmit }: Props) => {
         res.messages.forEach(({ field, message }) => {
           switch (field) {
             case 'email':
-            case 'password':
+              setError('email', { message:'User with this email is already registered' });
+              break;
             case 'userName':
-              setError(field, { message });
+              setError('userName', { message:'User with this username is already registered' });
+              break;
+            case 'password':
+              setError('password', { message: message });
               break;
             default:
-              setError('root', { message: 'Unknown field error' });
+              setError('root', { message: message || 'Unexpected error' });
           }
         });
         return;
       }
       if (res.statusCode === 204) {
-        console.log(res);
         reset();
       }
     } catch (err: unknown) {
       console.error('Unexpected error:', err);
-      setError('root', { message: 'Unexpected error' });
+      setError('root', { message: 'Unexpected error occured' });
     }
   };
 
   return (
     <Card className={s.card} as="form" noValidate onSubmit={handleSubmit(handleFormSubmit)}>
       <h2 className={s.title}>Sign Up</h2>
+
       <div className={s.containerBtn}>
         <Google />
         <Github />
       </div>
+
       <div className={s.containerInput}>
         <Input
           label="User name"
           type="text"
           id="Username"
           placeholder="Epam11"
-          error={errors.userName?.message ?? error ?? undefined}
+          error={errors.userName?.message}
           {...register('userName')}
           className={s.inputCustom}
         />
       </div>
+
       <div className={s.containerInput}>
         <Input
           label="Email"
@@ -89,6 +97,7 @@ export const SignUp = ({ error, isLoading = false, onSubmit }: Props) => {
           className={s.inputCustom}
         />
       </div>
+
       <div className={s.containerInput}>
         <Input
           label="Password"
@@ -123,12 +132,18 @@ export const SignUp = ({ error, isLoading = false, onSubmit }: Props) => {
           I agree to the <a href={'/'}>Terms of Service</a> and <a href={'./'}>Privacy Policy</a>
         </span>
       </div>
+
+      {errors.root?.message && <p className={s.rootError}>{errors.root.message}</p>}
+
       <Button variant={'primary'} type="submit" className={s.buttonFoolWidth}
-              disabled={isLoading}>
+              disabled={isLoading || !isValid}>
         Sign Up
       </Button>
+
       <p className={s.paragraph}>Do you have an account?</p>
-      <Button variant={'textButton'}>Sign In</Button>
+      <Link href={'/auth/signin'}>
+      <Button variant={'textButton'} disabled={!isValid}>Sign In</Button>
+      </Link>
     </Card>
   );
 };

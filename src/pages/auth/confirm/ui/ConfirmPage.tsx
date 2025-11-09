@@ -11,10 +11,12 @@ export function ConfirmPage() {
 
   useEffect(() => {
     const code = searchParams?.get('code');
+    debugger
+    const email = searchParams?.get('email');
 
     if (!code) {
       alert('Confirmation code missing!');
-      router.push('/signUp');
+      router.push('/auth/signUp');
       return;
     }
 
@@ -22,15 +24,20 @@ export function ConfirmPage() {
       try {
         await mutateAsync({ confirmationCode: code });
         alert('🎉 Congratulations! Your email has been confirmed!');
-        router.push('/signIn');
+        router.push('/auth/signin');
       } catch (err) {
         const e = err as Error | ConfirmErrorResponse;
+
+        if ('messages' in e && e.messages?.[0]?.field === 'code') {
+          router.push(`/auth/emailResending?email=${email ?? ''}`);
+          return;
+        }
         if ('messages' in e) {
           alert(e.messages?.[0]?.message ?? 'Something went wrong');
         } else {
           alert(e.message ?? 'Something went wrong');
         }
-        router.push('/signUp');
+        router.push('/auth/signUp');
       }
     };
 
@@ -42,4 +49,4 @@ export function ConfirmPage() {
       {isPending ? 'Confirming your account...' : 'Redirecting...'}
     </div>
   );
-};
+}
