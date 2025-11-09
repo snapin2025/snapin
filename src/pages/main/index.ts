@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 
-export { MainPage } from './ui/MainPage'
+export { MainPage } from '@/pages/main/ui/MainPage'
 
 export const metadata: Metadata = {
   title: 'Главная',
