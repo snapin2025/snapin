@@ -10,7 +10,7 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 type ForgotPasswordInputs = {
   email: string
 }
-// Добавляем пропс
+
 type Props = {
   onResendClick?: () => void
 }
@@ -18,7 +18,6 @@ type Props = {
 export const EmailSentMessage = ({ onResendClick }: Props) => {
   const {
     register,
-    // hendlerResend,
     handleSubmit,
     reset,
     formState: { errors }

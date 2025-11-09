@@ -4,15 +4,13 @@ import { api } from '@/shared/api'
 export const sendRecoveryEmail = (email: string) => {
   return api.post('/auth/password-recovery', {
     email: email,
-    recaptcha: 'mock-token',
-    baseUrl: 'http://localhost:3000'
+    recaptcha: 'mock-token'
   })
 }
 // POST /auth/password-recovery-resending - функция для повторная отправка
 export const resendRecoveryEmail = (email: string) => {
   return api.post('/auth/password-recovery-resending', {
-    email: email,
-    baseUrl: 'http://localhost:3000' // снова дабавила как в документации свагер это поле
+    email: email
   })
 }
 // Шаг 3: Установка нового пароля
