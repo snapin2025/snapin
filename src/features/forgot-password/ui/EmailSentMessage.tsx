@@ -6,6 +6,7 @@ import s from './ForgotPasswordForm.module.css'
 import { Card, Input, Typography } from '@/shared/ui'
 import { useResendRecoveryEmail } from '../hooks/use-reset-password'
 import { SubmitHandler, useForm } from 'react-hook-form'
+import { useQueryClient } from '@tanstack/react-query'
 
 type ForgotPasswordInputs = {
   email: string
@@ -16,20 +17,25 @@ type Props = {
 }
 
 export const EmailSentMessage = ({ onResendClick }: Props) => {
+  const queryClient = useQueryClient() // ← ДОБАВИТЬ
+  const savedEmail = queryClient.getQueryData<string>(['recovery-email']) // ← ДОБАВИТЬ
+
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors }
   } = useForm<ForgotPasswordInputs>({
-    defaultValues: { email: '' }
+    // defaultValues: { email: '' }
+    defaultValues: {
+      email: savedEmail || '' // ← ИСПОЛЬЗОВАТЬ сохраненный email
+    }
   })
 
   const { mutate: resendEmail, isPending } = useResendRecoveryEmail()
 
   const onSubmit: SubmitHandler<ForgotPasswordInputs> = (data) => {
     resendEmail(data.email, {
-      //хардкодированный email 'vikcoding24@gmail.com'
       onSuccess: () => {
         console.log('Письмо отправлено повторно!')
         onResendClick?.() // ← показываем модалку
@@ -76,3 +82,5 @@ export const EmailSentMessage = ({ onResendClick }: Props) => {
     </Card>
   )
 }
+
+//хардкодированный email 'vikcoding24@gmail.com'

@@ -7,6 +7,10 @@ import { useSetNewPassword } from '@/features/forgot-password/hooks/use-reset-pa
 import { passwordSchema, type CreatePasswordInput } from '../model'
 
 export const CreateNewPassword = () => {
+  // const searchParams = useSearchParams()
+  // const recoveryCode = searchParams.get('code')
+
+  const recoveryCode = 'test-recovery-code' // ← временный хардкод для разработки
   const {
     register,
     handleSubmit,
@@ -23,10 +27,16 @@ export const CreateNewPassword = () => {
   const { mutate: setNewPassword, isPending } = useSetNewPassword()
 
   const onSubmit: SubmitHandler<CreatePasswordInput> = (data) => {
+    if (!recoveryCode) {
+      // ← ДОБАВИТЬ проверку
+      console.error('Recovery code not found in URL')
+      return
+    }
     setNewPassword(
       {
         newPassword: data.password,
-        recoveryCode: 'mock-recovery-code'
+        // recoveryCode: 'mock-recovery-code'
+        recoveryCode: recoveryCode // ← ИСПОЛЬЗОВАТЬ реальный код из URL
       },
       {
         onSuccess: () => {
@@ -67,7 +77,13 @@ export const CreateNewPassword = () => {
 
       <p className={s.text}>Your password must be between 6 and 20 characters</p>
 
-      <Button variant="primary" className={s.buttonPassword} type="submit" disabled={isPending}>
+      <Button
+        variant="primary"
+        className={s.buttonPassword}
+        type="submit"
+        // disabled={isPending}
+        disabled={isPending || !recoveryCode} // ← ДОБАВИТЬ !recoveryCode
+      >
         {isPending ? 'Creating...' : 'Create new password'}
       </Button>
     </Card>

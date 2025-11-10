@@ -1,18 +1,31 @@
 'use client'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { resendRecoveryEmail, setNewPassword } from '../api'
 
 // Хук для повторной отправки письма восстановления
 export const useResendRecoveryEmail = () => {
+  const queryClient = useQueryClient() // ← добавить
+
   return useMutation({
-    mutationFn: resendRecoveryEmail
+    mutationFn: resendRecoveryEmail,
+    onSuccess: (data, variables) => {
+      // ← добавить onSuccess
+      // Сохраняем email для повторного использования
+      queryClient.setQueryData(['recovery-email'], variables)
+    }
   })
 }
 
 // Хук для установки нового пароля
 export const useSetNewPassword = () => {
+  const queryClient = useQueryClient() // ← ДОБАВИТЬ эту строку
   return useMutation({
     mutationFn: (data: { newPassword: string; recoveryCode: string }) =>
-      setNewPassword(data.newPassword, data.recoveryCode)
+      setNewPassword(data.newPassword, data.recoveryCode),
+    onSuccess: (data) => {
+      // ← добавить onSuccess
+      // Очищаем сохраненные данные после успешной смены пароля
+      queryClient.removeQueries({ queryKey: ['recovery-email'] })
+    }
   })
 }
