@@ -36,5 +36,3 @@ export const ModalWindow = () => <ForgotPasswordModal />
 
 // 5. Ссылка устарела
 export const LinkExpired = () => <LinkOldPage />
-
-//для запросов

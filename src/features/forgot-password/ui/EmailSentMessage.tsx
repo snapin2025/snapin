@@ -18,7 +18,7 @@ type Props = {
 
 export const EmailSentMessage = ({ onResendClick }: Props) => {
   const queryClient = useQueryClient() // ← ДОБАВИТЬ
-  const savedEmail = queryClient.getQueryData<string>(['recovery-email']) // ← ДОБАВИТЬ
+  const savedEmail = queryClient.getQueryData<string>(['recovery-email'])
 
   const {
     register,

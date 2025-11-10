@@ -7,9 +7,6 @@ import { useSetNewPassword } from '@/features/forgot-password/hooks/use-reset-pa
 import { passwordSchema, type CreatePasswordInput } from '../model'
 
 export const CreateNewPassword = () => {
-  // const searchParams = useSearchParams()
-  // const recoveryCode = searchParams.get('code')
-
   const recoveryCode = 'test-recovery-code' // ← временный хардкод для разработки
   const {
     register,
@@ -77,13 +74,7 @@ export const CreateNewPassword = () => {
 
       <p className={s.text}>Your password must be between 6 and 20 characters</p>
 
-      <Button
-        variant="primary"
-        className={s.buttonPassword}
-        type="submit"
-        // disabled={isPending}
-        disabled={isPending || !recoveryCode} // ← ДОБАВИТЬ !recoveryCode
-      >
+      <Button variant="primary" className={s.buttonPassword} type="submit" disabled={isPending}>
         {isPending ? 'Creating...' : 'Create new password'}
       </Button>
     </Card>

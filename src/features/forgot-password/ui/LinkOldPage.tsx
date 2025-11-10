@@ -38,7 +38,7 @@ export default function LinkOldPage() {
           // type="submit"
           onClick={handleResend}
           // disabled={isPending}
-          disabled={isPending || !savedEmail} // ← ДОБАВИТЬ !savedEmail
+          disabled={isPending}
         >
           {isPending ? 'Sending...' : 'Resend link'}
         </Button>

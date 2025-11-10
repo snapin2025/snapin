@@ -4,7 +4,7 @@ import { api } from '@/shared/api'
 export const sendRecoveryEmail = (email: string) => {
   return api.post('/auth/password-recovery', {
     email: email,
-    recaptcha: 'mock-token'
+    recaptcha: 'mock-token' // пока моковые данные
   })
 }
 // POST /auth/password-recovery-resending - функция для повторная отправка
