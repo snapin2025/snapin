@@ -1,0 +1,30 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  max-width: 1160px;
+  padding: 0 15px;
+}
+
+.section {
+  margin: 0 auto;
+  text-align: center;
+}
+.nav{
+  margin: 24px 0 0;
+}
+
+.wrapperLink {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.styleLink {
+  margin-left: 12px;
+}
+
+.content {
+  max-width: 936px;
+  margin-top: 20px;
+}
