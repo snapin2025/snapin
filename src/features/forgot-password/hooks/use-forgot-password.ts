@@ -11,8 +11,8 @@ export const useForgotPassword = () => {
   return useMutation({
     mutationFn: sendRecoveryEmail, // Функция которая отправляет запрос на сервер
     onSuccess: (data, variables) => {
-      // ← добавить onSuccess
       // Сохраняем email в Query Client для использования в других компонентах
+      // ⭐ СОХРАНЯЕМ EMAIL ДЛЯ БУДУЩЕГО ИСПОЛЬЗОВАНИЯ
       queryClient.setQueryData(['recovery-email'], variables)
     }
   })

@@ -4,13 +4,12 @@ import { resendRecoveryEmail, setNewPassword } from '../api'
 
 // Хук для повторной отправки письма восстановления
 export const useResendRecoveryEmail = () => {
-  const queryClient = useQueryClient() // ← добавить
+  const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: resendRecoveryEmail,
     onSuccess: (data, variables) => {
-      // ← добавить onSuccess
-      // Сохраняем email для повторного использования
+      // ⭐ УДАЛЯЕМ EMAIL - ОН БОЛЬШЕ НЕ НУЖЕН
       queryClient.setQueryData(['recovery-email'], variables)
     }
   })
@@ -23,7 +22,6 @@ export const useSetNewPassword = () => {
     mutationFn: (data: { newPassword: string; recoveryCode: string }) =>
       setNewPassword(data.newPassword, data.recoveryCode),
     onSuccess: (data) => {
-      // ← добавить onSuccess
       // Очищаем сохраненные данные после успешной смены пароля
       queryClient.removeQueries({ queryKey: ['recovery-email'] })
     }

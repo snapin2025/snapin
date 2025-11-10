@@ -7,8 +7,8 @@ import { useResendRecoveryEmail } from '../hooks/use-reset-password'
 import { useQueryClient } from '@tanstack/react-query'
 
 export default function LinkOldPage() {
-  const queryClient = useQueryClient() // ← ДОБАВИТЬ
-  const savedEmail = queryClient.getQueryData<string>(['recovery-email']) // ← ДОБАВИТЬ
+  const queryClient = useQueryClient()
+  const savedEmail = queryClient.getQueryData<string>(['recovery-email'])
 
   const { mutate: resendEmail, isPending } = useResendRecoveryEmail()
 
@@ -37,7 +37,6 @@ export default function LinkOldPage() {
           className={s.buttonPage}
           // type="submit"
           onClick={handleResend}
-          // disabled={isPending}
           disabled={isPending}
         >
           {isPending ? 'Sending...' : 'Resend link'}

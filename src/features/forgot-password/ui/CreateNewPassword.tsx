@@ -8,6 +8,7 @@ import { passwordSchema, type CreatePasswordInput } from '../model'
 
 export const CreateNewPassword = () => {
   const recoveryCode = 'test-recovery-code' // ← временный хардкод для разработки
+
   const {
     register,
     handleSubmit,
