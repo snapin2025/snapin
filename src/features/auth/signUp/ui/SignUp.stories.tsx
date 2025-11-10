@@ -1,9 +1,9 @@
 import type { StoryObj } from '@storybook/nextjs'
-import SignUpForm, { SignUp } from '@/features/auth/signUp/ui/SignUp'
+import { SignUp } from '@/features/auth/signUp/ui/SignUp'
 
 const meta = {
   title: 'Components/SignUp',
-  component: SignUpForm,
+  component: SignUp,
   parameters: {
     layout: 'centered'
   }
@@ -21,18 +21,12 @@ type RegisterFormProps = {
   }
 }
 export const Default: Story = {
-  args: {}
-}
-
-// 🔴 С ошибками
-export const WithErrors: Story = {
   args: {
-    error: 'ZZZZZZZZZZ'
-  },
-  render: () => <SignUp />
-}
-
-export const Prefilled: Story = {
-  args: {},
-  render: () => <SignUp />
+    isLoading: false,
+    error: null,
+    onSubmit: async (data) => {
+      console.log('Форма отправлена:', data)
+      return Promise.resolve({ success: true })
+    }
+  }
 }

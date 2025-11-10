@@ -1,12 +1,11 @@
-import { Card, Checkbox, Github, Google, Input } from '@/shared/ui';
-import s from './SignUp.module.css';
-import { Button } from '@/shared/ui/button/Button';
-import { Controller, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { SignUpForm, SignUpSchema } from '@/features/auth/signUp/model';
-import { SignUpResponse } from '@/features/auth/signUp';
-import Link from 'next/link';
-
+import { Card, Checkbox, Github, Google, Input, Typography } from '@/shared/ui'
+import s from './SignUp.module.css'
+import { Button } from '@/shared/ui/button/Button'
+import { Controller, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { SignUpForm, SignUpSchema } from '@/features/auth/signUp/model'
+import { SignUpResponse } from '@/features/auth/signUp'
+import Link from 'next/link'
 
 type Props = {
   error?: string | null
@@ -21,49 +20,49 @@ export const SignUp = ({ error, isLoading = false, onSubmit }: Props) => {
     reset,
     control,
     setError,
-    formState: { errors, isValid },
+    formState: { errors, isValid }
   } = useForm<SignUpForm>({
     defaultValues: { email: '', password: '', agree: false, confirmPassword: '', userName: '' },
     resolver: zodResolver(SignUpSchema),
     mode: 'onBlur',
-    reValidateMode: 'onChange',
-  });
+    reValidateMode: 'onChange'
+  })
 
   const handleFormSubmit = async (data: SignUpForm) => {
     try {
-      const res = await onSubmit(data);
+      const res = await onSubmit(data)
 
       if (!res) {
-        reset();
-        return;
+        reset()
+        return
       }
 
       if ('statusCode' in res && res.statusCode === 400) {
         res.messages.forEach(({ field, message }) => {
           switch (field) {
             case 'email':
-              setError('email', { message:'User with this email is already registered' });
-              break;
+              setError('email', { message: 'User with this email is already registered' })
+              break
             case 'userName':
-              setError('userName', { message:'User with this username is already registered' });
-              break;
+              setError('userName', { message: 'User with this username is already registered' })
+              break
             case 'password':
-              setError('password', { message: message });
-              break;
+              setError('password', { message: message })
+              break
             default:
-              setError('root', { message: message || 'Unexpected error' });
+              setError('root', { message: message || 'Unexpected error' })
           }
-        });
-        return;
+        })
+        return
       }
       if (res.statusCode === 204) {
-        reset();
+        reset()
       }
     } catch (err: unknown) {
-      console.error('Unexpected error:', err);
-      setError('root', { message: 'Unexpected error occured' });
+      console.error('Unexpected error:', err)
+      setError('root', { message: 'Unexpected error occured' })
     }
-  };
+  }
 
   return (
     <Card className={s.card} as="form" noValidate onSubmit={handleSubmit(handleFormSubmit)}>
@@ -128,24 +127,32 @@ export const SignUp = ({ error, isLoading = false, onSubmit }: Props) => {
           control={control}
           render={({ field }) => <Checkbox checked={field.value} onCheckedChange={field.onChange} />}
         />
-        <span className={s.paragraph}>
-          I agree to the <a href={'/'}>Terms of Service</a> and <a href={'./'}>Privacy Policy</a>
-        </span>
+        <Typography variant="small" className={s.paragraph}>
+          I agree to the{' '}
+          <Typography variant="small_link" href={'/'} className={s.paragraph}>
+            Terms of Service
+          </Typography>{' '}
+          and{' '}
+          <Typography variant="small_link" href={'./'} className={s.paragraph}>
+            Privacy Policy
+          </Typography>
+        </Typography>
       </div>
 
-      {errors.root?.message && <p className={s.rootError}>{errors.root.message}</p>}
+      {/*{errors.root?.message && <p className={s.rootError}>{errors.root.message}</p>}*/}
 
-      <Button variant={'primary'} type="submit" className={s.buttonFoolWidth}
-              disabled={isLoading || !isValid}>
+      <Button variant={'primary'} type="submit" className={s.buttonFullWidth} disabled={isLoading || !isValid}>
         Sign Up
       </Button>
 
-      <p className={s.paragraph}>Do you have an account?</p>
+      <Typography variant="regular_16" className={s.paragraph}>
+        Do you have an account?
+      </Typography>
       <Link href={'/auth/signin'}>
-      <Button variant={'textButton'} disabled={!isValid}>Sign In</Button>
+        <Button variant={'textButton'} disabled={!isValid}>
+          Sign In
+        </Button>
       </Link>
     </Card>
-  );
-};
-
-
+  )
+}
