@@ -9,7 +9,6 @@ export const useResendRecoveryEmail = () => {
   return useMutation({
     mutationFn: resendRecoveryEmail,
     onSuccess: (data, variables) => {
-      // ⭐ УДАЛЯЕМ EMAIL - ОН БОЛЬШЕ НЕ НУЖЕН
       queryClient.setQueryData(['recovery-email'], variables)
     }
   })

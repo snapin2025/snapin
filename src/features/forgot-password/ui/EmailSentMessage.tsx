@@ -28,7 +28,7 @@ export const EmailSentMessage = ({ onResendClick }: Props) => {
   } = useForm<ForgotPasswordInputs>({
     // defaultValues: { email: '' }
     defaultValues: {
-      email: savedEmail || '' // ← ИСПОЛЬЗОВАТЬ сохраненный email
+      email: savedEmail || ''
     }
   })
 

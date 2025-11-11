@@ -1,4 +1,5 @@
 export { Closes } from './Closes'
+export { Flag } from './Flag'
 export { Add } from './Add'
 export { Bookmark } from './Bookmark'
 export { Captch } from './Captch'
