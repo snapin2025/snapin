@@ -15,8 +15,7 @@ export const useLoginMutation = (setError: UseFormSetError<SignInForm>) => {
 
       const userData = await qc.fetchQuery({
         queryKey: ['me'],
-        queryFn: getMe,
-        staleTime: 0
+        queryFn: getMe
       })
       if (userData?.userId) {
         router.push(`/profile/${userData.userId}`)

@@ -73,3 +73,10 @@
   row-gap: 6px;
   align-items: center;
 }
+
+.registrationLink {
+  color: var(--color-accent-500);
+  text-decoration: none;
+  cursor: pointer;
+
+}

@@ -49,12 +49,13 @@ export const SignIn = () => {
         <Button disabled={isPending}>Sign In</Button>
       </form>
       <div className={s.registration}>
-        <Typography asChild className={s.registration} variant={'regular_14'}>
+        <Typography asChild variant={'regular_14'}>
           <h2>Don’t have an account?</h2>
         </Typography>
-        <Link href={'/auth/signUp'}>
-          <Button variant={'textButton'}>Sign Up</Button>
-        </Link>
+
+        <Typography className={s.registrationLink} asChild variant={'h3'}>
+          <Link href={'/auth/signUp'}>Sign Up</Link>
+        </Typography>
       </div>
     </Card>
   )
