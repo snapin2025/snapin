@@ -33,13 +33,18 @@ export const ForgotPasswordForm = () => {
       setRecaptchaToken('')
     }
   })
-
+  // const { mutate: sendRecoveryEmail, isPending } = useForgotPassword()
   const onSubmit: SubmitHandler<ForgotPasswordInputs> = (data) => {
     if (!recaptchaToken) {
       alert('Please complete the captcha')
       return
     }
-    sendRecoveryEmail({ email: data.email, recaptchaValue: recaptchaToken })
+
+    sendRecoveryEmail({
+      // тут все горит красным проблема с типами
+      email: data.email,
+      recaptcha: recaptchaToken
+    })
   }
 
   return (
@@ -73,7 +78,7 @@ export const ForgotPasswordForm = () => {
       <Link href="/signin" className={s.backLink}>
         Back to Sign In
       </Link>
-
+      {/*это сама капча */}
       <Recaptcha onVerify={() => setRecaptchaToken('recaptchaValue')} onError={() => setRecaptchaToken('')} />
     </Card>
   )
