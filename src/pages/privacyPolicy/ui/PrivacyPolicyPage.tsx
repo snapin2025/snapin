@@ -8,7 +8,7 @@ export const PrivacyPolicyPage = () => {
   return (
     <main className={s.main}>
       <div className={s.nav}>
-        <Link className={s.wrapperLink} href="/auth/sign-up">
+        <Link className={s.wrapperLink} href="/auth/signUp">
           <Image src={linkSvg} alt="Arrow left icon" width={14} height={16} />
           <Typography variant="regular_14" className={s.styleLink}>
             Back to Sign Up

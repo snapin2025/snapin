@@ -129,17 +129,15 @@ export const SignUp = ({ error, isLoading = false, onSubmit }: Props) => {
         />
         <Typography variant="small" className={s.paragraph}>
           I agree to the{' '}
-          <Typography variant="small_link" href={'/'} className={s.paragraph}>
-            Terms of Service
+          <Typography asChild className={s.link} variant={'regular_link'}>
+            <Link href={'/auth/terms'}>Terms of Service</Link>
           </Typography>{' '}
           and{' '}
-          <Typography variant="small_link" href={'./'} className={s.paragraph}>
-            Privacy Policy
+          <Typography asChild className={s.link} variant={'regular_link'}>
+            <Link href={'/auth/terms'}>Privacy Policy</Link>
           </Typography>
         </Typography>
       </div>
-
-      {/*{errors.root?.message && <p className={s.rootError}>{errors.root.message}</p>}*/}
 
       <Button variant={'primary'} type="submit" className={s.buttonFullWidth} disabled={isLoading || !isValid}>
         Sign Up
