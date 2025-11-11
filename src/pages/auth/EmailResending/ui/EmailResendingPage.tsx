@@ -20,7 +20,7 @@ export function EmailResendingPage() {
     handleSubmit,
     formState: { errors }
   } = useForm<EmailResendingForm>({
-    defaultValues: { email: 'emailParam' },
+    defaultValues: { email: emailParam },
     resolver: zodResolver(EmailResendingSchema),
     mode: 'onBlur'
   })
@@ -37,7 +37,7 @@ export function EmailResendingPage() {
         email,
         baseUrl: 'http://localhost:3000'
       })
-      setMessage('✅ Verifi cation link has been resent! Check your email.')
+      setMessage('✅ Verification link has been resent! Check your email.')
     } catch (err: any) {
       if ('messages' in err) {
         setMessage(err.messages?.[0]?.message ?? 'Something went wrong')

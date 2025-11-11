@@ -85,7 +85,7 @@ export const SignUp = ({ error, isLoading = false, onSubmit }: Props) => {
         />
       </div>
 
-      <div className={s.containerInput}>
+      <div className={s.containerInput} style={{}}>
         <Input
           label="Email"
           type="email"
