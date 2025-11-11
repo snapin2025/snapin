@@ -19,7 +19,7 @@ export const EmailSentModal = ({ email, onClose }: Props) => {
 
   return (
     <Modal open={open} onClose={handleClose} modalTitle="Email sent">
-      <Typography variant="regular_16" className={s.modalText}>
+      <Typography variant="regular_16" className={s.textModal}>
         We have sent a link to confirm your email to <b>{email}</b>
       </Typography>
       <Button className={s.buttonModal} onClick={handleClose}>
