@@ -9,10 +9,3 @@ export const useMe = () => {
     retry: false
   })
 }
-
-// export const useMeQuery = () => {
-//   return useQuery({
-//     queryKey: ['auth', 'me'],
-//     queryFn:getMe,
-//   })
-// }
