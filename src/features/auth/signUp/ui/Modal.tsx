@@ -1,7 +1,6 @@
-import s from './ForgotPasswordForm.module.css'
-import { Typography } from '@/shared/ui'
+import s from './SignUP.module.css'
+import { Closes, Typography } from '@/shared/ui';
 import { ReactNode } from 'react'
-import { Closes } from '@/shared/ui/icons/Closes';
 
 type Props = {
   open: boolean

@@ -48,3 +48,46 @@
 .link{
     font-size: var(--font-size-xs);
 }
+.overlay {
+  background: rgba(0, 0, 0, 0.5);
+  position: absolute;
+}
+
+.contentModal {
+  background-color: var( --color-dark-300);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 378px;
+  padding: 12px 24px 36px;
+}
+
+.titleModal {
+  margin: 0;
+  text-align: left;
+}
+
+.closeIcon {
+  position: absolute;
+  top: 20px;
+  right: 15px;
+
+}
+
+.textModal {
+  margin-top: 16px;
+  text-align: left;
+}
+
+.buttonModal {
+  margin-top: 18px;
+  margin-left: 230px;
+}
+
+.hr {
+  border: 1px solid var( --color-dark-100);
+  margin: 11px -24px 0 ;
+
+}
