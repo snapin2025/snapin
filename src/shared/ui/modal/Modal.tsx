@@ -1,4 +1,4 @@
-import s from './SignUP.module.css'
+import s from './Modal.module.css'
 import { Closes, Typography } from '@/shared/ui';
 import { ReactNode } from 'react'
 
