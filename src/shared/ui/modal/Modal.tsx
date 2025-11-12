@@ -2,7 +2,6 @@
 import * as React from 'react'
 import * as DialogPrimitive from '@radix-ui/react-dialog'
 import clsx from 'clsx'
-import { Close } from '@/shared/ui'
 import s from './modal.module.css'
 
 function Dialog({ ...props }: React.ComponentProps<typeof DialogPrimitive.Root>) {
@@ -28,7 +27,7 @@ function DialogOverlay({ className, ...props }: React.ComponentProps<typeof Dial
 function DialogContent({
   className,
   children,
-  showCloseButton = true,
+
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Content> & {
   showCloseButton?: boolean
@@ -38,12 +37,6 @@ function DialogContent({
       <DialogOverlay />
       <DialogPrimitive.Content className={clsx(s.content, className)} {...props}>
         {children}
-        {showCloseButton && (
-          <DialogPrimitive.Close className={s.closeButton}>
-            <Close />
-            <span className={s.srOnly}>Close</span>
-          </DialogPrimitive.Close>
-        )}
       </DialogPrimitive.Content>
     </DialogPortal>
   )

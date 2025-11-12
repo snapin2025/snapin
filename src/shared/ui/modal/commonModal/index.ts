@@ -1,0 +1,2 @@
+export { CommonModal } from './CommonModal'
+

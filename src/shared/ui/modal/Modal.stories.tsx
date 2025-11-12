@@ -9,6 +9,7 @@ import {
   DialogTrigger
 } from './Modal'
 
+import { CommonModal } from './commonModal/CommonModal'
 import { useState } from 'react'
 import { Meta, StoryObj } from '@storybook/nextjs'
 import { Button } from '@/shared/ui'
@@ -35,9 +36,6 @@ export const Simple: Story = {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Заголовок модального окна</DialogTitle>
-          <DialogDescription>
-            Это описание модального окна. Здесь можно разместить дополнительную информацию.
-          </DialogDescription>
         </DialogHeader>
         <div style={{ padding: '20px 0' }}>
           <p>Основной контент модального окна</p>
@@ -122,6 +120,87 @@ export const Controlled: Story = {
           Открыть снаружи
         </Button>
       </div>
+    )
+  }
+}
+
+// ========== CommonModal Stories ==========
+
+// Простая CommonModal
+export const CommonModalSimple: Story = {
+  render: () => {
+    const [open, setOpen] = useState(false)
+
+    return (
+      <>
+        <Button onClick={() => setOpen(true)}>Открыть CommonModal</Button>
+        <CommonModal open={open} onOpenChange={setOpen} title="Простая модалка">
+          <div style={{ padding: '20px 0' }}>
+            <p>Основной контент передается через children</p>
+          </div>
+        </CommonModal>
+      </>
+    )
+  }
+}
+
+// CommonModal с подтверждением
+export const CommonModalConfirmation: Story = {
+  render: () => {
+    const [open, setOpen] = useState(false)
+
+    const handleConfirm = () => {
+      alert('Действие подтверждено!')
+      setOpen(false)
+    }
+
+    return (
+      <>
+        <Button variant="outlined">Удалить фото</Button>
+        <CommonModal
+          open={open}
+          onOpenChange={setOpen}
+          title="Удалить фото?"
+          description="Вы уверены, что хотите удалить это фото? Это действие нельзя отменить."
+        >
+          <div style={{ display: 'flex', gap: '12px', marginTop: '24px', justifyContent: 'flex-end' }}>
+            <Button variant="outlined" onClick={() => setOpen(false)}>
+              Отмена
+            </Button>
+            <Button onClick={handleConfirm}>Удалить</Button>
+          </div>
+        </CommonModal>
+      </>
+    )
+  }
+}
+
+// CommonModal без кнопки закрытия
+export const CommonModalWithoutCloseButton: Story = {
+  render: () => {
+    const [open, setOpen] = useState(false)
+
+    return (
+      <>
+        <Button onClick={() => setOpen(true)}>Обязательное действие</Button>
+        <CommonModal
+          open={open}
+          onOpenChange={setOpen}
+          title="Обязательное действие"
+          description="Эта модалка не имеет кнопки закрытия в углу"
+          showCloseButton={false}
+        >
+          <div style={{ padding: '20px 0' }}>
+            <p>Вы должны выбрать одно из действий</p>
+          </div>
+          <div style={{ display: 'flex', gap: '12px', marginTop: '16px' }}>
+            <Button variant="outlined" onClick={() => setOpen(false)}>
+              Отклонить
+            </Button>
+            <Button onClick={() => setOpen(false)}>Принять</Button>
+          </div>
+        </CommonModal>
+      </>
     )
   }
 }

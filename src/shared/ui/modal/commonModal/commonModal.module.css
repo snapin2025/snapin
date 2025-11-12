@@ -1,0 +1,30 @@
+.headerWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--color-dark-100);
+}
+
+.closeButton {
+  opacity: 0.7;
+  transition: opacity 200ms;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  justify-content: center;
+}
+
+.closeButton:hover {
+  opacity: 1;
+}
+
+.closeButton:focus {
+  outline: 2px solid var(--color-accent-500);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.size {
+  width: 24px;
+  height: 24px;
+}
