@@ -18,6 +18,8 @@ export const LogoutButton = ({ variant = 'both', className }: Props) => {
     handleLogout()
   }
 
+  //TODO: Не реализован функционал открытия модельного окна при выходе из системы
+
   return (
     <Button onClick={onLogoutClick} disabled={isPending} variant={'textButton'} className={className}>
       <div className={s.center}>
