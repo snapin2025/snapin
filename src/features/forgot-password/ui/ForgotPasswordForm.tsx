@@ -5,46 +5,46 @@ import { Input, Typography } from '@/shared/ui'
 import { Button } from '@/shared/ui/button/Button'
 import s from './ForgotPasswordForm.module.css'
 import { Card } from '@/shared/ui'
-import { useForm, SubmitHandler } from 'react-hook-form'
+import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { useForgotPassword } from '@/features/forgot-password/hooks/use-forgot-password'
-import { Recaptcha } from '@/shared/ui/recaptcha'
-import { useState } from 'react'
 
-type ForgotPasswordInputs = {
-  email: string
-}
+import { useRef, useState } from 'react'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { forgotPasswordFormSchema, ForgotPasswordFormType } from '@/features/forgot-password/model'
+import ReCAPTCHA from 'react-google-recaptcha'
+import { Modal } from '@/features/forgot-password/ui/ResendLinkModal'
 
 export const ForgotPasswordForm = () => {
-  const [recaptchaToken, setRecaptchaToken] = useState<string>('')
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const recaptchaRef = useRef<ReCAPTCHA | null>(null)
 
   const {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors }
-  } = useForm<ForgotPasswordInputs>({
-    defaultValues: { email: '' }
+  } = useForm<ForgotPasswordFormType>({
+    resolver: zodResolver(forgotPasswordFormSchema),
+    defaultValues: { email: '', recaptcha: '' }
   })
 
-  const { mutate: sendRecoveryEmail, isPending } = useForgotPassword({
-    onSuccess: () => {
-      console.log('Email отправлен!')
-      reset()
-      setRecaptchaToken('')
-    }
-  })
-  // const { mutate: sendRecoveryEmail, isPending } = useForgotPassword()
-  const onSubmit: SubmitHandler<ForgotPasswordInputs> = (data) => {
-    if (!recaptchaToken) {
-      alert('Please complete the captcha')
-      return
-    }
+  const { mutate: sendRecoveryEmail, isPending } = useForgotPassword()
 
-    sendRecoveryEmail({
-      // тут все горит красным проблема с типами
-      email: data.email,
-      recaptcha: recaptchaToken
-    })
+  const onSubmit: SubmitHandler<ForgotPasswordFormType> = (data) => {
+    sendRecoveryEmail(
+      {
+        email: data.email,
+        recaptcha: data.recaptcha
+      },
+      {
+        onSuccess: () => {
+          reset({ email: '', recaptcha: '' })
+          recaptchaRef.current?.reset()
+          setIsModalOpen(true)
+        }
+      }
+    )
   }
 
   return (
@@ -78,8 +78,32 @@ export const ForgotPasswordForm = () => {
       <Link href="/signin" className={s.backLink}>
         Back to Sign In
       </Link>
-      {/*это сама капча */}
-      <Recaptcha onVerify={() => setRecaptchaToken('recaptchaValue')} onError={() => setRecaptchaToken('')} />
+      <Controller
+        control={control}
+        name="recaptcha"
+        rules={{ required: 'Please confirm you are not a robot' }}
+        render={({ field: { onChange }, fieldState: { error } }) => (
+          <>
+            <ReCAPTCHA
+              ref={recaptchaRef}
+              sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ?? ''}
+              onChange={(token) => onChange(token ?? '')}
+              onExpired={() => onChange('')}
+              theme="dark"
+            />
+            {(error || errors.recaptcha) && (
+              <span className={s.errorMessage}>{error?.message ?? errors.recaptcha?.message}</span>
+            )}
+          </>
+        )}
+      />
+
+      <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)} modalTitle="Email sent">
+        <p className={s.textModal}>We have sent a link to confirm your email to epam@epam.com</p>
+        <Button className={s.buttonModal} onClick={() => setIsModalOpen(false)}>
+          Ok
+        </Button>
+      </Modal>
     </Card>
   )
 }

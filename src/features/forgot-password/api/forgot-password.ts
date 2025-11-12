@@ -1,10 +1,11 @@
 // создаю запросы на // POST /auth/password-recovery  использую документацию свагер
 import { api } from '@/shared/api'
+import { SendRecoveryEmailType } from '@/features/forgot-password/api/types'
 
-export const sendRecoveryEmail = (email: string) => {
+export const sendRecoveryEmail = (data: SendRecoveryEmailType) => {
   return api.post('/auth/password-recovery', {
-    email: email,
-    recaptcha: 'mock-token' // пока моковые данные
+    email: data.email,
+    recaptcha: data.recaptcha
   })
 }
 // POST /auth/password-recovery-resending - функция для повторная отправка
