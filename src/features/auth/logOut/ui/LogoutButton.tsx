@@ -23,8 +23,8 @@ export const LogoutButton = ({ variant = 'both', className }: Props) => {
       <div className={s.center}>
         {(variant === 'icon' || variant === 'both') && <Logout width={24} height={24} />}
         {(variant === 'text' || variant === 'both') && (
-          <Typography className={s.text} variant="regular_14">
-            Log Out
+          <Typography className={s.text} variant="medium_14" asChild>
+            <span>Log Out</span>
           </Typography>
         )}
       </div>
