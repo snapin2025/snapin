@@ -1,4 +1,3 @@
-import type { Meta, StoryObj } from '@storybook/react'
 import {
   Dialog,
   DialogClose,
@@ -9,9 +8,10 @@ import {
   DialogTitle,
   DialogTrigger
 } from './Modal'
-import { Button } from '../button/Button'
-import { Input } from '../input/Input'
+
 import { useState } from 'react'
+import { Meta, StoryObj } from '@storybook/nextjs'
+import { Button } from '@/shared/ui'
 
 const meta = {
   title: 'Shared/Modal',
@@ -47,56 +47,6 @@ export const Simple: Story = {
   )
 }
 
-// Модалка с формой
-export const WithForm: Story = {
-  render: () => {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-
-    return (
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button>Войти</Button>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Вход в аккаунт</DialogTitle>
-            <DialogDescription>Введите ваши данные для входа</DialogDescription>
-          </DialogHeader>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault()
-              console.log({ email, password })
-            }}
-            style={{ display: 'flex', flexDirection: 'column', gap: '16px', padding: '20px 0' }}
-          >
-            <Input
-              label="Email"
-              type="email"
-              placeholder="example@mail.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <Input
-              label="Пароль"
-              type="password"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </form>
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outlined">Отмена</Button>
-            </DialogClose>
-            <Button type="submit">Войти</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    )
-  }
-}
-
 // Модалка с подтверждением
 export const Confirmation: Story = {
   render: () => (
@@ -107,9 +57,7 @@ export const Confirmation: Story = {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Вы уверены?</DialogTitle>
-          <DialogDescription>
-            Это действие нельзя отменить. Ваш аккаунт будет удален навсегда.
-          </DialogDescription>
+          <DialogDescription>Это действие нельзя отменить. Ваш аккаунт будет удален навсегда.</DialogDescription>
         </DialogHeader>
         <DialogFooter style={{ marginTop: '24px' }}>
           <DialogClose asChild>
@@ -134,9 +82,7 @@ export const WithoutCloseButton: Story = {
       <DialogContent showCloseButton={false}>
         <DialogHeader>
           <DialogTitle>Модалка без крестика</DialogTitle>
-          <DialogDescription>
-            Закрыть можно только через кнопку или клик вне модалки
-          </DialogDescription>
+          <DialogDescription>Закрыть можно только через кнопку или клик вне модалки</DialogDescription>
         </DialogHeader>
         <DialogFooter style={{ marginTop: '24px' }}>
           <DialogClose asChild>
@@ -162,9 +108,7 @@ export const Controlled: Story = {
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Контролируемая модалка</DialogTitle>
-              <DialogDescription>
-                Состояние модалки управляется через useState
-              </DialogDescription>
+              <DialogDescription>Состояние модалки управляется через useState</DialogDescription>
             </DialogHeader>
             <div style={{ padding: '20px 0' }}>
               <p>Модалка открыта: {open ? 'Да' : 'Нет'}</p>
@@ -181,4 +125,3 @@ export const Controlled: Story = {
     )
   }
 }
-

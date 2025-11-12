@@ -13,9 +13,3 @@ export type UserMeResponse = {
   email: string
   isBlocked: boolean
 }
-
-export type SignInErrorResponse = {
-  statusCode: number
-  messages: string
-  error: string
-}

@@ -1,9 +1,10 @@
 'use client'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { getMe, signIn, SignInErrorResponse, SignInForm } from '@/features/auth/signIn'
+import { getMe, signIn, SignInForm } from '@/features/auth/signIn'
 import { useRouter } from 'next/navigation'
-import { AxiosError } from 'axios'
+
 import { UseFormSetError } from 'react-hook-form'
+import { handleFormErrors } from '@/shared/lib/errors'
 
 export const useLoginMutation = (setError: UseFormSetError<SignInForm>) => {
   const qc = useQueryClient()
@@ -21,10 +22,11 @@ export const useLoginMutation = (setError: UseFormSetError<SignInForm>) => {
         router.push(`/profile/${userData.userId}`)
       }
     },
-    onError: (error: AxiosError<SignInErrorResponse>) => {
-      const message = error.response?.data?.messages || 'Authentication failed'
-      setError('password', { type: 'server', message })
-    }
+    onError: (error) => handleFormErrors(error, setError, 'password')
+
+    // onError: (error: AxiosError<SignInErrorResponse>) => {
+    //   const message = error.response?.data?.messages || 'Authentication failed'
+    //   setError('password', { type: 'server', message })
+    // }
   })
 }
-

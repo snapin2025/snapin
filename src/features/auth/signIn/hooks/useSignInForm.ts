@@ -1,7 +1,8 @@
 'use client'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { SignInForm, signInSchema, useLoginMutation } from '@/features/auth/signIn'
+import { SignInForm, signInSchema } from '@/features/auth/signIn'
+import { useLoginMutation } from '@/features/auth/signIn/hooks/useSignIn'
 
 export const useSignInForm = () => {
   const {
