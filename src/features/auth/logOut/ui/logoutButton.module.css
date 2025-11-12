@@ -1,0 +1,16 @@
+.text {
+  line-height: 1;
+}
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.center svg {
+  color: var(--color-light-100);
+  flex-shrink: 0;
+  display: block;
+}
