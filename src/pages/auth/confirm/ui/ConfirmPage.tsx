@@ -1,54 +1,64 @@
-'use client'
+'use client';
 
-import { useEffect } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { ConfirmErrorResponse, useConfirm } from '@/features/auth/confirm'
-import { Button, Confirmed, Typography } from '@/shared/ui'
-import Link from 'next/link'
-import s from './ConfirmPage.module.css'
+import { useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { ConfirmErrorResponse, useConfirm } from '@/features/auth/confirm';
+import { Button, Confirmed, Typography } from '@/shared/ui';
+import Link from 'next/link';
+import s from './ConfirmPage.module.css';
 
 export function ConfirmPage() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const { mutateAsync, isPending } = useConfirm()
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { mutateAsync } = useConfirm();
+
+  const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
 
   useEffect(() => {
-    const code = searchParams?.get('code')
-    const email = searchParams?.get('email')
+    const code = searchParams?.get('code');
+    const email = searchParams?.get('email');
 
     if (!code) {
-      // alert('Confirmation code missing!')
-      router.push('/auth/signUp')
-      return
+      router.push('/auth/signUp');
+      return;
     }
 
     const confirm = async () => {
       try {
-        await mutateAsync({ confirmationCode: code })
-        alert('🎉 Congratulations! Your email has been confirmed!')
-        router.push('/auth/signin')
+        await mutateAsync({ confirmationCode: code });
+        setStatus('success');
       } catch (err) {
-        const e = err as Error | ConfirmErrorResponse
+        const e = err as Error | ConfirmErrorResponse;
 
         if ('messages' in e && e.messages?.[0]?.field === 'code') {
-          router.push(`/auth/emailResending?email=${email ?? ''}`)
-          return
+          router.push(`/auth/emailResending?email=${email ?? ''}`);
+          return;
         }
         if ('messages' in e) {
-          alert(e.messages?.[0]?.message ?? 'Something went wrong')
+          alert(e.messages?.[0]?.message ?? 'Something went wrong');
         } else {
-          alert(e.message ?? 'Something went wrong')
+          alert(e.message ?? 'Something went wrong');
         }
-        router.push('/auth/signUp')
+        router.push('/auth/signUp');
       }
-    }
+    };
 
-    void confirm()
-  }, [mutateAsync, router, searchParams])
+    void confirm();
+  }, [mutateAsync, router, searchParams]);
+
+  if (status === 'loading') {
+    return (
+      <div className={s.wrapperConfirm}>
+        <Typography variant="h1">Checking your email...</Typography>
+        <Typography className={s.confirmMessage} variant="regular_16">
+          Please wait while we confirm your account
+        </Typography>
+      </div>
+    );
+  }
 
   return (
     <div className={s.wrapperConfirm}>
-      {/*{isPending ? 'Confirming your account...' : 'Redirecting...'}*/}
       <Typography variant="h1">Congratulations!</Typography>
       <Typography className={s.confirmMessage} variant="regular_16">
         Your email has been confirmed
@@ -61,5 +71,5 @@ export function ConfirmPage() {
       </Link>
       <Confirmed />
     </div>
-  )
+  );
 }

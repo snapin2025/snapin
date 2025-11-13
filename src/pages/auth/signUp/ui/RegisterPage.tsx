@@ -4,20 +4,21 @@ import { useSignUp } from '@/features/auth/signUp/hooks/useSignUp';
 import { SignUpForm } from '@/features/auth/signUp/model';
 import { SignUp } from '@/features/auth/signUp/ui';
 import { SignUpErrorResponse } from '@/features/auth/signUp/api';
+import { useState } from 'react';
+import { EmailSentModal } from '@/features/auth/ui/EmailSentModal';
+import  s  from './RegisterPage.module.css';
 
 
 export function RegisterPage() {
   const { mutateAsync, isPending, error } = useSignUp();
+  const [emailForModal, setEmailForModal] = useState<string | null>(null);
 
   let errorMessage: string | null = null;
 
   if (error) {
-    // если это ошибка от backend-а
     if ('messages' in error) {
       errorMessage = error.messages?.[0]?.message ?? null;
-    }
-    // если это системная (например network)
-    else {
+    } else {
       errorMessage = error.message;
     }
   }
@@ -31,8 +32,7 @@ export function RegisterPage() {
       });
 
       if (result && 'statusCode' in result && result.statusCode === 204) {
-        //вызов кастомной компоненты алерта
-        alert(`We have sent a link to confirm your email to ${formData.email}`);
+        setEmailForModal(formData.email)
       }
       return result;
     } catch (err) {
@@ -44,17 +44,25 @@ export function RegisterPage() {
           console.log(`Field: ${field}, Error: ${message}`);
         });
       }
-      console.log(err);
       return err as SignUpErrorResponse;
     }
   };
 
   return (
+    <div className={s.registerWrapper}>
     <SignUp
       onSubmit={handleRegister}
       isLoading={isPending}
       error={errorMessage}
     />
+      {emailForModal && (
+        <EmailSentModal
+          email={emailForModal}
+          onClose={() => setEmailForModal(null)}
+        />
+      )}
+    </div>
+
   );
 }
 

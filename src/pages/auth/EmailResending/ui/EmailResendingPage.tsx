@@ -1,63 +1,54 @@
-'use client'
+'use client';
 
-import { useSearchParams } from 'next/navigation'
-import { useEmailResending } from '@/features/auth/emailResending'
-import { useState } from 'react'
-import { Button, Input, Resending, Typography } from '@/shared/ui'
-import s from './EmailResendingPage.module.css'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { EmailResendingForm, EmailResendingSchema } from '@/pages/auth/EmailResending/model'
+import { useSearchParams } from 'next/navigation';
+import { useEmailResending } from '@/features/auth/emailResending';
+import { useState } from 'react';
+import { Button, Input, Resending, Typography } from '@/shared/ui';
+import s from './EmailResendingPage.module.css';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { EmailResendingForm, EmailResendingSchema } from '@/pages/auth/EmailResending/model';
+import { EmailSentModal } from '@/features/auth/ui/EmailSentModal';
 
 export function EmailResendingPage() {
-  const searchParams = useSearchParams()
-  const emailParam = searchParams?.get('email') ?? ''
-  const { mutateAsync, isPending } = useEmailResending()
-  const [message, setMessage] = useState('')
+  const searchParams = useSearchParams();
+  const emailParam = searchParams?.get('email') ?? '';
+  const { mutateAsync, isPending } = useEmailResending();
+  const [openModalEmail, setOpenModalEmail] = useState<string | null>(null);
 
   const {
     register,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
   } = useForm<EmailResendingForm>({
     defaultValues: { email: emailParam },
     resolver: zodResolver(EmailResendingSchema),
-    mode: 'onBlur'
-  })
+    mode: 'onBlur',
+  });
 
   const handleResend = async (data: EmailResendingForm) => {
-    const email = data.email || emailParam
+    const email = data.email || emailParam;
     if (!email) {
-      setMessage('Missing email in request.')
-      return
+      return;
     }
 
     try {
       await mutateAsync({
         email,
-        baseUrl: 'http://localhost:3000'
-      })
-      setMessage('✅ Verification link has been resent! Check your email.')
+        baseUrl: 'http://localhost:3000',
+      });
+      setOpenModalEmail(email);
     } catch (err: any) {
       if ('messages' in err) {
-        setMessage(err.messages?.[0]?.message ?? 'Something went wrong')
+        alert(err.messages?.[0]?.message ?? 'Something went wrong');
       } else {
-        setMessage(err.message ?? 'Something went wrong')
+        alert(err.message ?? 'Something went wrong');
       }
     }
-  }
+  };
 
   return (
     <div className={s.wrapperEmailResending}>
-      {/*<h2>Looks like the verification link has expired...</h2>*/}
-      {/*<p>Please request a new verification link.</p>*/}
-      {/*<Button onClick={handleResend} disabled={isPending}>*/}
-      {/*  Resend verification link*/}
-      {/*</Button>*/}
-      {/*{message && <p>{message}</p>}*/}
-      {/*<Link href={'/auth/signUp'}>*/}
-      {/*  <Button variant={'textButton'}>Back to Sign Up</Button>*/}
-      {/*</Link>*/}
       <Typography variant="h1">Email verification link expired</Typography>
       <Typography className={s.resendingMessage} variant="regular_16">
         Looks like the verification link has expired. Not to worry, we can send the link again
@@ -72,12 +63,19 @@ export function EmailResendingPage() {
           error={errors.email?.message}
           {...register('email')}
         />
-        <Button className={s.button} variant={'primary'} type="submit">
+        <Button className={s.button} variant={'primary'} type="submit" disabled={isPending}>
           <Typography variant="h3">Resend verification link</Typography>
         </Button>
       </form>
 
       <Resending />
+
+      {openModalEmail && (
+        <EmailSentModal
+          email={openModalEmail}
+          onClose={() => setOpenModalEmail(null)}
+        />
+      )}
     </div>
-  )
+  );
 }

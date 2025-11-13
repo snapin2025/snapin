@@ -1,11 +1,11 @@
-import { Card, Checkbox, Github, Google, Input, Typography } from '@/shared/ui'
-import s from './SignUp.module.css'
-import { Button } from '@/shared/ui/button/Button'
-import { Controller, useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { SignUpForm, SignUpSchema } from '@/features/auth/signUp/model'
-import { SignUpResponse } from '@/features/auth/signUp'
-import Link from 'next/link'
+import { Card, Checkbox, Github, Google, Input, Typography } from '@/shared/ui';
+import s from './SignUp.module.css';
+import { Button } from '@/shared/ui/button/Button';
+import { Controller, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { SignUpForm, SignUpSchema } from '@/features/auth/signUp/model';
+import { SignUpResponse } from '@/features/auth/signUp';
+import Link from 'next/link';
 
 type Props = {
   error?: string | null
@@ -20,57 +20,57 @@ export const SignUp = ({ error, isLoading = false, onSubmit }: Props) => {
     reset,
     control,
     setError,
-    formState: { errors, isValid }
+    formState: { errors, isValid },
   } = useForm<SignUpForm>({
     defaultValues: { email: '', password: '', agree: false, confirmPassword: '', userName: '' },
     resolver: zodResolver(SignUpSchema),
     mode: 'onBlur',
-    reValidateMode: 'onChange'
-  })
+    reValidateMode: 'onChange',
+  });
 
   const handleFormSubmit = async (data: SignUpForm) => {
     try {
-      const res = await onSubmit(data)
+      const res = await onSubmit(data);
 
       if (!res) {
-        reset()
-        return
+        reset();
+        return;
       }
 
       if ('statusCode' in res && res.statusCode === 400) {
         res.messages.forEach(({ field, message }) => {
           switch (field) {
             case 'email':
-              setError('email', { message: 'User with this email is already registered' })
-              break
+              setError('email', { message: 'User with this email is already registered' });
+              break;
             case 'userName':
-              setError('userName', { message: 'User with this username is already registered' })
-              break
+              setError('userName', { message: 'User with this username is already registered' });
+              break;
             case 'password':
-              setError('password', { message: message })
-              break
+              setError('password', { message: message });
+              break;
             default:
-              setError('root', { message: message || 'Unexpected error' })
+              setError('root', { message: message || 'Unexpected error' });
           }
-        })
-        return
+        });
+        return;
       }
       if (res.statusCode === 204) {
-        reset()
+        reset();
       }
     } catch (err: unknown) {
-      console.error('Unexpected error:', err)
-      setError('root', { message: 'Unexpected error occured' })
+      console.error('Unexpected error:', err);
+      setError('root', { message: 'Unexpected error occured' });
     }
-  }
+  };
 
   return (
     <Card className={s.card} as="form" noValidate onSubmit={handleSubmit(handleFormSubmit)}>
       <h2 className={s.title}>Sign Up</h2>
 
       <div className={s.containerBtn}>
-        <Google />
-        <Github />
+        <Google width={36} height={36} />
+        <Github width={36} height={36} />
       </div>
 
       <div className={s.containerInput}>
@@ -152,5 +152,5 @@ export const SignUp = ({ error, isLoading = false, onSubmit }: Props) => {
         </Button>
       </Link>
     </Card>
-  )
-}
+  );
+};
