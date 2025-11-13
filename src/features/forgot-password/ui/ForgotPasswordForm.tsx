@@ -78,15 +78,17 @@ export const ForgotPasswordForm = () => {
       </Link>
       <div className={s.captchaContainer}>
         {/*это сама капча  гугла  */}
-        <ReCAPTCHA
-          className={s.captchaContainer}
-          ref={recaptchaRef}
-          sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
-          onChange={(token) => setRecaptchaToken(token ?? '')}
-          onExpired={() => setRecaptchaToken('')}
-          theme="dark"
-          hl="en"
-        />
+        {process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY && (
+          <ReCAPTCHA
+            className={s.captchaContainer}
+            ref={recaptchaRef}
+            sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+            onChange={(token) => setRecaptchaToken(token ?? '')}
+            onExpired={() => setRecaptchaToken('')}
+            theme="dark"
+            hl="en"
+          />
+        )}
       </div>
       {/*</div>*/}
       <Modal modalTitle={'Email sent'} open={showModal} onClose={() => setShowModal(false)}>
