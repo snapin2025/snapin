@@ -33,6 +33,7 @@ export const ForgotPasswordForm = () => {
     resolver: zodResolver(inputEmailSchema),
     defaultValues: { email: '', recaptcha: '' }
   })
+
   const { mutate: sendRecoveryEmail, isPending } = useForgotPassword()
 
   const onSubmit: SubmitHandler<ForgotPasswordInputs> = (data) => {
@@ -90,7 +91,6 @@ export const ForgotPasswordForm = () => {
           />
         )}
       </div>
-      {/*</div>*/}
       <Modal modalTitle={'Email sent'} open={showModal} onClose={() => setShowModal(false)}>
         <p className={s.textModal}>We have sent a link to confirm your email to epam@epam.com</p>
         <Button className={s.buttonModal} onClick={() => setShowModal(false)}>
