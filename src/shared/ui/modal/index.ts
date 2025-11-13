@@ -11,5 +11,4 @@ export {
   DialogTrigger
 } from './Modal'
 
-export { CommonModal } from './commonModal'
-
+export * from './baseModal/BaseModal'

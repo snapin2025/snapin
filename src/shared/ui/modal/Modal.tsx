@@ -30,18 +30,28 @@ type DialogContentProps = React.ComponentProps<typeof DialogPrimitive.Content> &
   showCloseButton?: boolean
 }
 
-function DialogContent({ className, children, title, showCloseButton = true, ...props }: DialogContentProps) {
+function DialogContent({
+  className,
+  children,
+  title,
+  showCloseButton = true,
+
+  ...props
+}: DialogContentProps) {
+  const shouldRenderHeader = Boolean(title) || showCloseButton
+
   return (
     <DialogPortal>
       <DialogOverlay />
-      <DialogPrimitive.Content className={clsx(s.content, className)} {...props}>
-        {(title || showCloseButton) && (
+      <DialogPrimitive.Content aria-describedby={undefined} className={clsx(s.content, className)} {...props}>
+        {shouldRenderHeader && (
           <DialogHeader className={s.header}>
             {title && (
-              <DialogTitle className={s.titleModal}>
+              <DialogTitle>
                 <Typography variant={'h1'}>{title}</Typography>
               </DialogTitle>
             )}
+            {!title && <DialogTitle className={s.srOnly}>Диалог</DialogTitle>}
             {showCloseButton && (
               <DialogPrimitive.Close className={s.closeButton} aria-label="Закрыть">
                 <Close />
@@ -49,6 +59,7 @@ function DialogContent({ className, children, title, showCloseButton = true, ...
             )}
           </DialogHeader>
         )}
+        {!title && !shouldRenderHeader && <DialogTitle className={s.srOnly}>Диалог</DialogTitle>}
         {children}
       </DialogPrimitive.Content>
     </DialogPortal>
