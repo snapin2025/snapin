@@ -1,8 +1,8 @@
 import type { StoryObj } from '@storybook/nextjs'
 import type { ReactElement } from 'react'
 import { Button } from '@/shared/ui'
-import { Dialog, DialogContent, DialogTrigger } from './Modal'
-import s from './modal.module.css'
+import { Dialog, DialogClose, DialogContent, DialogTrigger } from './Modal'
+
 const centeredDecorator = (Story: () => ReactElement) => (
   <div
     style={{
@@ -40,9 +40,36 @@ export const Default: Story = {
         <DialogTrigger asChild>
           <Button variant="primary">Открыть модалку</Button>
         </DialogTrigger>
-        <DialogContent className={s.w} title="Заголовок окна">
+        <DialogContent title="Заголовок окна">
           <p>Основной контент модалки располагается здесь.</p>
-          <p>Основной контент модалки располаfddгается здесь.</p>
+        </DialogContent>
+      </Dialog>
+    </div>
+  )
+}
+
+export const WithoutHeader: Story = {
+  args: {
+    defaultOpen: true
+  },
+  render: (args) => (
+    <div>
+      <Dialog {...args}>
+        <DialogTrigger asChild>
+          <Button variant="primary">Открыть модалку</Button>
+        </DialogTrigger>
+        <DialogContent showCloseButton={false}>
+          <div style={{ marginTop: '24px', marginBottom: '24px' }}>
+            <p>
+              Основной контент здесь.Без Header, ее можно использовать там где у нас модалки с фото:посты,комментарии и
+              т.д.{' '}
+            </p>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <DialogClose asChild>
+              <Button>Закрыть</Button>
+            </DialogClose>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
