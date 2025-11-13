@@ -1,5 +1,6 @@
 .text {
   line-height: 1;
+  color: var(--color-light-100);
 }
 
 .center {
