@@ -1,10 +1,11 @@
+'use client'
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 import { ReactNode } from 'react'
-
-import '@/app/ui/styles/index.css'
-import { Providers } from '@/app/providers/query-provider'
+import { QueryProvider } from '@/app/providers/query-provider'
+import { AuthProvider } from '@/shared/providers'
 import { Header } from '@/widgets'
+import '@/app/ui/styles/index.css'
 
 const interFont = localFont({
   src: [
@@ -26,10 +27,12 @@ export const RootLayout = ({ children }: Readonly<{ children: ReactNode }>) => {
   return (
     <html lang="en" className={interFont.className}>
       <body>
-        <Providers>
-          <Header />
-          <main>{children}</main>
-        </Providers>
+        <QueryProvider>
+          <AuthProvider>
+            <Header />
+            <main>{children}</main>
+          </AuthProvider>
+        </QueryProvider>
       </body>
     </html>
   )
