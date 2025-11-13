@@ -1,14 +1,20 @@
-// пишем логику для капчи
-// src/app/api/password-recovery/forgot-password.route.ts
+//
 
 import { NextRequest, NextResponse } from 'next/server'
+import axios from 'axios'
 
-// Пока это заглушка. В реальности здесь будет обращение к API Google reCAPTCHA для проверки токена.
 const recaptchaAdapter = {
-  isValid(value: string): boolean {
-    // Заглушка: всегда возвращает true.
-    // В реальности здесь нужно отправить токен на Google reCAPTCHA API для проверки.
-    return true
+  async isValid(value: string) {
+    const response = await axios.post(
+      'https://www.google.com/recaptcha/api/siteverify',
+      `secret=6LdHxG4qAAAAAPKRxEHrlV5VvLFHIf2BO5NMI8YM&response=${value}`,
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      }
+    )
+    return response.data.success
   }
 }
 
@@ -18,7 +24,7 @@ export async function POST(request: NextRequest) {
     const { email, recaptchaValue } = body
 
     // Проверяем reCAPTCHA
-    if (!recaptchaAdapter.isValid(recaptchaValue)) {
+    if (!(await recaptchaAdapter.isValid(recaptchaValue))) {
       return NextResponse.json({ error: 'you are robot' }, { status: 400 })
     }
 

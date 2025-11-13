@@ -3,7 +3,7 @@
 // Тип для ПЕРВОЙ отправки письма восстановления (эндпоинт: /auth/password-recovery)
 export type SendRecoveryEmailType = {
   email: string // Email пользователя для отправки письма
-  recaptcha: string // Код капчи (пока заглушка)
+  recaptcha: string
 }
 
 // Тип для ПОВТОРНОЙ отправки письма (эндпоинт: /auth/password-recovery-resending)

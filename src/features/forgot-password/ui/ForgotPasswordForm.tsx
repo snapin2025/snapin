@@ -6,51 +6,58 @@ import { Button } from '@/shared/ui/button/Button'
 import s from './ForgotPasswordForm.module.css'
 import { Card } from '@/shared/ui'
 import { useForm, SubmitHandler } from 'react-hook-form'
+import { useRef, useState } from 'react'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { inputEmailSchema } from '@/features/forgot-password/model/validateInput'
+import ReCAPTCHA from 'react-google-recaptcha'
 import { useForgotPassword } from '@/features/forgot-password/hooks/use-forgot-password'
-import { Recaptcha } from '@/shared/ui/recaptcha'
-import { useState } from 'react'
+import { Modal } from '@/features/forgot-password/ui/ResendLinkModal'
 
-type ForgotPasswordInputs = {
+export type ForgotPasswordInputs = {
   email: string
+  recaptcha: string
 }
 
 export const ForgotPasswordForm = () => {
+  const [showModal, setShowModal] = useState(false)
   const [recaptchaToken, setRecaptchaToken] = useState<string>('')
+  //  добавила useRef
+  const recaptchaRef = useRef<ReCAPTCHA | null>(null)
 
   const {
     register,
-    handleSubmit,
     reset,
+    handleSubmit,
     formState: { errors }
   } = useForm<ForgotPasswordInputs>({
-    defaultValues: { email: '' }
+    resolver: zodResolver(inputEmailSchema),
+    defaultValues: { email: '', recaptcha: '' }
   })
+  const { mutate: sendRecoveryEmail, isPending } = useForgotPassword()
 
-  const { mutate: sendRecoveryEmail, isPending } = useForgotPassword({
-    onSuccess: () => {
-      console.log('Email отправлен!')
-      reset()
-      setRecaptchaToken('')
-    }
-  })
-  // const { mutate: sendRecoveryEmail, isPending } = useForgotPassword()
   const onSubmit: SubmitHandler<ForgotPasswordInputs> = (data) => {
     if (!recaptchaToken) {
       alert('Please complete the captcha')
       return
     }
-
-    sendRecoveryEmail({
-      // тут все горит красным проблема с типами
-      email: data.email,
-      recaptcha: recaptchaToken
-    })
+    sendRecoveryEmail(
+      {
+        email: data.email,
+        recaptcha: recaptchaToken
+      },
+      {
+        onSuccess: () => {
+          reset({ email: '', recaptcha: '' })
+          recaptchaRef.current?.reset()
+          setShowModal(true)
+        }
+      }
+    )
   }
 
   return (
     <Card as="form" className={s.form} onSubmit={handleSubmit(onSubmit)}>
       <Typography variant="h1">Forgot Password</Typography>
-
       <div className={s.field}>
         <Input
           id="email"
@@ -58,28 +65,36 @@ export const ForgotPasswordForm = () => {
           type="email"
           placeholder="Epam@epam.com"
           error={!!errors.email}
-          {...register('email', {
-            required: 'Email is required',
-            pattern: {
-              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-              message: 'Invalid email address'
-            }
-          })}
+          {...register('email')}
         />
         {errors.email && <span className={s.errorMessage}>{errors.email.message}</span>}
       </div>
-
       <p className={s.text}>Enter your email address and we will send you further instructions</p>
-
       <Button variant="primary" type={'submit'} className={s.button} disabled={isPending}>
-        {isPending ? 'Sending...' : 'Send Link'}
+        {isPending ? 'Sending' : 'Send Link'}
       </Button>
-
-      <Link href="/signin" className={s.backLink}>
+      <Link href="auth/signin" className={s.backLink}>
         Back to Sign In
       </Link>
-      {/*это сама капча */}
-      <Recaptcha onVerify={() => setRecaptchaToken('recaptchaValue')} onError={() => setRecaptchaToken('')} />
+      <div className={s.captchaContainer}>
+        {/*это сама капча  гугла  */}
+        <ReCAPTCHA
+          className={s.captchaContainer}
+          ref={recaptchaRef}
+          sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
+          onChange={(token) => setRecaptchaToken(token ?? '')}
+          onExpired={() => setRecaptchaToken('')}
+          theme="dark"
+          hl="en"
+        />
+      </div>
+      {/*</div>*/}
+      <Modal modalTitle={'Email sent'} open={showModal} onClose={() => setShowModal(false)}>
+        <p className={s.textModal}>We have sent a link to confirm your email to epam@epam.com</p>
+        <Button className={s.buttonModal} onClick={() => setShowModal(false)}>
+          Ok
+        </Button>
+      </Modal>
     </Card>
   )
 }

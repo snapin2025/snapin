@@ -26,14 +26,12 @@ export const CreateNewPassword = () => {
 
   const onSubmit: SubmitHandler<CreatePasswordInput> = (data) => {
     if (!recoveryCode) {
-      // ← ДОБАВИТЬ проверку
       console.error('Recovery code not found in URL')
       return
     }
     setNewPassword(
       {
         newPassword: data.password,
-        // recoveryCode: 'mock-recovery-code'
         recoveryCode: recoveryCode // ← ИСПОЛЬЗОВАТЬ реальный код из URL
       },
       {
@@ -76,7 +74,7 @@ export const CreateNewPassword = () => {
       <p className={s.text}>Your password must be between 6 and 20 characters</p>
 
       <Button variant="primary" className={s.buttonPassword} type="submit" disabled={isPending}>
-        {isPending ? 'Creating...' : 'Create new password'}
+        {isPending ? 'Creating' : 'Create new password'}
       </Button>
     </Card>
   )

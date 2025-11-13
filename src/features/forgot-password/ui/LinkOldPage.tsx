@@ -2,7 +2,7 @@
 
 import s from './ForgotPasswordForm.module.css'
 import Image from 'next/image'
-import { Button, Typography } from '@/shared/ui'
+import { Button, Resend, Typography } from '@/shared/ui'
 import { useResendRecoveryEmail } from '../hooks/use-reset-password'
 import { useQueryClient } from '@tanstack/react-query'
 
@@ -14,12 +14,10 @@ export default function LinkOldPage() {
 
   const handleResend = () => {
     if (!savedEmail) {
-      // ← ДОБАВИТЬ проверку
       console.error('Email not found')
       return
     }
     resendEmail(savedEmail, {
-      // ← ИСПОЛЬЗОВАТЬ сохраненный email
       onSuccess: () => {
         console.log('Письмо отправлено повторно!')
       }
@@ -39,9 +37,10 @@ export default function LinkOldPage() {
           onClick={handleResend}
           disabled={isPending}
         >
-          {isPending ? 'Sending...' : 'Resend link'}
+          {isPending ? 'Sending' : 'Resend link'}
         </Button>
-        <Image className={s.illustration} src="/imgs/password.png" alt="Expired link" width={473} height={352} />
+        <Resend className={s.illustration} width={473} height={352} />
+        {/*<Image className={s.illustration} src="/imgs/password.png" alt="Expired link" width={473} height={352} />*/}
       </div>
     </div>
   )

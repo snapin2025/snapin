@@ -17,7 +17,7 @@ type Props = {
 }
 
 export const EmailSentMessage = ({ onResendClick }: Props) => {
-  const queryClient = useQueryClient() // ← ДОБАВИТЬ
+  const queryClient = useQueryClient()
   const savedEmail = queryClient.getQueryData<string>(['recovery-email'])
 
   const {
@@ -26,7 +26,6 @@ export const EmailSentMessage = ({ onResendClick }: Props) => {
     reset,
     formState: { errors }
   } = useForm<ForgotPasswordInputs>({
-    // defaultValues: { email: '' }
     defaultValues: {
       email: savedEmail || ''
     }
@@ -55,6 +54,7 @@ export const EmailSentMessage = ({ onResendClick }: Props) => {
           placeholder="Epam@epam.com"
           error={!!errors.email}
           {...register('email', {
+            // здесь доделать валидацию
             required: 'Email is required',
             pattern: {
               value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
@@ -71,7 +71,7 @@ export const EmailSentMessage = ({ onResendClick }: Props) => {
 
       {/*изменим обшую кнопку для разных состояний*/}
       <Button variant="primary" className={s.button} type={'submit'} disabled={isPending}>
-        {isPending ? 'Sending...' : 'Send Link Again'}
+        {isPending ? 'Sending' : 'Send Link Again'}
       </Button>
 
       <Link href="/signin" className={s.backLink}>
