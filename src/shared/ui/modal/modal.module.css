@@ -7,6 +7,7 @@
   opacity: 0.6;
 }
 
+
 .overlay[data-state='open'] {
   animation: fadeIn 200ms ease-out;
 }
@@ -36,9 +37,10 @@
   left: 50%;
   z-index: 50;
   transform: translate(-50%, -50%);
-  width: 100%;
+
   max-width: calc(100% - 2rem);
   padding: 0px 24px 36px;
+  width: fit-content;
   border: 1px solid var(--color-dark-100);
   border-radius: 2px;
   background-color: var(--color-dark-300);
@@ -46,11 +48,7 @@
 
 }
 
-@media (min-width: 640px) {
-  .content {
-    max-width: 512px;
-  }
-}
+
 
 .content[data-state='open'] {
   animation: zoomIn 200ms ease-out;
@@ -79,18 +77,8 @@
 /* Header */
 
 
-@media (min-width: 640px) {
-  .header {
-    text-align: left;
-  }
-}
 
-@media (min-width: 640px) {
-  .footer {
-    flex-direction: row;
-    justify-content: flex-end;
-  }
-}
+
 
 
 /* Description */
