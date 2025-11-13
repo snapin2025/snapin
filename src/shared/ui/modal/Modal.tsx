@@ -2,6 +2,7 @@
 import * as React from 'react'
 import * as DialogPrimitive from '@radix-ui/react-dialog'
 import clsx from 'clsx'
+import { Close, Typography } from '@/shared/ui'
 import s from './modal.module.css'
 
 function Dialog({ ...props }: React.ComponentProps<typeof DialogPrimitive.Root>) {
@@ -24,18 +25,30 @@ function DialogOverlay({ className, ...props }: React.ComponentProps<typeof Dial
   return <DialogPrimitive.Overlay className={clsx(s.overlay, className)} {...props} />
 }
 
-function DialogContent({
-  className,
-  children,
-
-  ...props
-}: React.ComponentProps<typeof DialogPrimitive.Content> & {
+type DialogContentProps = React.ComponentProps<typeof DialogPrimitive.Content> & {
+  title?: React.ReactNode
   showCloseButton?: boolean
-}) {
+}
+
+function DialogContent({ className, children, title, showCloseButton = true, ...props }: DialogContentProps) {
   return (
     <DialogPortal>
       <DialogOverlay />
       <DialogPrimitive.Content className={clsx(s.content, className)} {...props}>
+        {(title || showCloseButton) && (
+          <DialogHeader className={s.header}>
+            {title && (
+              <DialogTitle className={s.titleModal}>
+                <Typography variant={'h1'}>{title}</Typography>
+              </DialogTitle>
+            )}
+            {showCloseButton && (
+              <DialogPrimitive.Close className={s.closeButton} aria-label="Закрыть">
+                <Close />
+              </DialogPrimitive.Close>
+            )}
+          </DialogHeader>
+        )}
         {children}
       </DialogPrimitive.Content>
     </DialogPortal>
