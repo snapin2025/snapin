@@ -82,5 +82,3 @@ export const EmailSentMessage = ({ onResendClick }: Props) => {
     </Card>
   )
 }
-
-//хардкодированный email 'vikcoding24@gmail.com'

@@ -21,7 +21,7 @@ export type ForgotPasswordInputs = {
 export const ForgotPasswordForm = () => {
   const [showModal, setShowModal] = useState(false)
   const [recaptchaToken, setRecaptchaToken] = useState<string>('')
-  //  добавила useRef
+
   const recaptchaRef = useRef<ReCAPTCHA | null>(null)
 
   const {
