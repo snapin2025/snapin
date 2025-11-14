@@ -35,10 +35,5 @@ export const useSignInForm = () => {
     }
   })
 
-  return {
-    register,
-    errors,
-    isPending,
-    onSubmit
-  }
+  return { register, errors, isPending, onSubmit }
 }

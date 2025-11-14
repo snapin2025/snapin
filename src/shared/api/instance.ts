@@ -1,8 +1,8 @@
 import axios, { AxiosError } from 'axios'
 
 export const api = axios.create({
-  baseURL: 'https://inctagram.work/api/v1/',
-  timeout: 10000,
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  timeout: 1000,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json'
@@ -11,13 +11,11 @@ export const api = axios.create({
 
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('accessToken')
-  console.log(config)
   if (token && config.headers) {
     config.headers.Authorization = `Bearer ${token}`
   }
   return config
 })
-
 // Response interceptor
 // apiInstance.interceptors.response.use(
 // 	(response) => response,
