@@ -13,7 +13,7 @@ export const useSignInForm = () => {
   } = useForm<SignInForm>({
     resolver: zodResolver(signInSchema),
     mode: 'onBlur',
-    reValidateMode: 'onChange',
+    // reValidateMode: 'onChange',
     defaultValues: { email: '', password: '' }
   })
 
