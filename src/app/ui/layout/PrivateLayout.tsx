@@ -1,6 +1,6 @@
 'use client'
 
-import { WithAuthGuard } from '@/shared/lib/hoc'
+import { WithAuthGuard } from '@/shared/lib'
 /**
  * Тут создаем layout для всего приложения, например сайдбар
  * сетку и т.д.

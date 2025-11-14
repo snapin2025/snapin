@@ -1,1 +1,0 @@
-export { WithAuthGuard } from './WithAuthGuard'

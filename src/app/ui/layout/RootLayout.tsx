@@ -3,9 +3,10 @@ import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 import { ReactNode } from 'react'
 import { QueryProvider } from '@/app/providers/query-provider/query-provider'
-import { AuthProvider } from '@/shared/providers'
+
 import { Header } from '@/widgets'
 import '@/app/ui/styles/index.css'
+import { AuthProvider } from '@/shared/lib'
 
 const interFont = localFont({
   src: [

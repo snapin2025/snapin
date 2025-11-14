@@ -2,7 +2,8 @@
 
 import { useRouter } from 'next/navigation'
 import { ComponentType, JSX, useEffect } from 'react'
-import { useAuth } from '@/shared/providers'
+import { useAuth } from '@/shared/lib'
+import { Spinner } from '@/shared/ui'
 
 /**
  * HOC AuthGuard оборачивает приватные страницы
@@ -21,7 +22,7 @@ export function WithAuthGuard<T extends JSX.IntrinsicAttributes>(Component: Comp
       }
     }, [user, isLoading, isError, router])
 
-    if (isLoading) return <p>Загрузка...</p>
+    if (isLoading) return <Spinner />
 
     if (!user || isError) return null
 
