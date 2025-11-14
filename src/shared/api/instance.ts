@@ -1,8 +1,8 @@
 import axios, { AxiosError } from 'axios'
 
 export const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
-  timeout: 1000,
+  baseURL: 'https://inctagram.work/api/v1/',
+  timeout: 10000,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json'

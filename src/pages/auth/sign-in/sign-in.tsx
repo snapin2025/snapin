@@ -1,18 +1,22 @@
 'use client'
 
 import React from 'react'
+import { SignIn } from '@/features/auth/signIn'
+import s from './sign-in.module.css'
 import { Oauth } from '@/widgets/oauth'
-import { Card } from '@/shared/ui'
+import { Card, Typography } from '@/shared/ui'
 import { WithGuestGuard } from '@/shared/lib/hoc/WithGuestGuard'
 
-const Page = () => {
+export const SignInPage = () => {
   return (
-    <section style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-      <Card style={{ width: '32rem', display: 'flex', alignItems: 'center' }}>
-        <Oauth></Oauth>
-      </Card>
-    </section>
+    <Card className={s.card}>
+      <Typography variant={'h1'} asChild className={s.title}>
+        <h1>Sign In</h1>
+      </Typography>
+      <Oauth />
+      <SignIn />
+    </Card>
   )
 }
 
-export const SignIn = WithGuestGuard(Page)
+// export const SignIn = WithGuestGuard(Page)
