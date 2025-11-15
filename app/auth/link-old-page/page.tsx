@@ -1,4 +1,4 @@
-import LinkOldPage from '@/features/forgot-password/ui/LinkOldPage'
+import LinkOldPage from '@/features/auth/forgot-password/ui/LinkOldPage'
 
 export default function LinkQldPage() {
   return <LinkOldPage />

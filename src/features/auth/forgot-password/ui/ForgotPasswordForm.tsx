@@ -8,10 +8,10 @@ import { Card } from '@/shared/ui'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { useRef, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { inputEmailSchema } from '@/features/forgot-password/model/validateInput'
+import { inputEmailSchema } from '@/features/auth/forgot-password/model/validateInput'
 import ReCAPTCHA from 'react-google-recaptcha'
-import { useForgotPassword } from '@/features/forgot-password/hooks/use-forgot-password'
-import { Modal } from '@/features/forgot-password/ui/ResendLinkModal'
+import { useForgotPassword } from '@/features/auth/forgot-password/hooks/use-forgot-password'
+import { Modal } from '@/features/auth/forgot-password/ui/ResendLinkModal'
 
 export type ForgotPasswordInputs = {
   email: string

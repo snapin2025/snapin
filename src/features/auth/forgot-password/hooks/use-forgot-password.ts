@@ -1,24 +1,8 @@
-// 'use client'
-//
-// import { useMutation, useQueryClient } from '@tanstack/react-query'
-// import { sendRecoveryEmail } from '../api'
-//
-// export const useForgotPassword = () => {
-//   const queryClient = useQueryClient()
-//
-//   return useMutation({
-//     mutationFn: sendRecoveryEmail
-//     // onSuccess: (data, variables) => {
-//     //   queryClient.setQueryData(['recovery-email'], variables)
-//     // }
-//   })
-// }
-
 'use client'
 
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { sendRecoveryEmail } from '../api'
-import type { ForgotPasswordInputs } from '@/features/forgot-password/model/validateInput'
+import type { ForgotPasswordInputs } from '@/features/auth/forgot-password/model/validateInput'
+import { userApi } from '@/entities/user'
 
 export const useForgotPassword = () => {
   const queryClient = useQueryClient()
@@ -28,7 +12,7 @@ export const useForgotPassword = () => {
     Error, // тип возможной ошибки
     ForgotPasswordInputs // тип переменных (аргументов mutate)
   >({
-    mutationFn: sendRecoveryEmail,
+    mutationFn: userApi.sendRecoveryEmail,
     onSuccess: (data, variables) => {
       // сохраняем email в кэше, чтобы переиспользовать на других страницах
       queryClient.setQueryData(['recovery-email'], variables.email)

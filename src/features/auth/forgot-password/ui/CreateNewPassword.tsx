@@ -3,11 +3,16 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Card, Input, Button, Typography } from '@/shared/ui'
 import s from './ForgotPasswordForm.module.css'
-import { useSetNewPassword } from '@/features/forgot-password/hooks/use-reset-password'
+
 import { passwordSchema, type CreatePasswordInput } from '../model'
+import { useSetNewPassword } from '@/features/auth/forgot-password/hooks/use-new-password'
+import { useSearchParams } from 'next/navigation'
 
 export const CreateNewPassword = () => {
-  const recoveryCode = 'test-recovery-code' // ← временный хардкод для разработки
+  const searchParams = useSearchParams() // ← ДОБАВЛЕНО: получаем параметры из URL
+  const recoveryCode = searchParams?.get('code') || '' // ← ДОБАВЛЕНО: реальный код из ссылки письма
+
+  // const recoveryCode = 'test-recovery-code' // ← временный хардкод для разработки можно для тестирования
 
   const {
     register,
@@ -26,7 +31,7 @@ export const CreateNewPassword = () => {
 
   const onSubmit: SubmitHandler<CreatePasswordInput> = (data) => {
     if (!recoveryCode) {
-      console.error('Recovery code not found in URL')
+      console.error('Recovery code not found in URL') // ← проверка, если код не пришёл
       return
     }
     setNewPassword(
