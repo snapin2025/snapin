@@ -1,5 +1,4 @@
 import { User, userApi } from '@/entities/user'
-
 import { createContext, ReactNode, useContext, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useRouter, useSearchParams } from 'next/navigation'

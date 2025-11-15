@@ -1,8 +1,13 @@
+'use client'
+
 import React from 'react'
 import { SignIn } from '@/features/auth/signIn'
 import { Card, Typography } from '@/shared/ui'
 import { Oauth } from '@/widgets'
 import s from './sign-in.module.css'
+import { Oauth } from '@/widgets/oauth'
+import { Card } from '@/shared/ui'
+import { WithGuestGuard } from '@/shared/lib/hoc/WithGuestGuard'
 
 export const SignInPage = () => {
   return (
@@ -15,3 +20,5 @@ export const SignInPage = () => {
     </Card>
   )
 }
+
+export const SignIn = WithGuestGuard(Page)

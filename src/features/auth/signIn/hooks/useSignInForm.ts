@@ -31,10 +31,5 @@ export const useSignInForm = () => {
 
   const onSubmit = handleSubmit((data) => mutate(data))
 
-  return {
-    register,
-    errors,
-    isPending,
-    onSubmit
-  }
+  return { register, errors, isPending, onSubmit }
 }
