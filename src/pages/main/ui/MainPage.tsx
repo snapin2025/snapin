@@ -1,8 +1,9 @@
 'use client'
 
-import { useAuth } from '@/shared/providers/auth-provider'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
+import { useAuth } from '@/shared/lib'
+import { Spinner } from '@/shared/ui'
 
 export function MainPage() {
   const { user, isLoading, isError } = useAuth()
@@ -14,7 +15,7 @@ export function MainPage() {
     }
   }, [isError, router])
 
-  if (isLoading) return <p>Loading...</p>
+  if (isLoading) return <Spinner />
   if (!user) return <p>Not logged in</p>
   return (
     <div>

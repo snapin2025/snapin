@@ -1,18 +1,19 @@
 'use client'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { signIn, SignInForm } from '@/features/auth/signIn'
+import { SignInForm } from '@/features/auth/signIn'
 import { UseFormSetError } from 'react-hook-form'
 import { handleFormErrors } from '@/shared/lib/errors'
+import { userApi } from '@/entities/user'
 
 export const useLoginMutation = (setError: UseFormSetError<SignInForm>) => {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: signIn,
+    mutationFn: userApi.signIn,
     onSuccess: async (data) => {
       if (typeof window !== 'undefined') {
         localStorage.setItem('accessToken', data.accessToken)
       }
-      qc.invalidateQueries({ queryKey: ['me'] })
+      await qc.invalidateQueries({ queryKey: ['me'] })
     },
     onError: (error) => handleFormErrors(error, setError, 'password')
 

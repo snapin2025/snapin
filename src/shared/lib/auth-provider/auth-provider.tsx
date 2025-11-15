@@ -2,6 +2,7 @@ import { User, userApi } from '@/entities/user'
 import { createContext, ReactNode, useContext, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { useMe } from '@/shared/api'
 
 type AuthContext = {
   user: User | null
@@ -33,16 +34,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [token, router])
 
-  const {
-    data: user,
-    isLoading,
-    isError
-  } = useQuery({
-    queryKey: ['me'],
-    queryFn: userApi.me,
-    retry: false,
-    refetchOnWindowFocus: false
-  })
+  const { data: user, isLoading, isError } = useMe()
 
   return <Auth.Provider value={{ user: user || null, isLoading, isError }}>{children}</Auth.Provider>
 }

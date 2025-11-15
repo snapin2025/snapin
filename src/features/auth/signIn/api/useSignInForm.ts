@@ -2,7 +2,7 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { SignInForm, signInSchema } from '@/features/auth/signIn'
-import { useLoginMutation } from '@/features/auth/signIn/hooks/useSignIn'
+import { useLoginMutation } from '@/features/auth/signIn/api/useSignIn'
 
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
@@ -26,7 +26,7 @@ export const useSignInForm = () => {
   const { mutate, isPending } = useLoginMutation(setError)
   useEffect(() => {
     if (user?.userId) {
-      router.push(`/profile/${user.userId}`)
+      router.replace(`/profile/${user.userId}`)
     }
   }, [user, router])
 
