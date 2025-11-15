@@ -27,16 +27,18 @@ import { Spinner } from '@/shared/ui'
 export function MainPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
-
+  const { user } = useAuth()
   useEffect(() => {
     const code = searchParams?.get('code')
     const email = searchParams?.get('email')
+    if (user) router.replace(`/profile/${user.userId}`)
+    else router.replace('/sign-in')
     console.log([code, email])
     if (code && email) {
       // Перенаправляем на страницу подтверждения регистрации
       router.replace(`/confirm?code=${code}&email=${email}`)
     }
-  }, [searchParams, router])
+  }, [searchParams, router, user])
 
   return <div>Hello{/*Счетчик и 4 поста*/}</div>
 }

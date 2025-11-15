@@ -1,12 +1,12 @@
 'use client'
 
-import { useSignUp } from '@/features/auth/signUp/api/useSignUp'
 import { SignUpForm } from '@/features/auth/signUp/model'
 import { SignUp } from '@/features/auth/signUp/ui'
 import { useState } from 'react'
 import { EmailSentModal } from '@/features/auth/ui/EmailSentModal'
 import s from './RegisterPage.module.css'
 import { SignUpErrorResponse } from '@/entities/user/api/user-types'
+import { useSignUp } from '@/features/auth/signUp'
 
 export function RegisterPage() {
   const { mutateAsync, isPending, error } = useSignUp()
