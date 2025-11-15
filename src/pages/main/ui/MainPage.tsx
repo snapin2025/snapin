@@ -1,12 +1,20 @@
 'use client'
 
 import { useAuth } from '@/shared/providers/auth-provider'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 
 export function MainPage() {
   const { user, isLoading, isError } = useAuth()
+  const router = useRouter()
+
+  useEffect(() => {
+    if (isError) {
+      router.replace('/sign-in')
+    }
+  }, [isError, router])
 
   if (isLoading) return <p>Loading...</p>
-  if (isError) return <p>Error</p>
   if (!user) return <p>Not logged in</p>
   return (
     <div>

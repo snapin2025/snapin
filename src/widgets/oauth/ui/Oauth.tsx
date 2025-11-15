@@ -1,5 +1,5 @@
 'use client'
-import { Button, Github } from '@/shared/ui'
+import { Button, Github, Google } from '@/shared/ui'
 import s from './oauth.module.css'
 
 export const Oauth = () => {
@@ -11,7 +11,10 @@ export const Oauth = () => {
   }
   return (
     <div className={s.container}>
-      <Button onClick={loginWithGitHub} variant={'textButton'} style={{ color: 'currentColor' }}>
+      <Button className={s.button} variant={'textButton'} style={{ color: 'currentColor' }}>
+        <Google name={'google'} width={'36px'} height={'36px'} />
+      </Button>
+      <Button className={s.button} onClick={loginWithGitHub} variant={'textButton'} style={{ color: 'currentColor' }}>
         <Github />
       </Button>
     </div>

@@ -1,13 +1,17 @@
 import React from 'react'
-import { Oauth } from '@/widgets/oauth'
-import { Card } from '@/shared/ui'
+import { SignIn } from '@/features/auth/signIn'
+import { Card, Typography } from '@/shared/ui'
+import { Oauth } from '@/widgets'
+import s from './sign-in.module.css'
 
-export const SignIn = () => {
+export const SignInPage = () => {
   return (
-    <section style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-      <Card style={{ width: '32rem', display: 'flex', alignItems: 'center' }}>
-        <Oauth></Oauth>
-      </Card>
-    </section>
+    <Card className={s.card}>
+      <Typography variant={'h1'} asChild className={s.title}>
+        <h1>Sign In</h1>
+      </Typography>
+      <Oauth />
+      <SignIn />
+    </Card>
   )
 }
