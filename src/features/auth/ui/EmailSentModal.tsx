@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Button, Modal, Typography } from '@/shared/ui';
+import { BaseModal, Button, Typography } from '@/shared/ui'
 import s from './EmailSentModal.module.css'
 
 type Props = {
@@ -18,13 +18,13 @@ export const EmailSentModal = ({ email, onClose }: Props) => {
   }
 
   return (
-    <Modal open={open} onClose={handleClose} modalTitle="Email sent">
+    <BaseModal open={open} onOpenChange={handleClose} title="Email sent">
       <Typography variant="regular_16" className={s.textModal}>
         We have sent a link to confirm your email to <b>{email}</b>
       </Typography>
       <Button className={s.buttonModal} onClick={handleClose}>
         Ok
       </Button>
-    </Modal>
+    </BaseModal>
   )
 }

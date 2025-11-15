@@ -1,4 +1,4 @@
-import { RegisterPage } from '../../../src/pages/auth/signUp';
+import { RegisterPage } from '@/pages/auth/signUp'
 
 export default function RegisterRedirect() {
   return <RegisterPage />
