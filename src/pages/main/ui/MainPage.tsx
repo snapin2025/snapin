@@ -27,7 +27,7 @@ import { Spinner } from '@/shared/ui'
 export function MainPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { user } = useAuth()
+  const { user, isLoading } = useAuth()
   useEffect(() => {
     const code = searchParams?.get('code')
     const email = searchParams?.get('email')
@@ -40,5 +40,6 @@ export function MainPage() {
     }
   }, [searchParams, router, user])
 
+  if (!isLoading) return <Spinner />
   return <div>Hello{/*Счетчик и 4 поста*/}</div>
 }
