@@ -48,7 +48,7 @@ export const SignIn = () => {
         </Typography>
 
         <Typography className={s.registrationLink} asChild variant={'h3'}>
-          <Link href={'/signUp'}>Sign Up</Link>
+          <Link href={'/sign-up'}>Sign Up</Link>
         </Typography>
       </div>
     </div>
