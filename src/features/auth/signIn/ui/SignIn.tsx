@@ -1,6 +1,6 @@
 'use client'
 
-import { Card, Github, Google, Input, Typography } from '@/shared/ui'
+import { Input, Typography } from '@/shared/ui'
 import Link from 'next/link'
 import { Button } from '@/shared/ui/button/Button'
 import s from './signIn.module.css'
@@ -10,18 +10,7 @@ export const SignIn = () => {
   const { register, errors, isPending, onSubmit } = useSignInForm()
 
   return (
-    <Card className={s.card}>
-      <Typography variant={'h1'} asChild className={s.title}>
-        <h1>Sign In</h1>
-      </Typography>
-      <div className={s.oAuth}>
-        <Link href={'google.com'}>
-          <Google name={'google'} width={'36px'} height={'36px'} />
-        </Link>
-        <Link href={'github.com'}>
-          <Github name={'github'} width={'36px'} height={'36px'} />
-        </Link>
-      </div>
+    <div className={s.card}>
       <form onSubmit={onSubmit} className={s.form}>
         <div className={s.fieldsWrapper}>
           <Input
@@ -43,19 +32,20 @@ export const SignIn = () => {
           />
         </div>
         <Typography asChild className={s.forgotPasswordLink} variant={'regular_link'}>
-          <Link href={'/auth/forgotPassword'}>Forgot Password</Link>
+          <Link href={'/forgot-password'}>Forgot Password</Link>
         </Typography>
 
         <Button disabled={isPending}>Sign In</Button>
       </form>
       <div className={s.registration}>
-        <Typography asChild className={s.registration} variant={'regular_14'}>
+        <Typography asChild variant={'regular_14'}>
           <h2>Don’t have an account?</h2>
         </Typography>
-        <Link href={'/auth/signUp'}>
-          <Button variant={'textButton'}>Sign Up</Button>
-        </Link>
+
+        <Typography className={s.registrationLink} asChild variant={'h3'}>
+          <Link href={'/signUp'}>Sign Up</Link>
+        </Typography>
       </div>
-    </Card>
+    </div>
   )
 }

@@ -1,5 +1,4 @@
 'use client'
-
 import React, { ComponentPropsWithRef, ReactNode, useState } from 'react'
 import s from './input.module.css'
 import clsx from 'clsx'

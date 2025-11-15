@@ -2,7 +2,7 @@ import axios, { AxiosError } from 'axios'
 
 export const api = axios.create({
   baseURL: 'https://inctagram.work/api/v1/',
-  timeout: 5000,
+  timeout: 10000,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json'
@@ -16,7 +16,6 @@ api.interceptors.request.use((config) => {
   }
   return config
 })
-
 // Response interceptor
 // apiInstance.interceptors.response.use(
 // 	(response) => response,
