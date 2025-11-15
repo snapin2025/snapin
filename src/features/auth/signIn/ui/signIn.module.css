@@ -7,6 +7,18 @@
   /*padding: 24px;*/
   width: 100%;
 }
+.containerInput {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 84px;
+}
+.inputCustom {
+  /*min-width: 330px;*/
+  /*min-height: 36px;*/
+  /*width: 100%;*/
+}
+
 
 .formWrapper {
   display: flex;
@@ -48,10 +60,9 @@
 .fieldsWrapper {
   display: flex;
   flex-direction: column;
-  flex-grow: none;
-  row-gap: 24px;
+  /*row-gap: 24px;*/
+  margin-bottom: 14px;
 
-  margin-bottom: 36px;
 }
 
 

@@ -4,8 +4,9 @@ import { Button } from '@/shared/ui/button/Button'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { SignUpForm, SignUpSchema } from '@/features/auth/signUp/model'
-import { SignUpResponse } from '@/features/auth/signUp'
+
 import Link from 'next/link'
+import { SignUpResponse } from '@/entities/user/api/user-types'
 
 type Props = {
   error?: string | null
@@ -147,9 +148,7 @@ export const SignUp = ({ error, isLoading = false, onSubmit }: Props) => {
         Do you have an account?
       </Typography>
       <Link href={'/sign-in'}>
-        <Button variant={'textButton'} disabled={!isValid}>
-          Sign In
-        </Button>
+        <Button variant={'textButton'}>Sign In</Button>
       </Link>
     </Card>
   )

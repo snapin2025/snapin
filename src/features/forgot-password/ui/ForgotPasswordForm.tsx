@@ -9,9 +9,10 @@ import { useForm, SubmitHandler } from 'react-hook-form'
 import { useRef, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { inputEmailSchema } from '@/features/forgot-password/model/validateInput'
-import ReCAPTCHA from 'react-google-recaptcha'
+
 import { useForgotPassword } from '@/features/forgot-password/hooks/use-forgot-password'
 import { Modal } from '@/features/forgot-password/ui/ResendLinkModal'
+import ReCAPTCHA from 'react-google-recaptcha'
 
 export type ForgotPasswordInputs = {
   email: string
