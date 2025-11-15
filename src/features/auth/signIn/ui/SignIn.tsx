@@ -13,23 +13,28 @@ export const SignIn = () => {
     <div className={s.card}>
       <form onSubmit={onSubmit} className={s.form}>
         <div className={s.fieldsWrapper}>
-          <Input
-            label={'Email'}
-            id={'email'}
-            placeholder={'Epam@epam.com'}
-            type={'email'}
-            error={errors.email?.message}
-            {...register('email')}
-          />
-
-          <Input
-            label={'Password'}
-            id={'password'}
-            placeholder={'**********'}
-            type={'password'}
-            error={errors.password?.message}
-            {...register('password')}
-          />
+          <div className={s.containerInput}>
+            <Input
+              label={'Email'}
+              id={'email'}
+              placeholder={'Epam@epam.com'}
+              type={'email'}
+              error={errors.email?.message}
+              {...register('email')}
+              className={s.inputCustom}
+            />
+          </div>
+          <div className={s.containerInput}>
+            <Input
+              label={'Password'}
+              id={'password'}
+              placeholder={'**********'}
+              type={'password'}
+              error={errors.password?.message}
+              {...register('password')}
+              className={s.inputCustom}
+            />
+          </div>
         </div>
         <Typography asChild className={s.forgotPasswordLink} variant={'regular_link'}>
           <Link href={'/forgot-password'}>Forgot Password</Link>

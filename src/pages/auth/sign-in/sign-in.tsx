@@ -7,7 +7,7 @@ import { Oauth } from '@/widgets/oauth'
 import { Card, Typography } from '@/shared/ui'
 import { WithGuestGuard } from '@/shared/lib/hoc/WithGuestGuard'
 
-export const SignInPage = () => {
+const SignInPage = () => {
   return (
     <Card className={s.card}>
       <Typography variant={'h1'} asChild className={s.title}>
@@ -19,4 +19,4 @@ export const SignInPage = () => {
   )
 }
 
-// export const SignIn = WithGuestGuard(Page)
+export const PrivateSignIn = WithGuestGuard(SignInPage)
