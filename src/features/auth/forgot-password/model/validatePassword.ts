@@ -16,3 +16,10 @@ export const passwordSchema = z
   })
 
 export type CreatePasswordInput = z.infer<typeof passwordSchema>
+
+export const forgotPasswordFormSchema = z.object({
+  email: z.email("User with this email doesn't exist"),
+  recaptcha: z.string()
+})
+
+export type ForgotPasswordFormType = z.infer<typeof forgotPasswordFormSchema>

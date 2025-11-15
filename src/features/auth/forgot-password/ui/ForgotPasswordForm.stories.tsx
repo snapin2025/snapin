@@ -1,11 +1,11 @@
 import { ForgotPasswordForm } from './ForgotPasswordForm'
 import { ForgotPasswordModal } from './ForgotPasswordModal'
 import LinkOldPage from './LinkOldPage'
-import { EmailSentMessage } from '@/features/forgot-password/ui/EmailSentMessage'
+import { EmailSentMessage } from '@/features/auth/forgot-password/ui/EmailSentMessage'
 import s from './ForgotPasswordForm.module.css'
 import { Button } from '@/shared/ui'
-import { Modal } from '@/features/forgot-password/ui/ResendLinkModal'
-import { CreateNewPassword } from '@/features/forgot-password/ui/CreateNewPassword'
+import { Modal } from '@/features/auth/forgot-password/ui/ResendLinkModal'
+import { CreateNewPassword } from '@/features/auth/forgot-password/ui/CreateNewPassword'
 
 export default {
   title: 'Features/ForgotPassword',

@@ -1,4 +1,4 @@
-import { EmailSentMessage } from '@/features/forgot-password/ui'
+import { EmailSentMessage } from '@/features/auth/forgot-password/ui'
 
 export default function EmailSentMessagePage() {
   return <EmailSentMessage />

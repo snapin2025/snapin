@@ -1,7 +1,6 @@
 'use client'
 
 import s from './ForgotPasswordForm.module.css'
-import Image from 'next/image'
 import { Button, Resend, Typography } from '@/shared/ui'
 import { useResendRecoveryEmail } from '../hooks/use-reset-password'
 import { useQueryClient } from '@tanstack/react-query'

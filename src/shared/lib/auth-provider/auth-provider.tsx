@@ -1,6 +1,6 @@
-import { User, userApi } from '@/entities/user'
+import { User } from '@/entities/user'
 import { createContext, ReactNode, useContext, useEffect } from 'react'
-import { useQuery } from '@tanstack/react-query'
+
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useMe } from '@/shared/api'
 
@@ -11,6 +11,7 @@ type AuthContext = {
 }
 
 const Auth = createContext<AuthContext | null>(null)
+export const AuthContext = Auth
 
 export const useAuth = () => {
   const ctx = useContext(Auth)
