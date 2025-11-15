@@ -3,9 +3,10 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { SignInForm, signInSchema } from '@/features/auth/signIn'
 import { useLoginMutation } from '@/features/auth/signIn/hooks/useSignIn'
-import { useAuth } from '@/shared/providers/auth-provider'
+
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
+import { useAuth } from '@/shared/lib'
 
 export const useSignInForm = () => {
   const router = useRouter()
