@@ -1,5 +1,15 @@
 import { api } from '@/shared/api'
-import { SignInRequest, SignInResponse, SignUpRequest, SignUpResponse, User } from './user-types'
+import {
+  ResendRecoveryEmailType,
+  SendRecoveryEmailType,
+  SetNewPasswordType,
+  SignInRequest,
+  SignInResponse,
+  SignUpRequest,
+  SignUpResponse,
+  User
+} from './user-types'
+import { ForgotPasswordInputs } from '@/features/auth/forgot-password/model/validateInput'
 
 export const userApi = {
   me: async () => {
