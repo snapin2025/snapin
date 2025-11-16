@@ -18,9 +18,10 @@ export const CreateNewPassword = () => {
     register,
     handleSubmit,
     reset,
-    formState: { errors }
+    formState: { errors, isValid } // ✔ Добавили isValid для дизейбла кнопки
   } = useForm<CreatePasswordInput>({
     resolver: zodResolver(passwordSchema),
+    mode: 'onChange', // ✔ Обновление isValid при вводе
     defaultValues: {
       password: '',
       password_confirmation: ''
@@ -77,8 +78,8 @@ export const CreateNewPassword = () => {
       </div>
 
       <p className={s.text}>Your password must be between 6 and 20 characters</p>
-
-      <Button variant="primary" className={s.buttonPassword} type="submit" disabled={isPending}>
+      {/* ✔ UC-3 шаг 11: кнопка дизейблится, если поля пустые/невалидные или запрос отправки в процессе */}
+      <Button variant="primary" className={s.buttonPassword} type="submit" disabled={!isValid || isPending}>
         {isPending ? 'Creating' : 'Create new password'}
       </Button>
     </Card>
