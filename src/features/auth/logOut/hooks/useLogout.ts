@@ -18,7 +18,7 @@ export const useLogout = () => {
       queryClient.clear()
 
       // Перенаправляем на страницу входа
-      router.push('/auth/signin')
+      router.push('/sign-in')
     },
     onError: (error) => {
       console.error('Logout failed:', error)
@@ -27,7 +27,7 @@ export const useLogout = () => {
         localStorage.removeItem('accessToken')
       }
       queryClient.clear()
-      router.push('/auth/signin')
+      router.push('/sign-in')
     }
   })
 
