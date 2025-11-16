@@ -1,2 +1,2 @@
 export { WithAuthGuard } from './hoc/WithAuthGuard'
-export { AuthProvider, useAuth } from './auth-provider/auth-provider'
+export { AuthProvider, useAuth, AuthContext } from './auth-provider/auth-provider'

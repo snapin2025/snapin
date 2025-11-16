@@ -11,6 +11,7 @@ type AuthContext = {
 }
 
 const Auth = createContext<AuthContext | null>(null)
+export const AuthContext = Auth
 
 export const useAuth = () => {
   const ctx = useContext(Auth)

@@ -1,7 +1,8 @@
 import type { StoryObj } from '@storybook/nextjs'
 import { SignIn } from '@/features/auth/signIn'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { useState } from 'react'
+import { PropsWithChildren, useMemo, useState } from 'react'
+import { AuthContext } from '@/shared/lib'
 
 const meta = {
   title: 'Features/Auth/SignIn',
@@ -18,15 +19,31 @@ export default meta
 
 type Story = StoryObj<typeof meta>
 
+const QueryWrapper = ({ children }: PropsWithChildren) => {
+  const [client] = useState(() => new QueryClient())
+  return <QueryClientProvider client={client}>{children}</QueryClientProvider>
+}
+
+const MockAuthProvider = ({ children }: PropsWithChildren) => {
+  const contextValue = useMemo(
+    () => ({
+      user: null,
+      isLoading: false,
+      isError: false
+    }),
+    []
+  )
+  return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
+}
+
 export const Default: Story = {
-  render: () => {
-    const [client] = useState(() => new QueryClient())
-    return (
-      <QueryClientProvider client={client}>
+  render: () => (
+    <QueryWrapper>
+      <MockAuthProvider>
         <SignIn />
-      </QueryClientProvider>
-    )
-  },
+      </MockAuthProvider>
+    </QueryWrapper>
+  ),
   parameters: {
     nextjs: {
       navigation: {
