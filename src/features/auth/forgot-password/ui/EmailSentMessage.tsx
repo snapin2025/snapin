@@ -77,7 +77,7 @@ export const EmailSentMessage = ({ onResendClick }: Props) => {
           {isPending ? 'Sending' : 'Send Link Again'}
         </Button>
 
-        <Link href="/signin" className={s.backLink}>
+        <Link href="/sign-in" className={s.backLink}>
           Back to Sign In
         </Link>
 

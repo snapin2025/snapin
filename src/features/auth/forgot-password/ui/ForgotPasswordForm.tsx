@@ -86,7 +86,7 @@ export const ForgotPasswordForm = () => {
       >
         {isPending ? 'Sending' : 'Send Link'}
       </Button>
-      <Link href="auth/signin" className={s.backLink}>
+      <Link href="auth/sign-in" className={s.backLink}>
         Back to Sign In
       </Link>
       <div className={s.captchaContainer}>

@@ -5,7 +5,6 @@ import { Button, Resend, Typography } from '@/shared/ui'
 import { useResendRecoveryEmail } from '../hooks/use-reset-password'
 import { useQueryClient } from '@tanstack/react-query'
 
-// импорт универсальной модалки
 import { Dialog, DialogContent } from '@/shared/ui'
 import { useState } from 'react'
 

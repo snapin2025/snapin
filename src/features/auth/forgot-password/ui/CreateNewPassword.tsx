@@ -7,8 +7,10 @@ import s from './ForgotPasswordForm.module.css'
 import { passwordSchema, type CreatePasswordInput } from '../model'
 import { useSetNewPassword } from '@/features/auth/forgot-password/hooks/use-new-password'
 import { useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
 export const CreateNewPassword = () => {
+  const router = useRouter() // ← создаём router
   const searchParams = useSearchParams() // ← ДОБАВЛЕНО: получаем параметры из URL
   const recoveryCode = searchParams?.get('code') || '' // ← ДОБАВЛЕНО: реальный код из ссылки письма
 
@@ -38,11 +40,12 @@ export const CreateNewPassword = () => {
     setNewPassword(
       {
         newPassword: data.password,
-        recoveryCode: recoveryCode // ← ИСПОЛЬЗОВАТЬ реальный код из URL
+        recoveryCode: recoveryCode // придет реальный код из URL
       },
       {
         onSuccess: () => {
-          console.log('Пароль успешно изменен!')
+          router.push('/sign-in') // ← РЕДИРЕКТ ПО ТЗ ШАГ 12
+          // console.log('Пароль успешно изменен!')
           reset()
         }
       }
