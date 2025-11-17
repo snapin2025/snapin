@@ -16,9 +16,6 @@ export default {
 // 1. Основная форма
 export const DefaultForm = () => <ForgotPasswordForm />
 
-// 2. Сообщение "Email отправлен"
-// export const EmailSent = () => <EmailSentMessage />
-
 // 3. Сообщение "Email отправлен" с ОТКРЫТОЙ модалкой (для демонстрации)
 export const EmailSentWithModal = () => {
   const [showModal, setShowModal] = useState(true) // ← управляемое состояние
@@ -40,7 +37,7 @@ export const EmailSentWithModal = () => {
 // 2. Сообщение "Email отправлен"
 export const EmailSent = () => <EmailSentMessage />
 // 4. Создание нового пароля
+// export const CreatePassword = () => <CreateNewPassword />
 export const CreatePassword = () => <CreateNewPassword />
-
 // 5. Ссылка устарела
 export const LinkExpired = () => <LinkOldPage />
