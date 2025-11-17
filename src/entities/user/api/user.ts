@@ -27,26 +27,25 @@ export const userApi = {
     }
     return res.data
   },
-  sendRecoveryEmail: async (payload: ForgotPasswordInputs) => {
-    const { data } = await api.post<SendRecoveryEmailType>('/auth/password-recovery', {
+  sendRecoveryEmail: async (payload: ForgotPasswordInputs): Promise<void> => {
+    await api.post<SendRecoveryEmailType>('/auth/password-recovery', {
       email: payload.email,
       recaptcha: payload.recaptcha
     })
-    return data
+    // return data
   },
   // повторная отправка — ожидаем строку email
-  resendRecoveryEmail: async (email: string) => {
-    const { data } = await api.post<ResendRecoveryEmailType>('/auth/password-recovery-resending', {
+  resendRecoveryEmail: async (email: string): Promise<void> => {
+    await api.post<ResendRecoveryEmailType>('/auth/password-recovery-resending', {
       email
     })
-    return data
+    // return data
   },
   // установка нового пароля — принимаем объект с newPassword и recoveryCode
-  SetNewPassword: async (payload: { newPassword: string; recoveryCode: string }) => {
-    const { data } = await api.post<SetNewPasswordType>('/auth/new-password', {
-      newPassword: payload.newPassword,
-      recoveryCode: payload.recoveryCode
-    })
-    return data
+  SetNewPassword: async (payload: SetNewPasswordType): Promise<void> => {
+    await api.post<SetNewPasswordType>('/auth/new-password', payload)
+    // newPassword: payload.newPassword,
+    // recoveryCode: payload.recoveryCode
+    // return data
   }
 }

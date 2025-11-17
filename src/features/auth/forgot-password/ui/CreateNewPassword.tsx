@@ -45,7 +45,6 @@ export const CreateNewPassword = () => {
       {
         onSuccess: () => {
           router.push('/sign-in') // ← РЕДИРЕКТ ПО ТЗ ШАГ 12
-          // console.log('Пароль успешно изменен!')
           reset()
         }
       }
