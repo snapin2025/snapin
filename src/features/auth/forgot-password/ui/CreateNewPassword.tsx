@@ -10,19 +10,18 @@ import { useSearchParams } from 'next/navigation'
 import { useRouter } from 'next/navigation'
 
 export const CreateNewPassword = () => {
-  // const router = useRouter() // ← создаём router
   const searchParams = useSearchParams() // ← ДОБАВЛЕНО: получаем параметры из URL
   const recoveryCode = searchParams?.get('code') || '' // ← ДОБАВЛЕНО: реальный код из ссылки письма
 
   // const recoveryCode = 'test-recovery-code' // ← временный хардкод для разработки можно для тестирования
+
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isValid } // ✔ Добавили isValid для дизейбла кнопки
+    formState: { errors }
   } = useForm<CreatePasswordInput>({
     resolver: zodResolver(passwordSchema),
-    mode: 'onChange', // ✔ Обновление isValid при вводе
     defaultValues: {
       password: '',
       password_confirmation: ''
@@ -39,12 +38,11 @@ export const CreateNewPassword = () => {
     setNewPassword(
       {
         newPassword: data.password,
-        recoveryCode: recoveryCode // придет реальный код из URL
+        recoveryCode: recoveryCode // ← ИСПОЛЬЗОВАТЬ реальный код из URL
       },
       {
         onSuccess: () => {
-          console.log('/sign-in')
-          // router.push('/sign-in') // ← РЕДИРЕКТ ПО ТЗ ШАГ 12
+          console.log('Пароль успешно изменен!')
           reset()
         }
       }
@@ -80,8 +78,8 @@ export const CreateNewPassword = () => {
       </div>
 
       <p className={s.text}>Your password must be between 6 and 20 characters</p>
-      {/* ✔ UC-3 шаг 11: кнопка дизейблится, если поля пустые/невалидные или запрос отправки в процессе */}
-      <Button variant="primary" className={s.buttonPassword} type="submit" disabled={!isValid || isPending}>
+
+      <Button variant="primary" className={s.buttonPassword} type="submit" disabled={isPending}>
         {isPending ? 'Creating' : 'Create new password'}
       </Button>
     </Card>

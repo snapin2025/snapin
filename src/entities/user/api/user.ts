@@ -10,6 +10,7 @@ import {
   User
 } from './user-types'
 import { ForgotPasswordInputs } from '@/features/auth/forgot-password/model/validateInput'
+import type { LogoutResponse } from '@/features/auth/logOut'
 
 export const userApi = {
   me: async () => {
@@ -48,5 +49,8 @@ export const userApi = {
       recoveryCode: payload.recoveryCode
     })
     return data
+  },
+  logout: async (): Promise<LogoutResponse> => {
+    await api.post<LogoutResponse>('/auth/logout')
   }
 }
