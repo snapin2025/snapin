@@ -8,29 +8,26 @@ import { Card } from '@/shared/ui'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { useRef, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { inputEmailSchema } from '@/features/auth/forgot-password/model/validateInput'
+import { ForgotPasswordInputs, inputEmailSchema } from '@/features/auth/forgot-password/model/validateInput'
 import ReCAPTCHA from 'react-google-recaptcha'
 import { useForgotPassword } from '@/features/auth/forgot-password/hooks/use-forgot-password'
-import { Modal } from '@/features/auth/forgot-password/ui/ResendLinkModal'
-
-export type ForgotPasswordInputs = {
-  email: string
-  recaptcha: string
-}
+import { AxiosError } from 'axios'
 
 export const ForgotPasswordForm = () => {
-  const [showModal, setShowModal] = useState(false)
   const [recaptchaToken, setRecaptchaToken] = useState<string>('')
-
   const recaptchaRef = useRef<ReCAPTCHA | null>(null)
+
+  // ✔ Добавлено состояние для отображения ошибки сервера (не зарегистрированный email)
+  const [formError, setFormError] = useState<string>('')
 
   const {
     register,
     reset,
     handleSubmit,
-    formState: { errors }
+    formState: { errors, isValid } // ✔ Добавлено isValid для дизейбла кнопки
   } = useForm<ForgotPasswordInputs>({
     resolver: zodResolver(inputEmailSchema),
+    mode: 'onChange', // ✔ Включаем onChange чтобы isValid обновлялся при вводе
     defaultValues: { email: '', recaptcha: '' }
   })
 
@@ -38,9 +35,12 @@ export const ForgotPasswordForm = () => {
 
   const onSubmit: SubmitHandler<ForgotPasswordInputs> = (data) => {
     if (!recaptchaToken) {
-      alert('Please complete the captcha')
+      // ✔ Вместо alert можно оставить formError, чтобы отображалось на форме
+      setFormError('Please complete the captcha')
       return
     }
+    // ✔ Сбрасываем предыдущую ошибку перед новым запросом
+    setFormError('')
     sendRecoveryEmail(
       {
         email: data.email,
@@ -50,7 +50,10 @@ export const ForgotPasswordForm = () => {
         onSuccess: () => {
           reset({ email: '', recaptcha: '' })
           recaptchaRef.current?.reset()
-          setShowModal(true)
+        },
+        onError: (err: AxiosError<{ message: string }>) => {
+          const serverMessage = err.response?.data?.message || err.message || 'Something went wrong'
+          setFormError(serverMessage)
         }
       }
     )
@@ -68,13 +71,22 @@ export const ForgotPasswordForm = () => {
           error={!!errors.email}
           {...register('email')}
         />
+        {/* ✔ Inline сообщение об ошибке от валидации zod */}
         {errors.email && <span className={s.errorMessage}>{errors.email.message}</span>}
+        {/* ✔ Inline сообщение от сервера (не зарегистрированный email) */}
+        {formError && !errors.email && <span className={s.errorMessage}>{formError}</span>}
       </div>
       <p className={s.text}>Enter your email address and we will send you further instructions</p>
-      <Button variant="primary" type={'submit'} className={s.button} disabled={isPending}>
+      {/* ✔ Кнопка теперь дизейблится, если форма не валидна или капча не пройдена */}
+      <Button
+        variant="primary"
+        type={'submit'}
+        className={s.button}
+        disabled={!isValid || !recaptchaToken || isPending} // ✔ UC-3: шаг 4
+      >
         {isPending ? 'Sending' : 'Send Link'}
       </Button>
-      <Link href="auth/signin" className={s.backLink}>
+      <Link href="auth/sign-in" className={s.backLink}>
         Back to Sign In
       </Link>
       <div className={s.captchaContainer}>
@@ -91,12 +103,6 @@ export const ForgotPasswordForm = () => {
           />
         )}
       </div>
-      <Modal modalTitle={'Email sent'} open={showModal} onClose={() => setShowModal(false)}>
-        <p className={s.textModal}>We have sent a link to confirm your email to epam@epam.com</p>
-        <Button className={s.buttonModal} onClick={() => setShowModal(false)}>
-          Ok
-        </Button>
-      </Modal>
     </Card>
   )
 }
