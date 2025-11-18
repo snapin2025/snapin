@@ -1,1 +1,0 @@
-export type LogoutResponse = void

@@ -10,7 +10,7 @@ import {
   User
 } from './user-types'
 import { ForgotPasswordInputs } from '@/features/auth/forgot-password/model/validateInput'
-import type { LogoutResponse } from '@/features/auth/logOut'
+import type { LogoutResponse } from '@/features/auth/logout'
 
 export const userApi = {
   me: async () => {

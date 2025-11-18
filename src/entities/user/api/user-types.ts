@@ -50,3 +50,5 @@ export type SetNewPasswordType = {
   newPassword: string // Новый пароль пользователя
   recoveryCode: string // Код восстановления из письма
 }
+
+export type LogoutResponse = void

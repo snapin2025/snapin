@@ -1,13 +1,14 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
-import { logout } from '@/features/auth/logOut/api'
+import { userApi } from '@/entities/user'
+import { ROUTES } from '@/shared/lib/routes'
 
 export const useLogout = () => {
   const queryClient = useQueryClient()
   const router = useRouter()
 
   const mutation = useMutation({
-    mutationFn: logout,
+    mutationFn: userApi.logout,
     onSuccess: () => {
       // Удаляем токен из localStorage
       if (typeof window !== 'undefined') {
@@ -18,7 +19,7 @@ export const useLogout = () => {
       queryClient.clear()
 
       // Перенаправляем на страницу входа
-      router.push('/sign-in')
+      router.push(ROUTES.AUTH.SIGN_IN)
     },
     onError: (error) => {
       console.error('Logout failed:', error)
@@ -27,7 +28,7 @@ export const useLogout = () => {
         localStorage.removeItem('accessToken')
       }
       queryClient.clear()
-      router.push('/sign-in')
+      router.push(ROUTES.AUTH.SIGN_IN)
     }
   })
 

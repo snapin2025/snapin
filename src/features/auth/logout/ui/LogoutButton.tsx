@@ -2,9 +2,10 @@
 
 import { Button } from '@/shared/ui/button/Button'
 import { Logout } from '@/shared/ui/icons'
-import { useLogout } from '@/features/auth/logOut/hooks'
+
 import s from './logoutButton.module.css'
 import { Typography } from '@/shared/ui'
+import { useLogout } from '../api/useLogout'
 
 type Props = {
   variant?: 'icon' | 'text' | 'both'
