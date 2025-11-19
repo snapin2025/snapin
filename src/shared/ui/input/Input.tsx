@@ -4,13 +4,12 @@ import s from './input.module.css'
 import clsx from 'clsx'
 import { Close, Eye, EyeOff, Search } from '@/shared/ui'
 
-type InputProps = ComponentPropsWithRef<'input'> & {
+export type InputProps = ComponentPropsWithRef<'input'> & {
   type: 'email' | 'password' | 'search' | 'text'
   label?: string | ReactNode
   className?: string
   error?: boolean | string
   onClear?: () => void
-  id: string
 }
 
 export const Input = ({
@@ -83,7 +82,6 @@ export const Input = ({
             className={s.eyesIcon}
             onClick={() => setShowPassword(!showPassword)}
             disabled={disabled}
-            tabIndex={-1}
             aria-label={showPassword ? 'Hide password' : 'Show password'}
           >
             {showPassword ? <Eye /> : <EyeOff />}
@@ -96,7 +94,6 @@ export const Input = ({
             className={s.crossIcon}
             onClick={handleClear}
             disabled={disabled}
-            tabIndex={-1}
             aria-label="Clear input"
           >
             <Close />

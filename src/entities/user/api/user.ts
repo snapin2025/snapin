@@ -1,5 +1,8 @@
 import { api } from '@/shared/api'
 import {
+  ConfirmRequest,
+  ConfirmResponse,
+  LogoutResponse,
   ResendRecoveryEmailType,
   SendRecoveryEmailType,
   SetNewPasswordType,
@@ -27,6 +30,9 @@ export const userApi = {
     }
     return res.data
   },
+  confirm: async (payload: ConfirmRequest): Promise<void> => {
+    await api.post<ConfirmResponse>('/auth/registration-confirmation', payload)
+  },
   sendRecoveryEmail: async (payload: ForgotPasswordInputs) => {
     const { data } = await api.post<SendRecoveryEmailType>('/auth/password-recovery', {
       email: payload.email,
@@ -48,5 +54,8 @@ export const userApi = {
       recoveryCode: payload.recoveryCode
     })
     return data
+  },
+  logout: async (): Promise<LogoutResponse> => {
+    await api.post<LogoutResponse>('/auth/logout')
   }
 }

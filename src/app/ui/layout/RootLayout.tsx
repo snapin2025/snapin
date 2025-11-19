@@ -31,7 +31,9 @@ export const RootLayout = ({ children }: Readonly<{ children: ReactNode }>) => {
         <QueryProvider>
           <AuthProvider>
             <Header />
-            <main>{children}</main>
+            <div className={'container'}>
+              <main> {children}</main>
+            </div>
           </AuthProvider>
         </QueryProvider>
       </body>

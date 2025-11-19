@@ -50,3 +50,20 @@ export type SetNewPasswordType = {
   newPassword: string // Новый пароль пользователя
   recoveryCode: string // Код восстановления из письма
 }
+
+export type LogoutResponse = void
+
+export type ConfirmRequest = {
+  confirmationCode: string
+}
+
+export type ConfirmErrorResponse = {
+  statusCode: number
+  messages: {
+    message: string
+    field: string
+  }[]
+  error: string
+}
+
+export type ConfirmResponse = void | ConfirmErrorResponse

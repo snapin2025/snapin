@@ -1,7 +1,0 @@
-.registerWrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: calc(100vh - 61px);
-  flex-direction: column;
-}

@@ -6,7 +6,7 @@ import { WithAuthGuard } from '@/shared/lib'
  * сетку и т.д.
  * */
 const Layout = () => {
-  return <div></div>
+  return <div>фывфыв</div>
 }
 
 export const PrivateLayout = WithAuthGuard(Layout)

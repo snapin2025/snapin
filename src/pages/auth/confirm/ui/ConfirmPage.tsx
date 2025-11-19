@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { ConfirmErrorResponse, useConfirm } from '@/features/auth/confirm'
+
 import { Button, Confirmed, Typography } from '@/shared/ui'
 import Link from 'next/link'
 import s from './ConfirmPage.module.css'
+import { ConfirmErrorResponse } from '@/entities/user/api/user-types'
+import { useConfirm } from '@/features/auth/sign-in/api/useConfirm'
 
 export function ConfirmPage() {
   const router = useRouter()
@@ -17,8 +19,9 @@ export function ConfirmPage() {
   useEffect(() => {
     const code = searchParams?.get('code')
     const email = searchParams?.get('email')
-
+    console.log(code)
     if (!code) {
+      console.log(code)
       router.push('/sign-up')
       return
     }
@@ -64,11 +67,9 @@ export function ConfirmPage() {
         Your email has been confirmed
       </Typography>
 
-      <Link href={'/sign-in'}>
-        <Button className={s.button} variant={'primary'}>
-          Sign In
-        </Button>
-      </Link>
+      <Button className={s.button} variant={'primary'}>
+        <Link href={'/sign-in'}>Sign In</Link>
+      </Button>
       <Confirmed />
     </div>
   )

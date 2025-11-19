@@ -1,1 +1,1 @@
-export { MainPage as default } from '@/pages/main/ui/MainPage'
+export { HomePage as default } from '@/pages/home'

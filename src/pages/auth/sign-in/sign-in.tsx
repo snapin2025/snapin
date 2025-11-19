@@ -1,22 +1,21 @@
 'use client'
-
 import React from 'react'
-import { SignIn } from '@/features/auth/signIn'
-import s from './sign-in.module.css'
 import { Oauth } from '@/widgets/oauth'
 import { Card, Typography } from '@/shared/ui'
 import { WithGuestGuard } from '@/shared/lib/hoc/WithGuestGuard'
+import { SignInForm } from '@/features/auth'
+import s from './sign-in.module.css'
 
-const SignInPage = () => {
+const Page = () => {
   return (
     <Card className={s.card}>
       <Typography variant={'h1'} asChild className={s.title}>
         <h1>Sign In</h1>
       </Typography>
       <Oauth />
-      <SignIn />
+      <SignInForm />
     </Card>
   )
 }
 
-export const PrivateSignIn = WithGuestGuard(SignInPage)
+export const SignInPage = WithGuestGuard(Page)
