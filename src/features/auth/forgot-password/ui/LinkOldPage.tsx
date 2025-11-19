@@ -1,12 +1,11 @@
 'use client'
 
-import s from './ForgotPasswordForm.module.css'
 import { Button, Resend, Typography } from '@/shared/ui'
-import { useResendRecoveryEmail } from '../hooks/use-reset-password'
 import { useQueryClient } from '@tanstack/react-query'
-
 import { Dialog, DialogContent } from '@/shared/ui'
 import { useState } from 'react'
+import { useResendRecoveryEmail } from '../api/useResetPassword'
+import s from './ForgotPasswordForm.module.css'
 
 export default function LinkOldPage() {
   const queryClient = useQueryClient()

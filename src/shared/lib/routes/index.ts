@@ -3,7 +3,9 @@ export const ROUTES = {
 
   AUTH: {
     SIGN_IN: '/sign-in',
-    SIGN_UP: '/sign-up'
+    SIGN_UP: '/sign-up',
+    FORGOT_PASSWORD: '/forgot-password',
+    CREATE_NEW_PASSWORD: '/create-password'
   },
 
   APP: {

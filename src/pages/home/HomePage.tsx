@@ -21,6 +21,9 @@ export const HomePage = () => {
       router.replace(`/confirm?code=${code}&email=${email}`)
       return
     }
+    if (email) {
+      router.replace('/create-new-password')
+    }
 
     // 2) Если пользователь уже авторизован
     if (user) {

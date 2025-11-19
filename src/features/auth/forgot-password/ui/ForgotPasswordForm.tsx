@@ -10,13 +10,14 @@ import { useRef, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ForgotPasswordInputs, inputEmailSchema } from '@/features/auth/forgot-password/model/validateInput'
 import ReCAPTCHA from 'react-google-recaptcha'
-import { useForgotPassword } from '@/features/auth/forgot-password/hooks/use-forgot-password'
+import { useForgotPassword } from '@/features/auth/forgot-password/api/useForgotPassword'
 import { AxiosError } from 'axios'
+import { ROUTES } from '@/shared/lib/routes'
+import { usePathname } from 'next/navigation'
 
 export const ForgotPasswordForm = () => {
   const [recaptchaToken, setRecaptchaToken] = useState<string>('')
   const recaptchaRef = useRef<ReCAPTCHA | null>(null)
-
   // ✔ Добавлено состояние для отображения ошибки сервера (не зарегистрированный email)
   const [formError, setFormError] = useState<string>('')
 
@@ -44,7 +45,8 @@ export const ForgotPasswordForm = () => {
     sendRecoveryEmail(
       {
         email: data.email,
-        recaptcha: recaptchaToken
+        recaptcha: recaptchaToken,
+        baseUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/${ROUTES.AUTH.CREATE_NEW_PASSWORD}`
       },
       {
         onSuccess: () => {
@@ -86,7 +88,7 @@ export const ForgotPasswordForm = () => {
       >
         {isPending ? 'Sending' : 'Send Link'}
       </Button>
-      <Link href="auth/sign-in" className={s.backLink}>
+      <Link href={ROUTES.AUTH.SIGN_IN} className={s.backLink}>
         Back to Sign In
       </Link>
       <div className={s.captchaContainer}>

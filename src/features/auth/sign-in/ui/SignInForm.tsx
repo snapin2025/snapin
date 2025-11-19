@@ -5,6 +5,7 @@ import { Button } from '@/shared/ui/button/Button'
 import { Input, Typography } from '@/shared/ui'
 import { useSignInForm } from '../api/useSignInForm'
 import s from './signIn.module.css'
+import { ROUTES } from '@/shared/lib/routes'
 
 export const SignInForm = () => {
   const { register, errors, isPending, onSubmit } = useSignInForm()
@@ -37,7 +38,7 @@ export const SignInForm = () => {
           </div>
         </div>
         <Typography asChild className={s.forgotPasswordLink} variant={'regular_link'}>
-          <Link href={'/forgot-password'}>Forgot Password</Link>
+          <Link href={ROUTES.AUTH.FORGOT_PASSWORD}>Forgot Password</Link>
         </Typography>
 
         <Button disabled={isPending}>Sign In</Button>
@@ -48,7 +49,7 @@ export const SignInForm = () => {
         </Typography>
 
         <Typography className={s.registrationLink} asChild variant={'h3'}>
-          <Link href={'/sign-up'}>Sign Up</Link>
+          <Link href={ROUTES.AUTH.SIGN_UP}>Sign Up</Link>
         </Typography>
       </div>
     </div>

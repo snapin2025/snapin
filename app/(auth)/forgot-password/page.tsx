@@ -1,5 +1,1 @@
-import { ForgotPasswordForm } from '@/features/auth/forgot-password/ui'
-
-export default function ForgotPasswordFormPage() {
-  return <ForgotPasswordForm />
-}
+export { ForgotPasswordPage as default, metadata } from '@/pages/auth/forgot-password'

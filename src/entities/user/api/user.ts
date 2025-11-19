@@ -33,10 +33,11 @@ export const userApi = {
   confirm: async (payload: ConfirmRequest): Promise<void> => {
     await api.post<ConfirmResponse>('/auth/registration-confirmation', payload)
   },
-  sendRecoveryEmail: async (payload: ForgotPasswordInputs) => {
+  sendRecoveryEmail: async (payload: SendRecoveryEmailType) => {
     const { data } = await api.post<SendRecoveryEmailType>('/auth/password-recovery', {
       email: payload.email,
-      recaptcha: payload.recaptcha
+      recaptcha: payload.recaptcha,
+      baseUrl: payload.baseUrl
     })
     return data
   },

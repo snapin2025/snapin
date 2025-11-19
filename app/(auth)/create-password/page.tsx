@@ -1,5 +1,1 @@
-import { CreateNewPassword } from '@/features/auth/forgot-password/ui'
-
-export default function CreateNewPasswordPage() {
-  return <CreateNewPassword />
-}
+export { CreateNewPasswordPage as default, metadata } from '@/pages/auth/create-new-password'

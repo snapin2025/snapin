@@ -2,12 +2,12 @@
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Card, Input, Button, Typography } from '@/shared/ui'
-import s from './ForgotPasswordForm.module.css'
-
-import { passwordSchema, type CreatePasswordInput } from '../model'
-import { useSetNewPassword } from '@/features/auth/forgot-password/hooks/use-new-password'
 import { useSearchParams } from 'next/navigation'
 import { useRouter } from 'next/navigation'
+import { useSetNewPassword } from '../api/useNewPassword'
+import { CreatePasswordInput, passwordSchema } from '../model/validatePassword'
+import s from './ForgotPasswordForm.module.css'
+import { ROUTES } from '@/shared/lib/routes'
 
 export const CreateNewPassword = () => {
   const router = useRouter() // ← создаём router
@@ -44,7 +44,7 @@ export const CreateNewPassword = () => {
       {
         onSuccess: () => {
           // console.log('/sign-in')
-          router.push('/sign-in') // ← РЕДИРЕКТ ПО ТЗ ШАГ 12
+          router.push(ROUTES.AUTH.SIGN_IN) // ← РЕДИРЕКТ ПО ТЗ ШАГ 12
           reset()
         }
       }

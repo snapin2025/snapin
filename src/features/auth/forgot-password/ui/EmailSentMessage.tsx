@@ -4,14 +4,14 @@ import Link from 'next/link'
 import { Button } from '@/shared/ui/button/Button'
 import s from './ForgotPasswordForm.module.css'
 import { Card, Input, Typography } from '@/shared/ui'
-import { useResendRecoveryEmail } from '../hooks/use-reset-password'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useQueryClient } from '@tanstack/react-query'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { EmailOnlyInputs, emailOnlySchema } from '@/features/auth/forgot-password/model/validateInput'
 import { useState } from 'react'
 
 import { Dialog, DialogContent } from '@/shared/ui' // путь к вашей универсальной модалке
+import { EmailOnlyInputs, emailOnlySchema } from '../model/validateInput'
+import { useResendRecoveryEmail } from '../api/useResetPassword'
 
 type Props = {
   onResendClick?: () => void
