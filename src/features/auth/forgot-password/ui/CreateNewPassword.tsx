@@ -10,6 +10,7 @@ import { useSearchParams } from 'next/navigation'
 import { useRouter } from 'next/navigation'
 
 export const CreateNewPassword = () => {
+  const router = useRouter() // ← создаём router
   const searchParams = useSearchParams() // ← ДОБАВЛЕНО: получаем параметры из URL
   const recoveryCode = searchParams?.get('code') || '' // ← ДОБАВЛЕНО: реальный код из ссылки письма
 
@@ -42,7 +43,8 @@ export const CreateNewPassword = () => {
       },
       {
         onSuccess: () => {
-          console.log('Пароль успешно изменен!')
+          // console.log('/sign-in')
+          router.push('/sign-in') // ← РЕДИРЕКТ ПО ТЗ ШАГ 12
           reset()
         }
       }
