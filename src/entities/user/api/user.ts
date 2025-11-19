@@ -1,5 +1,8 @@
 import { api } from '@/shared/api'
 import {
+  ConfirmRequest,
+  ConfirmResponse,
+  LogoutResponse,
   ResendRecoveryEmailType,
   SendRecoveryEmailType,
   SetNewPasswordType,
@@ -10,7 +13,6 @@ import {
   User
 } from './user-types'
 import { ForgotPasswordInputs } from '@/features/auth/forgot-password/model/validateInput'
-import type { LogoutResponse } from '@/features/auth/logout'
 
 export const userApi = {
   me: async () => {
@@ -27,6 +29,9 @@ export const userApi = {
       return { statusCode: 204 }
     }
     return res.data
+  },
+  confirm: async (payload: ConfirmRequest): Promise<void> => {
+    await api.post<ConfirmResponse>('/auth/registration-confirmation', payload)
   },
   sendRecoveryEmail: async (payload: ForgotPasswordInputs) => {
     const { data } = await api.post<SendRecoveryEmailType>('/auth/password-recovery', {
