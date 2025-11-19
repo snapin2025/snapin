@@ -12,6 +12,7 @@ import { useState } from 'react'
 import { Dialog, DialogContent } from '@/shared/ui' // путь к вашей универсальной модалке
 import { EmailOnlyInputs, emailOnlySchema } from '../model/validateInput'
 import { useResendRecoveryEmail } from '../api/useResetPassword'
+import { ROUTES } from '@/shared/lib/routes'
 
 type Props = {
   onResendClick?: () => void
@@ -19,7 +20,7 @@ type Props = {
 
 export const EmailSentMessage = ({ onResendClick }: Props) => {
   const queryClient = useQueryClient()
-  const savedEmail = queryClient.getQueryData<string>(['recovery-email'])
+  const savedEmail = queryClient.getQueryData<string>(['recovery-email']) ?? '' // дефолт, если email не сохранён
   const [showModal, setShowModal] = useState(false) // ← ДОБАВИЛ состояние для модалки
 
   const {
@@ -38,15 +39,33 @@ export const EmailSentMessage = ({ onResendClick }: Props) => {
 
   const { mutate: resendEmail, isPending } = useResendRecoveryEmail()
 
+  // const onSubmit: SubmitHandler<EmailOnlyInputs> = (data) => {
+  //   resendEmail(data.email, {
+  //     onSuccess: () => {
+  //       console.log('Письмо отправлено повторно!')
+  //       setShowModal(true) // ← ИЗМЕНИЛ: показываем нашу модалку вместо вызова пропса
+  //       onResendClick?.() // ← показываем модалку
+  //       reset()
+  //     }
+  //   })
+  // }
+  // теперь передаём объект payload, а не строку email
   const onSubmit: SubmitHandler<EmailOnlyInputs> = (data) => {
-    resendEmail(data.email, {
-      onSuccess: () => {
-        console.log('Письмо отправлено повторно!')
-        setShowModal(true) // ← ИЗМЕНИЛ: показываем нашу модалку вместо вызова пропса
-        onResendClick?.() // ← показываем модалку
-        reset()
+    resendEmail(
+      {
+        email: data.email,
+        //  передаём baseUrl, как требует backend
+        baseUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/${ROUTES.AUTH.CREATE_NEW_PASSWORD}`
+      },
+      {
+        onSuccess: () => {
+          console.log('Письмо отправлено повторно!')
+          setShowModal(true)
+          onResendClick?.()
+          reset()
+        }
       }
-    })
+    )
   }
 
   return (

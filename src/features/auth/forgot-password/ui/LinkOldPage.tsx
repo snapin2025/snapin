@@ -6,6 +6,7 @@ import { Dialog, DialogContent } from '@/shared/ui'
 import { useState } from 'react'
 import { useResendRecoveryEmail } from '../api/useResetPassword'
 import s from './ForgotPasswordForm.module.css'
+import { ROUTES } from '@/shared/lib/routes'
 
 export default function LinkOldPage() {
   const queryClient = useQueryClient()
@@ -19,12 +20,17 @@ export default function LinkOldPage() {
       console.error('Email not found')
       return
     }
-    resendEmail(savedEmail, {
-      onSuccess: () => {
-        // ✔ показываем сообщение по ТЗ (шаг 5)
-        setShowModal(true)
+    resendEmail(
+      {
+        email: savedEmail,
+        baseUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/${ROUTES.AUTH.CREATE_NEW_PASSWORD}` //обязательно передаем baseUrl
+      },
+      {
+        onSuccess: () => {
+          setShowModal(true)
+        }
       }
-    })
+    )
   }
 
   return (
@@ -35,16 +41,10 @@ export default function LinkOldPage() {
           <p className={s.textPage}>
             Looks like the verification link has expired. Not to worry, we can send the link again
           </p>
-          <Button
-            className={s.buttonPage}
-            // type="submit"
-            onClick={handleResend}
-            disabled={isPending}
-          >
+          <Button className={s.buttonPage} onClick={handleResend} disabled={isPending}>
             {isPending ? 'Sending' : 'Resend link'}
           </Button>
           <Resend className={s.illustration} width={473} height={352} />
-          {/*<Image className={s.illustration} src="/imgs/password.png" alt="Expired link" width={473} height={352} />*/}
         </div>
       </div>
       {/*МОДАЛЬНОЕ ОКНО, как требует ТЗ (шаг 5–7) */}

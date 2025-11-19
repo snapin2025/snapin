@@ -13,7 +13,6 @@ import ReCAPTCHA from 'react-google-recaptcha'
 import { useForgotPassword } from '@/features/auth/forgot-password/api/useForgotPassword'
 import { AxiosError } from 'axios'
 import { ROUTES } from '@/shared/lib/routes'
-import { usePathname } from 'next/navigation'
 
 export const ForgotPasswordForm = () => {
   const [recaptchaToken, setRecaptchaToken] = useState<string>('')
