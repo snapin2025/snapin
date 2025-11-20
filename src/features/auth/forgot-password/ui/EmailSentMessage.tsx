@@ -7,9 +7,7 @@ import { Card, Input, Typography } from '@/shared/ui'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useQueryClient } from '@tanstack/react-query'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
 
-import { Dialog, DialogContent } from '@/shared/ui' // путь к вашей универсальной модалке
 import { EmailOnlyInputs, emailOnlySchema } from '../model/validateInput'
 import { useResendRecoveryEmail } from '../api/useResetPassword'
 import { ROUTES } from '@/shared/lib/routes'
@@ -21,13 +19,13 @@ type Props = {
 export const EmailSentMessage = ({ onResendClick }: Props) => {
   const queryClient = useQueryClient()
   const savedEmail = queryClient.getQueryData<string>(['recovery-email']) ?? '' // дефолт, если email не сохранён
-  const [showModal, setShowModal] = useState(false) // ← ДОБАВИЛ состояние для модалки
+  // const [showModal, setShowModal] = useState(false) // ← ДОБАВИЛ состояние для модалки
 
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isValid } // ✔ Добавили isValid для дизейбла кнопки
+    formState: { errors, isValid } // ✔  isValid для дизейбла кнопки
   } = useForm<EmailOnlyInputs>({
     // ✔ Используем готовую схему emailOnlySchema для формы без капчи
     resolver: zodResolver(emailOnlySchema),
@@ -39,7 +37,6 @@ export const EmailSentMessage = ({ onResendClick }: Props) => {
 
   const { mutate: resendEmail, isPending } = useResendRecoveryEmail()
 
-  // теперь передаём объект payload, а не строку email
   const onSubmit: SubmitHandler<EmailOnlyInputs> = (data) => {
     resendEmail(
       {
@@ -50,7 +47,7 @@ export const EmailSentMessage = ({ onResendClick }: Props) => {
       {
         onSuccess: () => {
           console.log('Письмо отправлено повторно!')
-          setShowModal(true)
+          // setShowModal(true)
           onResendClick?.()
           reset()
         }
@@ -92,15 +89,15 @@ export const EmailSentMessage = ({ onResendClick }: Props) => {
 
         {/* форма ❌ БЕЗ капчи */}
       </Card>
-      {/* ← ДОБАВИЛ универсальную модалку */}
-      <Dialog open={showModal} onOpenChange={setShowModal}>
-        <DialogContent title="Email sent" showCloseButton={true}>
-          <p className={s.textModal}>We have sent a link to confirm your email to {savedEmail}</p>
-          <Button className={s.buttonModal} onClick={() => setShowModal(false)}>
-            Ok
-          </Button>
-        </DialogContent>
-      </Dialog>
+      {/* ←  универсальную модалку */}
+      {/*<Dialog open={showModal} onOpenChange={setShowModal}>*/}
+      {/*  <DialogContent title="Email sent" showCloseButton={true}>*/}
+      {/*    <p className={s.textModal}>We have sent a link to confirm your email to {savedEmail}</p>*/}
+      {/*    <Button className={s.buttonModal} onClick={() => setShowModal(false)}>*/}
+      {/*      Ok*/}
+      {/*    </Button>*/}
+      {/*  </DialogContent>*/}
+      {/*</Dialog>*/}
     </>
   )
 }

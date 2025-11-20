@@ -53,6 +53,15 @@ export type SetNewPasswordType = {
   newPassword: string // Новый пароль пользователя
   recoveryCode: string // Код восстановления из письма
 }
+// Тип запроса для проверки кода восстановления
+export type CheckRecoveryCodePayload = {
+  recoveryCode: string
+}
+
+// Тип ответа при успешной проверке кода (200 OK)
+export type CheckRecoveryCodeResponse = {
+  email: string
+}
 
 export type LogoutResponse = void
 

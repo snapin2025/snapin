@@ -1,5 +1,7 @@
 import { api } from '@/shared/api'
 import {
+  CheckRecoveryCodePayload,
+  CheckRecoveryCodeResponse,
   ConfirmRequest,
   ConfirmResponse,
   LogoutResponse,
@@ -63,6 +65,12 @@ export const userApi = {
       recoveryCode: payload.recoveryCode
     })
   },
+  //запросы для проверки кода
+  checkRecoveryCode: async (payload: CheckRecoveryCodePayload): Promise<CheckRecoveryCodeResponse> => {
+    const response = await api.post<CheckRecoveryCodeResponse>('/auth/check-recovery-code', payload)
+    return response.data
+  },
+
   logout: async (): Promise<LogoutResponse> => {
     await api.post<LogoutResponse>('/auth/logout')
   }
