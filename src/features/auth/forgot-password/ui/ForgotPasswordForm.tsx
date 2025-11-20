@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Input, Typography } from '@/shared/ui'
+import { BaseModal, Input, Typography } from '@/shared/ui'
 import { Button } from '@/shared/ui/button/Button'
 import s from './ForgotPasswordForm.module.css'
 import { Card } from '@/shared/ui'
@@ -13,6 +13,7 @@ import ReCAPTCHA from 'react-google-recaptcha'
 import { useForgotPassword } from '@/features/auth/forgot-password/api/useForgotPassword'
 import { AxiosError } from 'axios'
 import { ROUTES } from '@/shared/lib/routes'
+import { useQueryClient } from '@tanstack/react-query'
 
 export const ForgotPasswordForm = () => {
   const [recaptchaToken, setRecaptchaToken] = useState<string>('')
