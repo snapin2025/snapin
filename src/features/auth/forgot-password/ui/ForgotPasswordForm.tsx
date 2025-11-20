@@ -1,31 +1,30 @@
 'use client'
 
 import Link from 'next/link'
-import { BaseModal, Input, Typography } from '@/shared/ui'
+import { Card, Input, Typography } from '@/shared/ui'
 import { Button } from '@/shared/ui/button/Button'
 import s from './ForgotPasswordForm.module.css'
-import { Card } from '@/shared/ui'
-import { useForm, SubmitHandler } from 'react-hook-form'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import { useRef, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ForgotPasswordInputs, inputEmailSchema } from '@/features/auth/forgot-password/model/validateInput'
 import ReCAPTCHA from 'react-google-recaptcha'
-import { useForgotPassword } from '@/features/auth/forgot-password/api/useForgotPassword'
 import { AxiosError } from 'axios'
 import { ROUTES } from '@/shared/lib/routes'
 import { useQueryClient } from '@tanstack/react-query'
+import { ForgotPasswordInputs, inputEmailSchema } from '../model/validateInput'
+import { useForgotPassword } from '../api/useForgotPassword'
+import { useRouter } from 'next/navigation'
 
 export const ForgotPasswordForm = () => {
   const [recaptchaToken, setRecaptchaToken] = useState<string>('')
   const recaptchaRef = useRef<ReCAPTCHA | null>(null)
-  // ✔ Добавлено состояние для отображения ошибки сервера (не зарегистрированный email)
-  const [formError, setFormError] = useState<string>('')
-  const [showModal, setShowModal] = useState(false) // ← ДОБАВИЛ состояние для модалки
   const savedEmail = useQueryClient().getQueryData<string>(['recovery-email']) ?? ''
+  const router = useRouter()
   const {
     register,
     reset,
     handleSubmit,
+    setError,
     formState: { errors, isValid } // ✔ Добавлено isValid для дизейбла кнопки
   } = useForm<ForgotPasswordInputs>({
     resolver: zodResolver(inputEmailSchema),
@@ -36,13 +35,8 @@ export const ForgotPasswordForm = () => {
   const { mutate: sendRecoveryEmail, isPending } = useForgotPassword()
 
   const onSubmit: SubmitHandler<ForgotPasswordInputs> = (data) => {
-    if (!recaptchaToken) {
-      // ✔ Вместо alert можно оставить formError, чтобы отображалось на форме
-      setFormError('Please complete the captcha')
-      return
-    }
+    if (!recaptchaToken) return
     // ✔ Сбрасываем предыдущую ошибку перед новым запросом
-    setFormError('')
     sendRecoveryEmail(
       {
         email: data.email,
@@ -52,12 +46,18 @@ export const ForgotPasswordForm = () => {
       {
         onSuccess: () => {
           reset({ email: '', recaptcha: '' })
-          setShowModal(true)
           recaptchaRef.current?.reset()
+          alert(`We have sent a link to confirm your email to ${savedEmail}`)
+          router.replace(ROUTES.AUTH.RESEND_NEW_PASSWORD_LINK)
         },
-        onError: (err: AxiosError<{ message: string }>) => {
-          const serverMessage = err.response?.data?.message || err.message || 'Something went wrong'
-          setFormError(serverMessage)
+        onError: (
+          err: AxiosError<{
+            statusCode: number
+            messages: { message: string; field: string }[]
+          }>
+        ) => {
+          const serverMessage = err.response?.data?.messages?.[0]?.message || 'Something went wrong'
+          setError('email', { type: 'server error', message: serverMessage })
         }
       }
     )
@@ -78,7 +78,7 @@ export const ForgotPasswordForm = () => {
         {/* ✔ Inline сообщение об ошибке от валидации zod */}
         {errors.email && <span className={s.errorMessage}>{errors.email.message}</span>}
         {/* ✔ Inline сообщение от сервера (не зарегистрированный email) */}
-        {formError && !errors.email && <span className={s.errorMessage}>{formError}</span>}
+        {!errors.email && <span className={s.errorMessage}>{errors.email}</span>}
       </div>
       <p className={s.text}>Enter your email address and we will send you further instructions</p>
       {/* ✔ Кнопка теперь дизейблится, если форма не валидна или капча не пройдена */}
@@ -107,10 +107,6 @@ export const ForgotPasswordForm = () => {
           />
         )}
       </div>
-      <BaseModal open={showModal} onOpenChange={setShowModal} title={'Email sent'} showCloseButton={true}>
-        <p className={s.textModal}>We have sent a link to confirm your email to {savedEmail}</p>
-        <Button onClick={() => setShowModal(false)}>OK</Button>
-      </BaseModal>
     </Card>
   )
 }
