@@ -17,17 +17,20 @@ import { ROUTES } from '@/shared/lib/routes'
 export const ForgotPasswordForm = () => {
   const [recaptchaToken, setRecaptchaToken] = useState<string>('')
   const recaptchaRef = useRef<ReCAPTCHA | null>(null)
-  // ✔ Добавлено состояние для отображения ошибки сервера (не зарегистрированный email)
+
   const [formError, setFormError] = useState<string>('')
+  // ✔ ИСПРАВЛЕНО: состояние ошибки сервера для отображения под полем email
 
   const {
     register,
     reset,
     handleSubmit,
-    formState: { errors, isValid } // ✔ Добавлено isValid для дизейбла кнопки
+    formState: { errors, isValid }
+    // ✔ ИСПРАВЛЕНО: добавлено isValid → кнопка становится disabled как в UC-3 шаг 4
   } = useForm<ForgotPasswordInputs>({
     resolver: zodResolver(inputEmailSchema),
-    mode: 'onChange', // ✔ Включаем onChange чтобы isValid обновлялся при вводе
+    mode: 'onChange',
+    // ✔ ИСПРАВЛЕНО: включили onChange, чтобы isValid обновлялся при вводе
     defaultValues: { email: '', recaptcha: '' }
   })
 
@@ -35,12 +38,13 @@ export const ForgotPasswordForm = () => {
 
   const onSubmit: SubmitHandler<ForgotPasswordInputs> = (data) => {
     if (!recaptchaToken) {
-      // ✔ Вместо alert можно оставить formError, чтобы отображалось на форме
       setFormError('Please complete the captcha')
       return
     }
-    // ✔ Сбрасываем предыдущую ошибку перед новым запросом
+
     setFormError('')
+    // ✔ ИСПРАВЛЕНО: сбрасываем старую ошибку перед новым запросом
+
     sendRecoveryEmail(
       {
         email: data.email,
@@ -52,10 +56,26 @@ export const ForgotPasswordForm = () => {
           reset({ email: '', recaptcha: '' })
           recaptchaRef.current?.reset()
         },
-        onError: (err: AxiosError<{ message: string }>) => {
-          const serverMessage = err.response?.data?.message || err.message || 'Something went wrong'
+        onError: (
+          err: AxiosError<{
+            statusCode: number
+            messages: { message: string; field: string }[]
+          }>
+        ) => {
+          // ✔ ИСПРАВЛЕНО: строго по Swagger UC-3 — ошибки приходят в массиве messages[]
+          const serverMessage = err.response?.data?.messages?.[0]?.message || 'Something went wrong'
+
           setFormError(serverMessage)
         }
+
+        // ПОЧЕМУ ИСПРАВИЛИ:
+        // ❗ Swagger UC-3 возвращает форму:
+        // {
+        //   statusCode: 400,
+        //   messages: [{ message: "User not found", field: "email" }]
+        // }
+        // Поэтому нельзя использовать err.response.data.message
+        // Нужно брать messages[0].message → иначе TypeScript ругался.
       }
     )
   }
@@ -63,6 +83,7 @@ export const ForgotPasswordForm = () => {
   return (
     <Card as="form" className={s.form} onSubmit={handleSubmit(onSubmit)}>
       <Typography variant="h1">Forgot Password</Typography>
+
       <div className={s.field}>
         <Input
           id="email"
@@ -72,26 +93,31 @@ export const ForgotPasswordForm = () => {
           error={!!errors.email}
           {...register('email')}
         />
-        {/* ✔ Inline сообщение об ошибке от валидации zod */}
+
+        {/* ✔ Сообщение Zod валидации */}
         {errors.email && <span className={s.errorMessage}>{errors.email.message}</span>}
-        {/* ✔ Inline сообщение от сервера (не зарегистрированный email) */}
+
+        {/* ✔ Сообщение от сервера → email не найден */}
         {formError && !errors.email && <span className={s.errorMessage}>{formError}</span>}
       </div>
+
       <p className={s.text}>Enter your email address and we will send you further instructions</p>
-      {/* ✔ Кнопка теперь дизейблится, если форма не валидна или капча не пройдена */}
+
       <Button
         variant="primary"
-        type={'submit'}
+        type="submit"
         className={s.button}
-        disabled={!isValid || !recaptchaToken || isPending} // ✔ UC-3: шаг 4
+        disabled={!isValid || !recaptchaToken || isPending}
+        // ✔ UC-3: кнопка заблокирована если форма невалидна, капча пустая или идёт запрос
       >
         {isPending ? 'Sending' : 'Send Link'}
       </Button>
+
       <Link href={ROUTES.AUTH.SIGN_IN} className={s.backLink}>
         Back to Sign In
       </Link>
+
       <div className={s.captchaContainer}>
-        {/*это сама капча  гугла  */}
         {process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY && (
           <ReCAPTCHA
             className={s.captchaContainer}

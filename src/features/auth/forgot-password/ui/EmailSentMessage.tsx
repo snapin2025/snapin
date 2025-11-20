@@ -39,16 +39,6 @@ export const EmailSentMessage = ({ onResendClick }: Props) => {
 
   const { mutate: resendEmail, isPending } = useResendRecoveryEmail()
 
-  // const onSubmit: SubmitHandler<EmailOnlyInputs> = (data) => {
-  //   resendEmail(data.email, {
-  //     onSuccess: () => {
-  //       console.log('Письмо отправлено повторно!')
-  //       setShowModal(true) // ← ИЗМЕНИЛ: показываем нашу модалку вместо вызова пропса
-  //       onResendClick?.() // ← показываем модалку
-  //       reset()
-  //     }
-  //   })
-  // }
   // теперь передаём объект payload, а не строку email
   const onSubmit: SubmitHandler<EmailOnlyInputs> = (data) => {
     resendEmail(
@@ -90,7 +80,7 @@ export const EmailSentMessage = ({ onResendClick }: Props) => {
           The link has been sent by email. If you don&apos;t receive an email send link again
         </p>
 
-        {/*изменим обшую кнопку для разных состояний*/}
+        {/*изменю обшую кнопку для разных состояний*/}
         {/* ✔ UC-3 шаг 4: кнопка дизейблится, если email пустой/невалидный или запрос отправки в процессе */}
         <Button variant="primary" className={s.button} type={'submit'} disabled={!isValid || isPending}>
           {isPending ? 'Sending' : 'Send Link Again'}

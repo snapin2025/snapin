@@ -62,8 +62,8 @@ export default {
 // 1. Основная форма
 export const DefaultForm = () => <ForgotPasswordForm />
 
-// 2. Сообщение "Email отправлен"
-export const EmailSent = () => <EmailSentMessage />
+// 2. Сообщение "Email отправлен" пока закаментировала чтоб не дублировать формы
+// export const EmailSent = () => <EmailSentMessage />
 
 // 3. Сообщение "Email отправлен" с открытой модалкой (для демонстрации)
 export const EmailSentWithModal = () => {

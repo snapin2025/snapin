@@ -12,7 +12,6 @@ import {
   SignUpResponse,
   User
 } from './user-types'
-import { ForgotPasswordInputs } from '@/features/auth/forgot-password/model/validateInput'
 
 export const userApi = {
   me: async () => {
@@ -33,28 +32,36 @@ export const userApi = {
   confirm: async (payload: ConfirmRequest): Promise<void> => {
     await api.post<ConfirmResponse>('/auth/registration-confirmation', payload)
   },
-  sendRecoveryEmail: async (payload: SendRecoveryEmailType) => {
-    const { data } = await api.post<SendRecoveryEmailType>('/auth/password-recovery', {
+
+  // ✔ Исправление №1 — Swagger: /auth/password-recovery возвращает 204 без тела
+  // ❌ Было: api.post<SendRecoveryEmailType> — Неверно, это тип запроса, а не ответа
+  // ✔ Стало: api.post без типа → тело не ожидается, всё корректно
+  sendRecoveryEmail: async (payload: SendRecoveryEmailType): Promise<void> => {
+    await api.post('/auth/password-recovery', {
       email: payload.email,
       recaptcha: payload.recaptcha,
       baseUrl: payload.baseUrl
     })
-    return data
   },
-  resendRecoveryEmail: async (payload: ResendRecoveryEmailType) => {
-    const { data } = await api.post<ResendRecoveryEmailType>('/auth/password-recovery-resending', {
+
+  // ✔ Исправление №2 — Swagger: повторная отправка тоже возвращает 204
+  // ❌ Было: api.post<ResendRecoveryEmailType> — Неверный тип ответа
+  // ✔ Стало: просто await api.post(...)
+  resendRecoveryEmail: async (payload: ResendRecoveryEmailType): Promise<void> => {
+    await api.post('/auth/password-recovery-resending', {
       email: payload.email,
       baseUrl: payload.baseUrl
     })
-    return data
   },
-  // установка нового пароля — принимаем объект с newPassword и recoveryCode
-  SetNewPassword: async (payload: { newPassword: string; recoveryCode: string }) => {
-    const { data } = await api.post<SetNewPasswordType>('/auth/new-password', {
+
+  // ✔ Исправление №3 — Swagger: new-password → 204 No Content
+  // ❌ Было: post<SetNewPasswordType> — опять тип запроса как тип ответа
+  // ✔ Стало: просто await api.post(...)
+  SetNewPassword: async (payload: SetNewPasswordType): Promise<void> => {
+    await api.post('/auth/new-password', {
       newPassword: payload.newPassword,
       recoveryCode: payload.recoveryCode
     })
-    return data
   },
   logout: async (): Promise<LogoutResponse> => {
     await api.post<LogoutResponse>('/auth/logout')
