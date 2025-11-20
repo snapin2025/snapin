@@ -1,18 +1,18 @@
 'use client'
 
 import Link from 'next/link'
-import { BaseModal, Card, Input, Typography } from '@/shared/ui'
+import { Input, Typography } from '@/shared/ui'
 import { Button } from '@/shared/ui/button/Button'
 import s from './ForgotPasswordForm.module.css'
-import { SubmitHandler, useForm } from 'react-hook-form'
+import { Card } from '@/shared/ui'
+import { useForm, SubmitHandler } from 'react-hook-form'
 import { useRef, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { ForgotPasswordInputs, inputEmailSchema } from '@/features/auth/forgot-password/model/validateInput'
 import ReCAPTCHA from 'react-google-recaptcha'
+import { useForgotPassword } from '@/features/auth/forgot-password/api/useForgotPassword'
 import { AxiosError } from 'axios'
 import { ROUTES } from '@/shared/lib/routes'
-import { ForgotPasswordInputs, inputEmailSchema } from '../model/validateInput'
-import { useForgotPassword } from '../api/useForgotPassword'
-import { useQueryClient } from '@tanstack/react-query'
 
 export const ForgotPasswordForm = () => {
   const [recaptchaToken, setRecaptchaToken] = useState<string>('')
@@ -25,7 +25,6 @@ export const ForgotPasswordForm = () => {
     register,
     reset,
     handleSubmit,
-
     formState: { errors, isValid } // ✔ Добавлено isValid для дизейбла кнопки
   } = useForm<ForgotPasswordInputs>({
     resolver: zodResolver(inputEmailSchema),

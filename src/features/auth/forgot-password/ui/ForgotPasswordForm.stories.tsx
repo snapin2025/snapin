@@ -62,7 +62,7 @@ export default {
 // 1. Основная форма
 export const DefaultForm = () => <ForgotPasswordForm />
 
-// 2. Сообщение "Email отправлен"
+// 2. Сообщение "Email отправлен" пока закаментировала чтоб не дублировать формы
 export const EmailSent = () => <EmailSentMessage />
 
 // 3. Сообщение "Email отправлен" с открытой модалкой (для демонстрации)
@@ -71,7 +71,7 @@ export const EmailSentWithModal = () => {
 
   return (
     <div>
-      <EmailSentMessage />
+      <ForgotPasswordForm />
       <Dialog open={showModal} onOpenChange={setShowModal}>
         <DialogContent title="Email sent" showCloseButton={true}>
           <p className={s.textModal}>We have sent a link to confirm your email to epam@epam.com</p>
