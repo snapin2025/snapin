@@ -41,10 +41,10 @@ export const userApi = {
     })
     return data
   },
-  // повторная отправка — ожидаем строку email
-  resendRecoveryEmail: async (email: string) => {
+  resendRecoveryEmail: async (payload: ResendRecoveryEmailType) => {
     const { data } = await api.post<ResendRecoveryEmailType>('/auth/password-recovery-resending', {
-      email
+      email: payload.email,
+      baseUrl: payload.baseUrl
     })
     return data
   },

@@ -35,8 +35,9 @@ export type SignUpErrorResponse = {
 
 export type SignUpResponse = SignUpErrorResponse | SignUpSuccessResponse
 
+//(эндпоинт: /auth/password-recovery)
 export type SendRecoveryEmailType = {
-  email: string // Email пользователя для отправки письма
+  email: string
   recaptcha: string
   baseUrl: string
 }
@@ -44,6 +45,7 @@ export type SendRecoveryEmailType = {
 // Тип для ПОВТОРНОЙ отправки письма (эндпоинт: /auth/password-recovery-resending)
 export type ResendRecoveryEmailType = {
   email: string // Email пользователя для повторной отправки
+  baseUrl: string
 }
 
 // Тип для установки НОВОГО ПАРОЛЯ (эндпоинт: /auth/new-password)

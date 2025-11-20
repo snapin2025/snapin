@@ -11,8 +11,8 @@ import { ROUTES } from '@/shared/lib/routes'
 
 export const CreateNewPassword = () => {
   const router = useRouter() // ← создаём router
-  const searchParams = useSearchParams() // ← ДОБАВЛЕНО: получаем параметры из URL
-  const recoveryCode = searchParams?.get('code') || '' // ← ДОБАВЛЕНО: реальный код из ссылки письма
+  const searchParams = useSearchParams() // получаем параметры из URL
+  const recoveryCode = searchParams?.get('code') || '' // реальный код из ссылки письма
 
   // const recoveryCode = 'test-recovery-code' // ← временный хардкод для разработки можно для тестирования
 
