@@ -1,29 +1,31 @@
 'use client'
 
 import Link from 'next/link'
-import { Input, Typography } from '@/shared/ui'
+import { BaseModal, Card, Input, Typography } from '@/shared/ui'
 import { Button } from '@/shared/ui/button/Button'
 import s from './ForgotPasswordForm.module.css'
-import { Card } from '@/shared/ui'
-import { useForm, SubmitHandler } from 'react-hook-form'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import { useRef, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ForgotPasswordInputs, inputEmailSchema } from '@/features/auth/forgot-password/model/validateInput'
 import ReCAPTCHA from 'react-google-recaptcha'
-import { useForgotPassword } from '@/features/auth/forgot-password/api/useForgotPassword'
 import { AxiosError } from 'axios'
 import { ROUTES } from '@/shared/lib/routes'
+import { ForgotPasswordInputs, inputEmailSchema } from '../model/validateInput'
+import { useForgotPassword } from '../api/useForgotPassword'
+import { useQueryClient } from '@tanstack/react-query'
 
 export const ForgotPasswordForm = () => {
   const [recaptchaToken, setRecaptchaToken] = useState<string>('')
   const recaptchaRef = useRef<ReCAPTCHA | null>(null)
   // ✔ Добавлено состояние для отображения ошибки сервера (не зарегистрированный email)
   const [formError, setFormError] = useState<string>('')
-
+  const [showModal, setShowModal] = useState(false) // ← ДОБАВИЛ состояние для модалки
+  const savedEmail = useQueryClient().getQueryData<string>(['recovery-email']) ?? ''
   const {
     register,
     reset,
     handleSubmit,
+
     formState: { errors, isValid } // ✔ Добавлено isValid для дизейбла кнопки
   } = useForm<ForgotPasswordInputs>({
     resolver: zodResolver(inputEmailSchema),
@@ -50,6 +52,7 @@ export const ForgotPasswordForm = () => {
       {
         onSuccess: () => {
           reset({ email: '', recaptcha: '' })
+          setShowModal(true)
           recaptchaRef.current?.reset()
         },
         onError: (err: AxiosError<{ message: string }>) => {
@@ -104,6 +107,10 @@ export const ForgotPasswordForm = () => {
           />
         )}
       </div>
+      <BaseModal open={showModal} onOpenChange={setShowModal} title={'Email sent'} showCloseButton={true}>
+        <p className={s.textModal}>We have sent a link to confirm your email to {savedEmail}</p>
+        <Button onClick={() => setShowModal(false)}>OK</Button>
+      </BaseModal>
     </Card>
   )
 }
