@@ -9,7 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { EmailOnlyInputs, emailOnlySchema } from '../model/validateInput'
 import { useResendRecoveryEmail } from '../api/useResetPassword'
 import { ROUTES } from '@/shared/lib/routes'
-import { useRouter } from 'next/navigation'
+import { AxiosError } from 'axios'
 
 type Props = {
   onResendClick?: () => void
@@ -39,14 +39,20 @@ export const EmailSentMessage = ({ onResendClick }: Props) => {
     resendEmail(
       {
         email: data.email,
-        //  передаём baseUrl, как требует backend
         baseUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/${ROUTES.AUTH.CREATE_NEW_PASSWORD}`
       },
       {
         onSuccess: () => {
-          console.log('Письмо отправлено повторно!')
+          alert(`We have sent a link to confirm your email to ${savedEmail}`)
           onResendClick?.()
           reset()
+        },
+        onError: (err: unknown) => {
+          const message =
+            err instanceof AxiosError
+              ? (err.response?.data?.messages?.[0]?.message ?? 'Something went wrong. Please enter your email again.')
+              : 'Something went wrong. Please enter your email again.'
+          alert(message)
         }
       }
     )
@@ -64,14 +70,17 @@ export const EmailSentMessage = ({ onResendClick }: Props) => {
           error={!!errors.email}
           {...register('email')}
         />
-        {errors.email && <span className={s.errorMessage}>{errors.email.message}</span>}
+        {errors.email?.message && <span className={s.errorMessage}>{errors.email.message}</span>}
       </div>
 
       <p className={s.text}>Enter your email address and we will send you further instructions</p>
 
-      <p className={s.textLink}>The link has been sent by email. If you don&apos;t receive an email send link again</p>
+      {/*исправила на это  Это строго соответствует шагу 5 UC-3.*/}
+      <p className={s.textLink}>
+        The link has been sent by email. If you don’t receive an email send link again {savedEmail}
+      </p>
 
-      {/*изменю обшую кнопку для разных состояний*/}
+      {/*кнопку для разных состояний*/}
       {/* ✔ UC-3 шаг 4: кнопка дизейблится, если email пустой/невалидный или запрос отправки в процессе */}
       <Button variant="primary" className={s.button} type={'submit'} disabled={!isValid || isPending}>
         {isPending ? 'Sending' : 'Send Link Again'}
@@ -80,6 +89,7 @@ export const EmailSentMessage = ({ onResendClick }: Props) => {
       <Link href="/sign-in" className={s.backLink}>
         Back to Sign In
       </Link>
+      {/*  форма без капчи*/}
     </Card>
   )
 }

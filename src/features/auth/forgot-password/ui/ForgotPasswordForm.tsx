@@ -13,13 +13,13 @@ import { ROUTES } from '@/shared/lib/routes'
 import { useQueryClient } from '@tanstack/react-query'
 import { ForgotPasswordInputs, inputEmailSchema } from '../model/validateInput'
 import { useForgotPassword } from '../api/useForgotPassword'
-import { useRouter } from 'next/navigation'
 
 export const ForgotPasswordForm = () => {
+  const queryClient = useQueryClient() // <- вот здесь получаем
   const [recaptchaToken, setRecaptchaToken] = useState<string>('')
   const recaptchaRef = useRef<ReCAPTCHA | null>(null)
-  const savedEmail = useQueryClient().getQueryData<string>(['recovery-email']) ?? ''
-  const router = useRouter()
+  // const savedEmail = useQueryClient().getQueryData<string>(['recovery-email']) ?? ''
+  // const router = useRouter()
   const {
     register,
     reset,
@@ -37,6 +37,7 @@ export const ForgotPasswordForm = () => {
   const onSubmit: SubmitHandler<ForgotPasswordInputs> = (data) => {
     if (!recaptchaToken) return
     // ✔ Сбрасываем предыдущую ошибку перед новым запросом
+
     sendRecoveryEmail(
       {
         email: data.email,
@@ -45,10 +46,16 @@ export const ForgotPasswordForm = () => {
       },
       {
         onSuccess: () => {
+          //дописала
+          // Сохраняем email в queryClient
+          queryClient.setQueryData(['recovery-email'], data.email) // сохраняем email
           reset({ email: '', recaptcha: '' })
           recaptchaRef.current?.reset()
-          alert(`We have sent a link to confirm your email to ${savedEmail}`)
-          router.replace(ROUTES.AUTH.RESEND_NEW_PASSWORD_LINK)
+          // было -так делать не льзя так как Проблема: при первом запросе savedEmail может быть пустым.
+          // alert(`We have sent a link to confirm your email to ${savedEmail}`)
+
+          alert(`We have sent a link to confirm your email to ${data.email}`)
+          // router.replace(ROUTES.AUTH.RESEND_NEW_PASSWORD_LINK)
         },
         onError: (
           err: AxiosError<{
@@ -75,10 +82,8 @@ export const ForgotPasswordForm = () => {
           error={!!errors.email}
           {...register('email')}
         />
-        {/* ✔ Inline сообщение об ошибке от валидации zod */}
-        {errors.email && <span className={s.errorMessage}>{errors.email.message}</span>}
-        {/* ✔ Inline сообщение от сервера (не зарегистрированный email) */}
-        {!errors.email && <span className={s.errorMessage}>{errors.email}</span>}
+        {/*С этим исправлением показываются и ошибки валидации, и ошибки от сервера.*/}
+        {errors.email?.message && <span className={s.errorMessage}>{errors.email.message}</span>}
       </div>
       <p className={s.text}>Enter your email address and we will send you further instructions</p>
       {/* ✔ Кнопка теперь дизейблится, если форма не валидна или капча не пройдена */}
