@@ -46,7 +46,7 @@
 // export const LinkExpired = () => <LinkOldPage />
 import { ForgotPasswordForm } from './ForgotPasswordForm'
 import LinkOldPage from './LinkOldPage'
-import { EmailSentMessage } from '@/features/auth/forgot-password/ui/EmailSentMessage'
+
 import { CreateNewPassword } from '@/features/auth/forgot-password/ui/CreateNewPassword'
 import { Button, Dialog, DialogContent } from '@/shared/ui'
 import s from './ForgotPasswordForm.module.css'
@@ -63,7 +63,7 @@ export default {
 export const DefaultForm = () => <ForgotPasswordForm />
 
 // 2. Сообщение "Email отправлен" пока закаментировала чтоб не дублировать формы
-export const EmailSent = () => <EmailSentMessage />
+// export const EmailSent = () => <EmailSentMessage />
 
 // 3. Сообщение "Email отправлен" с открытой модалкой (для демонстрации)
 export const EmailSentWithModal = () => {
