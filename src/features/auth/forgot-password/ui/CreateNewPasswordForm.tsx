@@ -2,17 +2,15 @@
 
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Card, Input, Button, Typography } from '@/shared/ui'
-import { useSearchParams, useRouter } from 'next/navigation'
+import { Button, Card, Input, Typography } from '@/shared/ui'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useSetNewPassword } from '../api/useNewPassword'
-import { useCheckRecoveryCode } from '../api/useCheckRecoveryCode'
 import { CreatePasswordInput, passwordSchema } from '../model/validatePassword'
 import s from './ForgotPasswordForm.module.css'
 import { ROUTES } from '@/shared/lib/routes'
 import { useState } from 'react'
-import { AxiosError } from 'axios'
 
-export const CreateNewPassword = () => {
+export const CreateNewPasswordForm = () => {
   const router = useRouter()
   const searchParams = useSearchParams()
   const recoveryCode = searchParams?.get('code') || ''
@@ -28,7 +26,6 @@ export const CreateNewPassword = () => {
   })
 
   const { mutate: setNewPassword, isPending } = useSetNewPassword()
-  const { mutate: checkRecoveryCode } = useCheckRecoveryCode()
 
   const [errorMessage, setErrorMessage] = useState('')
 
@@ -41,24 +38,15 @@ export const CreateNewPassword = () => {
     setErrorMessage('')
 
     // Простая проверка кода перед установкой пароля
-    checkRecoveryCode(
-      { recoveryCode },
+
+    setNewPassword(
+      { newPassword: data.password, recoveryCode },
       {
         onSuccess: () => {
-          setNewPassword(
-            { newPassword: data.password, recoveryCode },
-            {
-              onSuccess: () => {
-                reset()
-                router.push(ROUTES.AUTH.SIGN_IN)
-              },
-              onError: () => setErrorMessage('Failed to set new password')
-            }
-          )
+          reset()
+          router.replace(ROUTES.AUTH.SIGN_IN)
         },
-        onError: (err: AxiosError<{ messages?: { message: string }[] }>) => {
-          setErrorMessage(err.response?.data?.messages?.[0]?.message || 'Invalid or expired code')
-        }
+        onError: () => setErrorMessage('Failed to set new password')
       }
     )
   }

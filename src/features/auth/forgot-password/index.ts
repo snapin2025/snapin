@@ -1,3 +1,3 @@
 export { ForgotPasswordForm } from './ui/ForgotPasswordForm'
-export { CreateNewPassword } from './ui/CreateNewPassword'
+export { CreateNewPasswordForm } from './ui/CreateNewPasswordForm'
 export { useCheckRecoveryCode } from './api/useCheckRecoveryCode'

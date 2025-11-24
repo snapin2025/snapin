@@ -1,23 +1,22 @@
 'use client'
 
 import { Button, Resend, Typography } from '@/shared/ui'
-import { useQueryClient } from '@tanstack/react-query'
-import { useResendRecoveryEmail } from '../api/useResetPassword'
+import { useResendRecoveryEmail } from '../api/useResendRecoveryEmail'
 import s from './ForgotPasswordForm.module.css'
+import { useSearchParams } from 'next/navigation'
 import { ROUTES } from '@/shared/lib/routes'
 
-export default function LinkOldPage() {
-  const queryClient = useQueryClient()
-  const savedEmail = queryClient.getQueryData<string>(['recovery-email'])
+export default function ExpiredLink() {
+  const savedEmail = useSearchParams()?.get('email')
   const { mutate: resendEmail, isPending } = useResendRecoveryEmail()
-  console.log(savedEmail)
+
   const handleResend = () => {
     // if (!savedEmail) return
 
     resendEmail(
       {
         email: savedEmail!,
-        baseUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/${ROUTES.AUTH.CREATE_NEW_PASSWORD}` //обязательно передаем baseUrl
+        baseUrl: `${process.env.NEXT_PUBLIC_BASE_URL}${ROUTES.AUTH.CREATE_NEW_PASSWORD}`
       },
       {
         onSuccess: () => {

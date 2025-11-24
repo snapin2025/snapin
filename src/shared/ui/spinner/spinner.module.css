@@ -19,6 +19,15 @@
   animation: rotation 1s linear infinite;
 }
 
+.inlineLoader {
+  display: inline-block;
+  border-radius: 50%;
+  border-top: 0.2em solid currentColor; /* <-- берёт цвет текста кнопки */
+  border-right: 0.2em solid transparent;
+  animation: rotation 0.75s linear infinite;
+  vertical-align: middle;
+}
+
 @keyframes rotation {
   0% {
     transform: rotate(0deg);

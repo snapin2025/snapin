@@ -1,24 +1,21 @@
 'use client'
-import { CreateNewPassword, useCheckRecoveryCode } from '@/features/auth/forgot-password'
-import { useEffect } from 'react'
+import { CreateNewPasswordForm, useCheckRecoveryCode } from '@/features/auth/forgot-password'
 import { useSearchParams } from 'next/navigation'
-import LinkOldPage from '@/features/auth/forgot-password/ui/LinkOldPage'
+import ExpiredLink from '@/features/auth/forgot-password/ui/ExpiredLink'
+import { Spinner } from '@/shared/ui'
 
 export const CreateNewPasswordPage = () => {
-  const { mutate: checkRecoveryCode, isPending, isError } = useCheckRecoveryCode()
   const params = useSearchParams()
 
   const recoveryCode = params?.get('code')
 
-  useEffect(() => {
-    if (recoveryCode) {
-      checkRecoveryCode({ recoveryCode })
-    }
-  }, [checkRecoveryCode, recoveryCode])
+  const { isPending, isError } = useCheckRecoveryCode(recoveryCode!)
+
+  if (isPending) return <Spinner />
 
   if (isError) {
-    return <LinkOldPage />
+    return <ExpiredLink />
   }
 
-  return <CreateNewPassword />
+  return <CreateNewPasswordForm />
 }
