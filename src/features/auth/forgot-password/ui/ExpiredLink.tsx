@@ -1,35 +1,26 @@
 'use client'
 
 import { Button, Resend, Typography } from '@/shared/ui'
-import { useQueryClient } from '@tanstack/react-query'
-import { useResendRecoveryEmail } from '../api/useResetPassword'
+import { useResendRecoveryEmail } from '../api/useResendRecoveryEmail'
 import s from './ForgotPasswordForm.module.css'
+import { useSearchParams } from 'next/navigation'
 import { ROUTES } from '@/shared/lib/routes'
-import { useRouter } from 'next/navigation'
 
-export default function LinkOldPage() {
-  const queryClient = useQueryClient()
-  const savedEmail = queryClient.getQueryData<string>(['recovery-email'])
+export default function ExpiredLink() {
+  const savedEmail = useSearchParams()?.get('email')
   const { mutate: resendEmail, isPending } = useResendRecoveryEmail()
-  const router = useRouter() //создаю экземпляр хука
 
   const handleResend = () => {
-    if (!savedEmail) {
-      alert('Email not found. Please enter your email again.')
-      //дабавила реддирект
-      router.replace(ROUTES.AUTH.RESEND_NEW_PASSWORD_LINK)
-      return
-    }
+    // if (!savedEmail) return
 
     resendEmail(
       {
-        email: savedEmail,
-        baseUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/${ROUTES.AUTH.CREATE_NEW_PASSWORD}` //обязательно передаем baseUrl
+        email: savedEmail!,
+        baseUrl: `${process.env.NEXT_PUBLIC_BASE_URL}${ROUTES.AUTH.CREATE_NEW_PASSWORD}`
       },
       {
         onSuccess: () => {
           alert(`We have sent a link to confirm your email to ${savedEmail}`)
-          router.replace(ROUTES.AUTH.RESEND_NEW_PASSWORD_LINK) // редирект на страницу "Email sent"
         }
       }
     )
@@ -46,7 +37,6 @@ export default function LinkOldPage() {
           <Button className={s.buttonPage} onClick={handleResend} disabled={isPending}>
             {isPending ? 'Sending' : 'Resend link'}
           </Button>
-          {/*картинка*/}
           <Resend className={s.illustration} width={473} height={352} />
         </div>
       </div>

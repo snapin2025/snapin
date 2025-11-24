@@ -1,26 +1,21 @@
-//recoveryCode
-'use client'
-
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { userApi } from '@/entities/user'
-import { CheckRecoveryCodePayload, CheckRecoveryCodeResponse } from '@/entities/user/api/user-types'
+import { CheckRecoveryCodeResponse } from '@/entities/user/api/user-types'
 
-// CheckRecoveryCodePayload — тело запроса { recoveryCode: string }
-// CheckRecoveryCodeResponse — ответ { email: string }
-
-export const useCheckRecoveryCode = () => {
-  const queryClient = useQueryClient()
-
-  return useMutation<
+export const useCheckRecoveryCode = (recoveryCode: string) =>
+  useQuery<
     CheckRecoveryCodeResponse,
-    AxiosError<{ statusCode: number; messages: { message: string; field: string }[] }>,
-    CheckRecoveryCodePayload
+    AxiosError<{ statusCode: number; messages: { message: string; field: string }[] }>
   >({
-    mutationFn: (payload) => userApi.checkRecoveryCode(payload),
-    onSuccess: (data) => {
-      // Сохраняем email для дальнейшего использования на странице создания нового пароля
-      queryClient.setQueryData(['recovery-email'], data.email)
-    }
+    queryKey: ['check-recovery-code', recoveryCode],
+    queryFn: ({ queryKey }) => {
+      const [, code] = queryKey
+
+      return userApi.checkRecoveryCode({
+        recoveryCode: code as string
+      })
+    },
+    enabled: !!recoveryCode,
+    retry: false
   })
-}
