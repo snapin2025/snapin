@@ -1,7 +1,7 @@
 // import { ForgotPasswordForm } from './ForgotPasswordForm'
-// import LinkOldPage from './LinkOldPage'
+// import ExpiredLink from './ExpiredLink'
 // import { EmailSentMessage } from '@/features/auth/forgot-password/ui/EmailSentMessage'
-// import { CreateNewPassword } from '@/features/auth/forgot-password/ui/CreateNewPassword'
+// import { CreateNewPasswordForm } from '@/features/auth/forgot-password/ui/CreateNewPasswordForm'
 // import { Button, Dialog, DialogContent } from '@/shared/ui'
 // import s from './ForgotPasswordForm.module.css'
 // import { useState } from 'react'
@@ -40,14 +40,13 @@
 // // 2. Сообщение "Email отправлен"
 // export const EmailSent = () => <EmailSentMessage />
 // // 4. Создание нового пароля
-// // export const CreatePassword = () => <CreateNewPassword />
-// export const CreatePassword = () => <CreateNewPassword />
+// // export const CreatePassword = () => <CreateNewPasswordForm />
+// export const CreatePassword = () => <CreateNewPasswordForm />
 // // 5. Ссылка устарела
-// export const LinkExpired = () => <LinkOldPage />
+// export const LinkExpired = () => <ExpiredLink />
 import { ForgotPasswordForm } from './ForgotPasswordForm'
-import LinkOldPage from './LinkOldPage'
-
-import { CreateNewPassword } from '@/features/auth/forgot-password/ui/CreateNewPassword'
+import ExpiredLink from './ExpiredLink'
+import { CreateNewPasswordForm } from '@/features/auth/forgot-password/ui/CreateNewPasswordForm'
 import { Button, Dialog, DialogContent } from '@/shared/ui'
 import s from './ForgotPasswordForm.module.css'
 import { useState } from 'react'
@@ -61,9 +60,6 @@ export default {
 
 // 1. Основная форма
 export const DefaultForm = () => <ForgotPasswordForm />
-
-// 2. Сообщение "Email отправлен" пока закаментировала чтоб не дублировать формы
-// export const EmailSent = () => <EmailSentMessage />
 
 // 3. Сообщение "Email отправлен" с открытой модалкой (для демонстрации)
 export const EmailSentWithModal = () => {
@@ -85,7 +81,7 @@ export const EmailSentWithModal = () => {
 }
 
 // 4. Создание нового пароля
-export const CreatePassword = () => <CreateNewPassword />
+export const CreatePassword = () => <CreateNewPasswordForm />
 
 CreatePassword.parameters = {
   nextjs: {
@@ -98,4 +94,4 @@ CreatePassword.parameters = {
 }
 
 // 5. Ссылка устарела
-export const LinkExpired = () => <LinkOldPage />
+export const LinkExpired = () => <ExpiredLink />
