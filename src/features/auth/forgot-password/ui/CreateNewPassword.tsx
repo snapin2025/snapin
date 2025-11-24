@@ -96,7 +96,7 @@ export const CreateNewPassword = () => {
       <p className={s.text}>Your password must be between 6 and 20 characters</p>
 
       <Button variant="primary" className={s.buttonPassword} type="submit" disabled={isPending}>
-        {isPending ? 'Creating...' : 'Create new password'}
+        {isPending ? 'Creating' : 'Create new password'}
       </Button>
     </Card>
   )
