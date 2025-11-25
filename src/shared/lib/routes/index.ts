@@ -6,7 +6,7 @@ export const ROUTES = {
     SIGN_UP: '/sign-up',
     FORGOT_PASSWORD: '/forgot-password',
     CREATE_NEW_PASSWORD: '/create-password',
-    RESEND_NEW_PASSWORD_LINK: '/resend-recovery-password-link'
+    CONFIRM_REGISTRATION: '/confirm-registration'
   },
 
   APP: {
