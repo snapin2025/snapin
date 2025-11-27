@@ -5,18 +5,13 @@ import { zodResolver } from '@hookform/resolvers/zod'
 
 import s from './SignUp.module.css'
 import Link from 'next/link'
-import { SignUpResponse } from '@/entities/user/api/user-types'
 import { Oauth } from '@/widgets'
 import { SignUpForm, SignUpSchema } from '../model/validation'
 import { ROUTES } from '@/shared/lib/routes'
+import { useSignUp } from '@/features/auth'
+import { AxiosError } from 'axios'
 
-type Props = {
-  error?: string | null
-  isLoading?: boolean
-  onSubmit: (data: SignUpForm) => Promise<SignUpResponse>
-}
-
-export const SignUp = ({ error, isLoading = false, onSubmit }: Props) => {
+export const SignUp = () => {
   const {
     register,
     handleSubmit,
@@ -31,40 +26,38 @@ export const SignUp = ({ error, isLoading = false, onSubmit }: Props) => {
     reValidateMode: 'onChange'
   })
 
-  const handleFormSubmit = async (data: SignUpForm) => {
-    try {
-      const res = await onSubmit(data)
+  const { mutate: signUpMutate, isPending } = useSignUp()
 
-      if (!res) {
+  const handleFormSubmit = (data: SignUpForm) => {
+    signUpMutate(data, {
+      onSuccess: () => {
         reset()
-        return
-      }
+        alert('Регистрация прошла успешно! Проверьте email для подтверждения.')
+      },
+      onError: (error: AxiosError<{ statusCode: number; messages: { message: string; field: string }[] }>) => {
+        const messages = error.response?.data?.messages
 
-      if ('statusCode' in res && res.statusCode === 400) {
-        res.messages.forEach(({ field, message }) => {
-          switch (field) {
-            case 'email':
-              setError('email', { message: 'User with this email is already registered' })
-              break
-            case 'userName':
-              setError('userName', { message: 'User with this username is already registered' })
-              break
-            case 'password':
-              setError('password', { message: message })
-              break
-            default:
-              setError('root', { message: message || 'Unexpected error' })
-          }
-        })
-        return
+        if (messages) {
+          messages.forEach(({ field, message }) => {
+            switch (field) {
+              case 'email':
+                setError('email', { message: 'User with this email is already registered' })
+                break
+              case 'userName':
+                setError('userName', { message: 'User with this username is already registered' })
+                break
+              case 'password':
+                setError('password', { message })
+                break
+              default:
+                setError('root', { message })
+            }
+          })
+        } else {
+          setError('root', { message: 'Unexpected error occurred' })
+        }
       }
-      if (res.statusCode === 204) {
-        reset()
-      }
-    } catch (err: unknown) {
-      console.error('Unexpected error:', err)
-      setError('root', { message: 'Unexpected error occured' })
-    }
+    })
   }
 
   return (
@@ -139,7 +132,7 @@ export const SignUp = ({ error, isLoading = false, onSubmit }: Props) => {
         </Typography>
       </div>
 
-      <Button variant={'primary'} type="submit" className={s.buttonFullWidth} disabled={isLoading || !isValid}>
+      <Button variant={'primary'} type="submit" className={s.buttonFullWidth} disabled={isPending || !isValid}>
         Sign Up
       </Button>
 
@@ -152,3 +145,37 @@ export const SignUp = ({ error, isLoading = false, onSubmit }: Props) => {
     </Card>
   )
 }
+
+// try {
+//   const res =  onSubmit(data)
+//
+//   if (!res) {
+//     reset()
+//     return
+//   }
+//
+//   if ('statusCode' in res && res.statusCode === 400) {
+//     res.messages.forEach(({ field, message }) => {
+//       switch (field) {
+//         case 'email':
+//           setError('email', { message: 'User with this email is already registered' })
+//           break
+//         case 'userName':
+//           setError('userName', { message: 'User with this username is already registered' })
+//           break
+//         case 'password':
+//           setError('password', { message: message })
+//           break
+//         default:
+//           setError('root', { message: message || 'Unexpected error' })
+//       }
+//     })
+//     return
+//   }
+//   if (res.statusCode === 204) {
+//     reset()
+//   }
+// } catch (err: unknown) {
+//   console.error('Unexpected error:', err)
+//   setError('root', { message: 'Unexpected error occured' })
+// }

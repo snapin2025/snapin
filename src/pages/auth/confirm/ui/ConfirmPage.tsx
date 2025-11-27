@@ -70,7 +70,7 @@ export function ConfirmPage() {
       <Button className={s.button} variant={'primary'}>
         <Link href={'/sign-in'}>Sign In</Link>
       </Button>
-      <Confirmed />
+      <Confirmed width={432} height={300} />
     </div>
   )
 }

@@ -49,7 +49,7 @@ export function RegisterPage() {
 
   return (
     <>
-      <SignUp onSubmit={handleRegister} isLoading={isPending} error={errorMessage} />
+      <SignUp />
       {emailForModal && <EmailSentModal email={emailForModal} onClose={() => setEmailForModal(null)} />}
     </>
   )

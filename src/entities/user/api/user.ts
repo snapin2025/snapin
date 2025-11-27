@@ -10,8 +10,8 @@ import {
   SetNewPasswordType,
   SignInRequest,
   SignInResponse,
+  SignUpErrorResponse,
   SignUpRequest,
-  SignUpResponse,
   User
 } from './user-types'
 
@@ -24,12 +24,8 @@ export const userApi = {
     const { data } = await api.post<SignInResponse>('/auth/login', payload)
     return data
   },
-  signUp: async (payload: SignUpRequest): Promise<SignUpResponse> => {
-    const res = await api.post<SignUpResponse>('/auth/registration', payload)
-    if (res.status === 204) {
-      return { statusCode: 204 }
-    }
-    return res.data
+  signUp: async (payload: SignUpRequest): Promise<void> => {
+    await api.post<void | SignUpErrorResponse>('/auth/registration', payload)
   },
   confirm: async (payload: ConfirmRequest): Promise<void> => {
     await api.post<ConfirmResponse>('/auth/registration-confirmation', payload)
