@@ -2,7 +2,7 @@
 
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button, Card, Input, Typography } from '@/shared/ui'
+import { Button, Card, Input, Spinner, Typography } from '@/shared/ui'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useSetNewPassword } from '../api/useNewPassword'
 import { CreatePasswordInput, passwordSchema } from '../model/validatePassword'
@@ -84,7 +84,7 @@ export const CreateNewPasswordForm = () => {
       <p className={s.text}>Your password must be between 6 and 20 characters</p>
 
       <Button variant="primary" className={s.buttonPassword} type="submit" disabled={isPending}>
-        {isPending ? 'Creating' : 'Create new password'}
+        {isPending ? <Spinner inline /> : 'Create new password'}
       </Button>
     </Card>
   )

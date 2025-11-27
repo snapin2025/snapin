@@ -5,6 +5,7 @@ import { EmailSentModal } from '@/features/auth/ui/EmailSentModal'
 import s from './RegisterPage.module.css'
 import { SignUpErrorResponse } from '@/entities/user/api/user-types'
 import { SignUp, SignUpForm, useSignUp } from '@/features/auth'
+import { ROUTES } from '@/shared/lib/routes'
 
 export function RegisterPage() {
   const { mutateAsync, isPending, error } = useSignUp()
@@ -25,7 +26,8 @@ export function RegisterPage() {
       const result = await mutateAsync({
         userName: formData.userName,
         email: formData.email,
-        password: formData.password
+        password: formData.password,
+        baseUrl: `${process.env.NEXT_PUBLIC_BASE_URL}${ROUTES.AUTH.CONFIRM_REGISTRATION}`
       })
 
       if (result && 'statusCode' in result && result.statusCode === 204) {

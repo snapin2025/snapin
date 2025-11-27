@@ -4,11 +4,10 @@
   box-sizing: border-box;
   color: var(--color-light-100);
   font-size: var(--font-size-m);
-  min-width: 100px;
+  /*min-width: 100px;*/
   border-radius: 2px;
   text-align: center;
   font-weight: var(--font-weight-semi-bold);
-  line-height: 150%;
   padding: 6px 24px;
   border: 1px solid transparent;
 }

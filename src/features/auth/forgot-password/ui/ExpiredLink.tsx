@@ -1,6 +1,6 @@
 'use client'
 
-import { Button, Resend, Typography } from '@/shared/ui'
+import { Button, Resend, Spinner, Typography } from '@/shared/ui'
 import { useResendRecoveryEmail } from '../api/useResendRecoveryEmail'
 import s from './ForgotPasswordForm.module.css'
 import { useSearchParams } from 'next/navigation'
@@ -11,11 +11,11 @@ export default function ExpiredLink() {
   const { mutate: resendEmail, isPending } = useResendRecoveryEmail()
 
   const handleResend = () => {
-    // if (!savedEmail) return
+    if (!savedEmail) return
 
     resendEmail(
       {
-        email: savedEmail!,
+        email: savedEmail,
         baseUrl: `${process.env.NEXT_PUBLIC_BASE_URL}${ROUTES.AUTH.CREATE_NEW_PASSWORD}`
       },
       {
@@ -35,7 +35,7 @@ export default function ExpiredLink() {
             Looks like the verification link has expired. Not to worry, we can send the link again
           </p>
           <Button className={s.buttonPage} onClick={handleResend} disabled={isPending}>
-            {isPending ? 'Sending' : 'Resend link'}
+            {isPending ? <Spinner inline /> : 'Resend link'}
           </Button>
           <Resend className={s.illustration} width={473} height={352} />
         </div>
