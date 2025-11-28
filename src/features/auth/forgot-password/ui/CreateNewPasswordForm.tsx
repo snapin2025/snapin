@@ -37,8 +37,6 @@ export const CreateNewPasswordForm = () => {
 
     setErrorMessage('')
 
-    // Простая проверка кода перед установкой пароля
-
     setNewPassword(
       { newPassword: data.password, recoveryCode },
       {

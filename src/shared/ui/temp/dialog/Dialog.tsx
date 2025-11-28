@@ -38,4 +38,4 @@ export const Dialog = (props: Props) => {
   )
 }
 
-const DialogClose = DialogPrimitive.Close
+export const DialogClose = DialogPrimitive.Close
