@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs'
 
-import { Dialog } from './Dialog'
-import { Button, DialogClose, Typography } from '@/shared/ui'
+import { Dialog, DialogClose } from './Dialog'
+import { Button, Typography } from '@/shared/ui'
 
 const meta = {
   title: 'Components/Dialog',

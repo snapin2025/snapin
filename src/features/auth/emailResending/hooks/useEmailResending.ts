@@ -1,6 +1,5 @@
-import { useMutation } from '@tanstack/react-query';
-import { emailResending, emailResendingErrorResponse, emailResendingRequest } from '@/features/auth/emailResending';
-
+import { useMutation } from '@tanstack/react-query'
+import { emailResending, emailResendingErrorResponse, emailResendingRequest } from '@/features/auth/emailResending'
 
 export const useEmailResending = () => {
   return useMutation<void, Error | emailResendingErrorResponse, emailResendingRequest>({
@@ -14,6 +13,6 @@ export const useEmailResending = () => {
         }
         throw err
       }
-    },
+    }
   })
 }

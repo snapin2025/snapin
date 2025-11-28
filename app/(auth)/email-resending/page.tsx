@@ -1,6 +1,5 @@
-import { EmailResendingPage } from '@/pages/auth/EmailResending';
-
+import { EmailResendingPage } from '@/pages/auth/EmailResending'
 
 export default function EmailResending() {
-  return <EmailResendingPage />;
+  return <EmailResendingPage />
 }
