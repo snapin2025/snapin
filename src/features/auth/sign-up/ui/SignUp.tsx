@@ -10,6 +10,7 @@ import { SignUpForm, SignUpSchema } from '../model/validation'
 import { ROUTES } from '@/shared/lib/routes'
 import { useSignUp } from '@/features/auth'
 import { AxiosError } from 'axios'
+import { SignUpErrorResponse } from '@/entities/user'
 
 export const SignUp = () => {
   const {
@@ -18,6 +19,7 @@ export const SignUp = () => {
     reset,
     control,
     setError,
+    watch,
     formState: { errors, isValid }
   } = useForm<SignUpForm>({
     defaultValues: { email: '', password: '', agree: false, confirmPassword: '', userName: '' },
@@ -25,39 +27,31 @@ export const SignUp = () => {
     mode: 'onBlur',
     reValidateMode: 'onChange'
   })
-
+  const agree = watch('agree')
   const { mutate: signUpMutate, isPending } = useSignUp()
 
-  const handleFormSubmit = (data: SignUpForm) => {
-    signUpMutate(data, {
-      onSuccess: () => {
-        reset()
-        alert('Регистрация прошла успешно! Проверьте email для подтверждения.')
+  const handleFormSubmit = (formData: SignUpForm) => {
+    signUpMutate(
+      {
+        userName: formData.userName,
+        email: formData.email,
+        password: formData.password,
+        baseUrl: `${process.env.NEXT_PUBLIC_BASE_URL}${ROUTES.AUTH.CONFIRM_REGISTRATION}`
       },
-      onError: (error: AxiosError<{ statusCode: number; messages: { message: string; field: string }[] }>) => {
-        const messages = error.response?.data?.messages
+      {
+        onSuccess: () => {
+          reset()
+          alert('Регистрация прошла успешно! Проверьте email для подтверждения.')
+        },
+        onError: (error: AxiosError<SignUpErrorResponse>) => {
+          const messages = error.response?.data.messages
 
-        if (messages) {
-          messages.forEach(({ field, message }) => {
-            switch (field) {
-              case 'email':
-                setError('email', { message: 'User with this email is already registered' })
-                break
-              case 'userName':
-                setError('userName', { message: 'User with this username is already registered' })
-                break
-              case 'password':
-                setError('password', { message })
-                break
-              default:
-                setError('root', { message })
-            }
-          })
-        } else {
-          setError('root', { message: 'Unexpected error occurred' })
+          if (messages) {
+            setError(messages[0].field, { type: 'server error', message: messages[0].message })
+          }
         }
       }
-    })
+    )
   }
 
   return (
@@ -132,7 +126,12 @@ export const SignUp = () => {
         </Typography>
       </div>
 
-      <Button variant={'primary'} type="submit" className={s.buttonFullWidth} disabled={isPending || !isValid}>
+      <Button
+        variant={'primary'}
+        type="submit"
+        className={s.buttonFullWidth}
+        disabled={isPending || !isValid || !agree}
+      >
         Sign Up
       </Button>
 

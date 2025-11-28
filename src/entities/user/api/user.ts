@@ -24,8 +24,9 @@ export const userApi = {
     const { data } = await api.post<SignInResponse>('/auth/login', payload)
     return data
   },
-  signUp: async (payload: SignUpRequest): Promise<void> => {
-    await api.post<void | SignUpErrorResponse>('/auth/registration', payload)
+  signUp: async (payload: SignUpRequest): Promise<void | SignUpErrorResponse> => {
+    const { data } = await api.post<void | SignUpErrorResponse>('/auth/registration', payload)
+    return data
   },
   confirm: async (payload: ConfirmRequest): Promise<void> => {
     await api.post<ConfirmResponse>('/auth/registration-confirmation', payload)

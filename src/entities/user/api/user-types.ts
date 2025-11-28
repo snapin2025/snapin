@@ -25,7 +25,7 @@ export type SignUpErrorResponse = {
   statusCode: number // 400
   messages: {
     message: string
-    field: 'email' | 'password' | 'userName'
+    field: 'email' | 'password' | 'userName' | 'confirmPassword' | 'agree'
   }[]
   error: string // "Bad Request"
 }
