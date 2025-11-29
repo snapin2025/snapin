@@ -1,6 +1,6 @@
 import type { SVGProps } from 'react'
 export const Github = (props: SVGProps<SVGSVGElement>) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="36px" height="36px" fill="none" viewBox="0 0 24 24" {...props}>
+  <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" viewBox="0 0 24 24" {...props}>
     <g clipPath="url(#github_svg__a)">
       <path
         fill="currentColor"
