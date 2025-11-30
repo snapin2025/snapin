@@ -34,7 +34,7 @@ export function ConfirmPage() {
         const e = err as Error | ConfirmErrorResponse
 
         if ('messages' in e && e.messages?.[0]?.field === 'code') {
-          router.push(`/emailResending?email=${email ?? ''}`)
+          router.push(`/email-resending?email=${email ?? ''}`)
           return
         }
         if ('messages' in e) {
