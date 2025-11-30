@@ -1,22 +1,11 @@
+/* src/shared/ui/dropdown/Dropdown.module.css */
+
 .DropdownMenuContent {
-  /* 👇 Устанавливаем требуемую ширину */
   width: 137px;
-  background-color: #171717; /* Перенесли фон сюда */
-  padding: 13px 12px; /* Ваши нужные внутренние отступы пункта */
-  border: 3px #a82f2f;
-
-  /*!* Анимации появления/исчезновения *!*/
-  /*animation-duration: 400ms;*/
-  /*animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);*/
-  /*will-change: transform, opacity;*/
+  background-color: #171717;
+  padding: 13px 12px;
+  border: 1px #4c4c4c;
 }
-
-/* Стили для анимаций в зависимости от того, с какой стороны появляется меню */
-/*.DropdownMenuContent[data-side="top"] { animation-name: slideDownAndFade; }*/
-/*.DropdownMenuContent[data-side="right"] { animation-name: slideLeftAndFade; }*/
-/*.DropdownMenuContent[data-side="bottom"] { animation-name: slideUpAndFade; }*/
-/*.DropdownMenuContent[data-side="left"] { animation-name: slideRightAndFade; }*/
-
 
 .DropdownMenuItem {
   /* Стили для каждого отдельного пункта меню */
@@ -44,25 +33,3 @@
   cursor: pointer;
   outline: none;
 }
-
-/*!* --- Keyframes (Обязательны для работы анимаций) --- *!*/
-
-/*@keyframes slideUpAndFade {*/
-/*  from { opacity: 0; transform: translateY(2px); }*/
-/*  to { opacity: 1; transform: translateY(0); }*/
-/*}*/
-
-/*@keyframes slideRightAndFade {*/
-/*  from { opacity: 0; transform: translateX(-2px); }*/
-/*  to { opacity: 1; transform: translateX(0); }*/
-/*}*/
-
-/*@keyframes slideDownAndFade {*/
-/*  from { opacity: 0; transform: translateY(-2px); }*/
-/*  to { opacity: 1; transform: translateY(0); }*/
-/*}*/
-
-/*@keyframes slideLeftAndFade {*/
-/*  from { opacity: 0; transform: translateX(2px); }*/
-/*  to { opacity: 1; transform: translateX(0); }*/
-/*}*/

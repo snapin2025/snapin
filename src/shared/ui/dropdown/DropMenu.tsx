@@ -1,14 +1,16 @@
+// src/shared/ui/dropdown/DropMenu.tsx
 'use client'
 
 import { Dropdown } from './Dropdown'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
+// Импортируем стили из CSS-модуля
 import s from './Dropdown.module.css'
 import { CopyLinkIcon, DeleteIcon, DotsIcon, EditIcon, FollowIcon, UnfollowIcon } from '@/shared/ui'
 
-export const PostMenu = () => {
-  // 👇 Триггером теперь будет ваша иконка троеточия
+export const DropMenu = () => {
   const myTrigger = (
-    <button className="IconButton" aria-label="Post options">
+    // ИСПРАВЛЕНО: Используем класс s.IconButton из модуля 'Dropdown.module.css'
+    <button className={s.IconButton} aria-label="Post options">
       <DotsIcon />
     </button>
   )
@@ -30,7 +32,7 @@ export const PostMenu = () => {
         <FollowIcon className={s.icon} />
         Follow
       </DropdownMenu.Item>
-      {/* Пункт "одписаться" (с иконкой минус) */}
+      {/* Пункт "Отписаться" (с иконкой минус) */}
       <DropdownMenu.Item className={s.DropdownMenuItem} onSelect={() => console.log('Unfollow')}>
         <UnfollowIcon className={s.icon} />
         Unfollow
@@ -44,5 +46,4 @@ export const PostMenu = () => {
   )
 }
 
-export default PostMenu
-//<PostMenu /> можно использовать в любом месте проекта.
+export default DropMenu

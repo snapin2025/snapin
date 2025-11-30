@@ -1,20 +1,38 @@
-// Dropdown.stories.tsx
+import DropMenu from '@/shared/ui/dropdown/DropMenu'
+import { PostCard } from '@/shared/ui/post'
 
-// 1. Импортируйте ваш компонент
-import { PostMenu } from './PostMenu'
-
-// 2. ОБЯЗАТЕЛЬНО ПРИСУТСТВУЕТ ЭКСПОРТ ПО УМОЛЧАНИЮ (default export)
 export default {
-  // Название, под которым компонент будет отображаться в сайдбаре Storybook
-  title: 'UI/PostMenu',
-  // Сам компонент
-  component: PostMenu,
-  // Дополнительные параметры
+  title: 'UI Components',
   parameters: {
     layout: 'centered'
   }
 }
 
-// 3. Именованный экспорт для конкретной истории.
-// Используем PostMenu() без параметров.
-export const DefaultView = () => <PostMenu />
+export const DropMenuStory = () => <DropMenu />
+
+// Состояния карточки
+export const State1_WithMenu = () => (
+  <PostCard userName="UserName" avatar="/girl.png" description="" timeAgo="" showDropMenu={true} showActions={false} />
+)
+
+export const State2_WithAnswer = () => (
+  <PostCard
+    userName="UserName"
+    avatar="/girl.png"
+    description=" Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+    timeAgo="2 hours ago"
+    showDropMenu={false}
+    showActions={true}
+  />
+)
+
+// export const State3_Full = () => (
+//   <PostCard
+//     userName="UserName"
+//     avatar="/girl.png"
+//     description="UserName Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+//     timeAgo="2 hours ago"
+//     showDropMenu={true}
+//     showActions={true}
+//   />
+// )
