@@ -13,14 +13,6 @@ export default meta
 
 type Story = StoryObj<typeof meta>
 
-type RegisterFormProps = {
-  initialErrors?: {
-    userName?: string
-    email?: string
-    password?: string
-    passwordConfirmation?: string
-  }
-}
 export const Default: Story = {
   args: {
     isLoading: false,

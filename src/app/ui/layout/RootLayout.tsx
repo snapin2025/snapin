@@ -1,10 +1,7 @@
-'use client'
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 import { ReactNode } from 'react'
 import { QueryProvider } from '@/app/providers/query-provider/query-provider'
-
-import { Header } from '@/widgets'
 import '@/app/ui/styles/index.css'
 import { AuthProvider } from '@/shared/lib'
 
@@ -30,10 +27,7 @@ export const RootLayout = ({ children }: Readonly<{ children: ReactNode }>) => {
       <body>
         <QueryProvider>
           <AuthProvider>
-            <Header />
-            <div className={'container'}>
-              <main> {children}</main>
-            </div>
+            <>{children}</>
           </AuthProvider>
         </QueryProvider>
       </body>

@@ -4,6 +4,7 @@ import { ComponentType, JSX, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/shared/lib'
 import { Spinner } from '@/shared/ui'
+import { ROUTES } from '@/shared/lib/routes'
 
 /**
  * WithGuestGuard оборачивает публичные страницы (login, register)
@@ -17,7 +18,7 @@ export function WithGuestGuard<T extends JSX.IntrinsicAttributes>(Component: Com
 
     useEffect(() => {
       if (!isLoading && user) {
-        router.replace(`/profile/${user.userId}`)
+        router.replace(ROUTES.HOME)
       }
     }, [user, isLoading, router])
 
