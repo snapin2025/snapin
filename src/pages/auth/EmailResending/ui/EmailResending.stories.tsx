@@ -1,4 +1,3 @@
-import { ConfirmPage } from '@/pages/auth/confirm'
 import { StoryObj } from '@storybook/nextjs'
 import { useState } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -31,7 +30,6 @@ export const Default: Story = {
   parameters: {
     nextjs: {
       navigation: {
-        // pathname: '/auth/signin',
         query: {}
       }
     }

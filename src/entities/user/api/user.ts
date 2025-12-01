@@ -2,8 +2,10 @@ import { api } from '@/shared/api'
 import {
   CheckRecoveryCodePayload,
   CheckRecoveryCodeResponse,
+  ConfirmErrorResponse,
   ConfirmRequest,
-  ConfirmResponse,
+  EmailResendingErrorResponse,
+  EmailResendingRequest,
   LogoutResponse,
   ResendRecoveryEmailType,
   SendRecoveryEmailType,
@@ -22,14 +24,17 @@ export const userApi = {
   },
   signIn: async (payload: SignInRequest) => {
     const { data } = await api.post<SignInResponse>('/auth/login', payload)
+    console.log(data)
     return data
   },
-  signUp: async (payload: SignUpRequest): Promise<void | SignUpErrorResponse> => {
-    const { data } = await api.post<void | SignUpErrorResponse>('/auth/registration', payload)
-    return data
+  signUp: async (payload: SignUpRequest): Promise<void> => {
+    await api.post<void | SignUpErrorResponse>('/auth/registration', payload)
   },
   confirm: async (payload: ConfirmRequest): Promise<void> => {
-    await api.post<ConfirmResponse>('/auth/registration-confirmation', payload)
+    await api.post<void | ConfirmErrorResponse>('/auth/registration-confirmation', payload)
+  },
+  emailResending: async (payload: EmailResendingRequest): Promise<void> => {
+    await api.post<EmailResendingErrorResponse>('/auth/registration-email-resending', payload)
   },
 
   // ✔ Исправление №1 — Swagger: /auth/password-recovery возвращает 204 без тела

@@ -8,13 +8,3 @@ export const useSignUp = () => {
     mutationFn: (payload) => userApi.signUp(payload)
   })
 }
-
-// try {
-//   const res = await userApi.signUp(payload)
-//   return res
-// } catch (err: any) {
-//   if (err.response?.data) {
-//     throw err.response.data as SignUpErrorResponse
-//   }
-//   throw err
-// }

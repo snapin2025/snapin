@@ -1,63 +1,25 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
-
-import { Button, Confirmed, Typography } from '@/shared/ui'
+import { Button, Confirmed, Spinner, Typography } from '@/shared/ui'
 import Link from 'next/link'
 import s from './ConfirmPage.module.css'
-import { ConfirmErrorResponse } from '@/entities/user/api/user-types'
-import { useConfirm } from '@/features/auth/sign-in/api/useConfirm'
+import { notFound, useSearchParams } from 'next/navigation'
+import { useCheckConfirmCode } from '@/pages/auth/confirm/api/useCheckConfirmCode'
+import { EmailResending } from '@/pages/auth/EmailResending/ui/EmailResending'
 
 export function ConfirmPage() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const { mutateAsync } = useConfirm()
+  const params = useSearchParams()
+  const confirmCode = params?.get('code') ?? '12'
+  const email = params?.get('email')
 
-  const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading')
+  if (!email || !confirmCode) notFound()
 
-  useEffect(() => {
-    const code = searchParams?.get('code')
-    const email = searchParams?.get('email')
-    console.log(code)
-    if (!code) {
-      console.log(code)
-      router.push('/sign-up')
-      return
-    }
+  const { isPending, isError } = useCheckConfirmCode(confirmCode)
 
-    const confirm = async () => {
-      try {
-        await mutateAsync({ confirmationCode: code })
-        setStatus('success')
-      } catch (err) {
-        const e = err as Error | ConfirmErrorResponse
+  if (isPending) return <Spinner />
 
-        if ('messages' in e && e.messages?.[0]?.field === 'code') {
-          router.push(`/emailResending?email=${email ?? ''}`)
-          return
-        }
-        if ('messages' in e) {
-          alert(e.messages?.[0]?.message ?? 'Something went wrong')
-        } else {
-          alert(e.message ?? 'Something went wrong')
-        }
-        router.push('/sign-up')
-      }
-    }
-
-    void confirm()
-  }, [mutateAsync, router, searchParams])
-
-  if (status === 'loading') {
-    return (
-      <div className={s.wrapperConfirm}>
-        <Typography variant="h1">Checking your email...</Typography>
-        <Typography className={s.confirmMessage} variant="regular_16">
-          Please wait while we confirm your account
-        </Typography>
-      </div>
-    )
+  if (isError) {
+    return <EmailResending />
   }
 
   return (
@@ -67,7 +29,7 @@ export function ConfirmPage() {
         Your email has been confirmed
       </Typography>
 
-      <Button className={s.button} variant={'primary'}>
+      <Button asChild className={s.button} variant={'primary'}>
         <Link href={'/sign-in'}>Sign In</Link>
       </Button>
       <Confirmed width={432} height={300} />

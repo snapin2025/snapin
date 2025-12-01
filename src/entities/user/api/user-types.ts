@@ -73,4 +73,16 @@ export type ConfirmErrorResponse = {
   error: string
 }
 
-export type ConfirmResponse = void | ConfirmErrorResponse
+export type EmailResendingRequest = {
+  email: string
+  baseUrl: string
+}
+
+export type EmailResendingErrorResponse = {
+  statusCode: number
+  messages: {
+    message: string
+    field: string
+  }[]
+  error: string
+}

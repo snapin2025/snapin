@@ -10,7 +10,6 @@
   margin: 19px 0 30px;
   max-width: 294px;
   width: 100%;
-
 }
 
 .form {
@@ -23,6 +22,7 @@
 
 .button {
   margin-bottom: 36px;
+  padding: 6px 0;
   font-size: 16px;
   width: 100%;
 }
