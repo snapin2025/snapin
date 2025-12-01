@@ -21,7 +21,7 @@ export const Dialog = (props: Props) => {
         <DialogPrimitive.Content asChild className={clsx(className, s.container)}>
           <Card className={s.card}>
             {title && (
-              <DialogPrimitive.Title asChild className={s.title}>
+              <DialogPrimitive.Title asChild className={s.title} aria-describedby={'modal title'}>
                 <header>
                   <Typography variant={'h1'}>{title}</Typography>
                   <DialogClose className={clsx(closeOutContent && s.closeOutContent)}>

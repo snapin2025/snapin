@@ -22,7 +22,6 @@ export type NormalizedServerError = {
   raw?: unknown
 }
 
-
 const capitalizeFirstLetter = (text: string): string => {
   if (!text) {
     return text
@@ -47,7 +46,6 @@ const capitalizeFirstLetter = (text: string): string => {
 }
  */
 
-
 const DEFAULT_FALLBACK_MESSAGE = 'Произошла ошибка. Попробуйте позже.'
 
 const getSafeString = (value: unknown): string | undefined => {
@@ -65,9 +63,7 @@ const capitalizeSentence = (text: string): string => {
   return text.charAt(0).toUpperCase() + text.slice(1)
 }
 
-const normalizeMessageArray = (
-  messages: ServerError['messages']
-): NormalizedMessage[] => {
+const normalizeMessageArray = (messages: ServerError['messages']): NormalizedMessage[] => {
   if (!Array.isArray(messages)) {
     return []
   }
@@ -92,8 +88,7 @@ export const normalizeServerError = (
   const safeFallback = capitalizeSentence(fallbackMessage)
 
   if (!axios.isAxiosError<ServerError>(error) || !error.response) {
-    const fallback =
-      getSafeString((error as Error)?.message) ?? safeFallback
+    const fallback = getSafeString((error as Error)?.message) ?? safeFallback
 
     return {
       message: capitalizeSentence(fallback),

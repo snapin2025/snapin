@@ -1,51 +1,51 @@
-'use client';
+'use client'
 
-import { useSearchParams } from 'next/navigation';
-import { useEmailResending } from '@/features/auth/emailResending';
-import { useState } from 'react';
-import { Button, Input, Resending, Typography } from '@/shared/ui';
-import s from './EmailResendingPage.module.css';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { EmailResendingForm, EmailResendingSchema } from '@/pages/auth/EmailResending/model';
-import { EmailSentModal } from '@/features/auth/ui/EmailSentModal';
+import { useSearchParams } from 'next/navigation'
+import { useEmailResending } from '@/features/auth/emailResending'
+import { useState } from 'react'
+import { Button, Input, Resending, Typography } from '@/shared/ui'
+import s from './EmailResendingPage.module.css'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { EmailResendingForm, EmailResendingSchema } from '@/pages/auth/EmailResending/model'
+import { EmailSentModal } from '@/features/auth/ui/EmailSentModal'
 
 export function EmailResendingPage() {
-  const searchParams = useSearchParams();
-  const emailParam = searchParams?.get('email') ?? '';
-  const { mutateAsync, isPending } = useEmailResending();
-  const [openModalEmail, setOpenModalEmail] = useState<string | null>(null);
+  const searchParams = useSearchParams()
+  const emailParam = searchParams?.get('email') ?? ''
+  const { mutateAsync, isPending } = useEmailResending()
+  const [openModalEmail, setOpenModalEmail] = useState<string | null>(null)
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors }
   } = useForm<EmailResendingForm>({
     defaultValues: { email: emailParam },
     resolver: zodResolver(EmailResendingSchema),
-    mode: 'onBlur',
-  });
+    mode: 'onBlur'
+  })
 
   const handleResend = async (data: EmailResendingForm) => {
-    const email = data.email || emailParam;
+    const email = data.email || emailParam
     if (!email) {
-      return;
+      return
     }
 
     try {
       await mutateAsync({
         email,
-        baseUrl: 'http://localhost:3000',
-      });
-      setOpenModalEmail(email);
+        baseUrl: 'http://localhost:3000'
+      })
+      setOpenModalEmail(email)
     } catch (err: any) {
       if ('messages' in err) {
-        alert(err.messages?.[0]?.message ?? 'Something went wrong');
+        alert(err.messages?.[0]?.message ?? 'Something went wrong')
       } else {
-        alert(err.message ?? 'Something went wrong');
+        alert(err.message ?? 'Something went wrong')
       }
     }
-  };
+  }
 
   return (
     <div className={s.wrapperEmailResending}>
@@ -70,12 +70,7 @@ export function EmailResendingPage() {
 
       <Resending />
 
-      {openModalEmail && (
-        <EmailSentModal
-          email={openModalEmail}
-          onClose={() => setOpenModalEmail(null)}
-        />
-      )}
+      {openModalEmail && <EmailSentModal email={openModalEmail} onClose={() => setOpenModalEmail(null)} />}
     </div>
-  );
+  )
 }

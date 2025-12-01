@@ -1,2 +1,3 @@
 export { RootLayout } from './layout/RootLayout'
-export { PrivateLayout } from './layout/PrivateLayout'
+export { AuthLayout } from './layout/AuthLayout'
+export { AppLayout } from './layout/AppLayout'

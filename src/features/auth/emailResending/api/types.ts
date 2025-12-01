@@ -4,12 +4,12 @@ export type emailResendingRequest = {
 }
 
 export type emailResendingErrorResponse = {
-  statusCode: number;
+  statusCode: number
   messages: {
-    message: string;
-    field: string;
-  }[];
-  error: string;
+    message: string
+    field: string
+  }[]
+  error: string
 }
 
 export type emailResendingResponse = void | emailResendingErrorResponse
