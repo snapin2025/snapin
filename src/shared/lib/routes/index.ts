@@ -10,7 +10,7 @@ export const ROUTES = {
   },
 
   APP: {
-    PROFILE: '/profile',
+    USER_PROFILE: `/profile`,
     DASHBOARD: '/settings'
   },
   LEGAL: {

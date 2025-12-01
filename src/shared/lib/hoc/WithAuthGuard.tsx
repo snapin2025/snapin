@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { ComponentType, JSX, ReactNode, useEffect } from 'react'
+import { ComponentType, ReactNode, useEffect } from 'react'
 import { useAuth } from '@/shared/lib'
 import { Spinner } from '@/shared/ui'
 import { ROUTES } from '@/shared/lib/routes'
