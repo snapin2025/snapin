@@ -31,11 +31,18 @@ export function PostCard({
         <Image src="/girl.png" alt={`${userName}'s Avatar`} width={36} height={36} className={s.avatar} />
 
         <div className={s.content}>
-          <div className={s.top}>
-            <span className={s.userName}>{userName}</span>
-            {description && <span className={s.description}>{description}</span>}
-            {shouldShowMenu && <DropMenu />}
-          </div>
+          {/* Если есть описание - используем textBlock как в примере */}
+          {description ? (
+            <div className={s.textBlock}>
+              <span className={s.userName}>{userName}</span> {description}
+            </div>
+          ) : (
+            /* Если нет описания - используем top для имени и меню */
+            <div className={s.top}>
+              <span className={s.userName}>{userName}</span>
+              {shouldShowMenu && <DropMenu />}
+            </div>
+          )}
 
           {/* Время и Answer внизу */}
           {(timeAgo || showActions) && (

@@ -1,0 +1,84 @@
+
+/* Контейнер */
+.container {
+  width: 100%;
+  /*max-width: 284px ;*/
+  display: flex;
+  flex-direction: column;
+  /*gap: 8px;*/
+}
+
+/* Лейбл */
+.label {
+  display: block;
+  font-size: 14px;
+  line-height: 24px;
+  font-weight: 400;
+  color: #8D9094;
+  margin-bottom: 2px;
+}
+
+/* Card вокруг textarea */
+.textareaCard {
+  width: 100%;
+  background: #171717;
+  border: 1px solid #4c4c4c; /* ← ИЗМЕНЕНО: бордер перенесен сюда */
+  border-radius: 2px; /* ← ДОБАВЛЕНО: если нужно скругление */
+  transition: border-color 0.2s; /* ← ДОБАВЛЕНО: плавный переход */
+}
+
+/* Hover */
+.textareaCard:hover {
+  border-color: #4c4c4c; /* Hover border */
+}
+
+/* Active/Focus */
+.textareaCard:focus-within { /* ← ИЗМЕНЕНО: используем focus-within вместо :has */
+  border-color: #2F68CC; /* Focus border */
+}
+
+.textarea:focus {
+  outline: none;
+  color: #fff; /* Focus text color */
+}
+
+/* Error */
+.errorCard {
+  border-color: #cc1439; /* Error border */
+}
+
+/* Disabled */
+.textareaCard:has(.textarea:disabled) {
+  border-color: #4c4c4c; /* Disabled border */
+  background: #171717;
+  opacity: 0.6; /* ← ДОБАВЛЕНО: визуальное затемнение */
+}
+
+/* Сама textarea */
+.textarea {
+  width: 100%;
+  height: 84px;
+  padding: 12px 12px 54px 12px;
+  background: transparent;
+  font-size: 16px;
+  line-height: 24px;
+  color: #8D9094; /* Цвет текста */
+  resize: vertical;
+  outline: none;
+  font-weight: 400;
+  border: none; /* ← ИЗМЕНЕНО: убираем бордер, он теперь на .textareaCard */
+}
+
+/* Заблокирован */
+.textarea:disabled {
+  color: #4c4c4c;
+  cursor: not-allowed;
+}
+
+/* Текст ошибки */
+.errorText {
+  display: block;
+  font-size: 14px;
+  color: #cc1439;
+  margin-top: 2px;
+}
