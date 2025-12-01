@@ -21,20 +21,14 @@ export type SignUpRequest = {
   baseUrl: string
 }
 
-export type SignUpSuccessResponse = {
-  statusCode: 204
-}
-
 export type SignUpErrorResponse = {
   statusCode: number // 400
   messages: {
     message: string
-    field: 'email' | 'password' | 'userName'
+    field: 'email' | 'password' | 'userName' | 'confirmPassword' | 'agree'
   }[]
   error: string // "Bad Request"
 }
-
-export type SignUpResponse = SignUpErrorResponse | SignUpSuccessResponse
 
 //(эндпоинт: /auth/password-recovery)
 export type SendRecoveryEmailType = {
@@ -79,4 +73,16 @@ export type ConfirmErrorResponse = {
   error: string
 }
 
-export type ConfirmResponse = void | ConfirmErrorResponse
+export type EmailResendingRequest = {
+  email: string
+  baseUrl: string
+}
+
+export type EmailResendingErrorResponse = {
+  statusCode: number
+  messages: {
+    message: string
+    field: string
+  }[]
+  error: string
+}
