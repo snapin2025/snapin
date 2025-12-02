@@ -1,20 +1,24 @@
 'use client'
 
-import { useSearchParams } from 'next/navigation'
+import { notFound, useSearchParams } from 'next/navigation'
 import { useEmailResending } from '@/features/auth/emailResending'
 import { useState } from 'react'
-import { Button, Input, Resending, Typography } from '@/shared/ui'
-import s from './EmailResendingPage.module.css'
+import { BaseModal, Button, Input, Resending, Spinner, Typography } from '@/shared/ui'
+import s from './EmailResending.module.css'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { EmailResendingForm, EmailResendingSchema } from '@/pages/auth/EmailResending/model'
-import { EmailSentModal } from '@/features/auth/ui/EmailSentModal'
+import { ROUTES } from '@/shared/lib/routes'
 
-export function EmailResendingPage() {
+export function EmailResending() {
   const searchParams = useSearchParams()
-  const emailParam = searchParams?.get('email') ?? ''
-  const { mutateAsync, isPending } = useEmailResending()
+  const emailParam = searchParams?.get('email')
+  if (!emailParam) notFound()
+
+  const { mutateAsync, isPending, isError, error } = useEmailResending()
   const [openModalEmail, setOpenModalEmail] = useState<string | null>(null)
+
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const {
     register,
@@ -28,23 +32,26 @@ export function EmailResendingPage() {
 
   const handleResend = async (data: EmailResendingForm) => {
     const email = data.email || emailParam
-    if (!email) {
-      return
-    }
 
-    try {
-      await mutateAsync({
-        email,
-        baseUrl: 'http://localhost:3000'
-      })
-      setOpenModalEmail(email)
-    } catch (err: any) {
-      if ('messages' in err) {
-        alert(err.messages?.[0]?.message ?? 'Something went wrong')
-      } else {
-        alert(err.message ?? 'Something went wrong')
+    await mutateAsync(
+      { email, baseUrl: `${process.env.NEXT_PUBLIC_BASE_URL}${ROUTES.AUTH.CONFIRM_REGISTRATION}` },
+      {
+        onSuccess: () => {
+          setOpenModalEmail(email)
+          setIsModalOpen(true)
+        }
       }
-    }
+    )
+  }
+  if (isPending) return <Spinner />
+
+  if (isError) {
+    const message = error?.response?.data?.messages?.[0]?.message ?? 'Something went wrong'
+    alert(message)
+  }
+
+  const handleClose = () => {
+    setIsModalOpen(false)
   }
 
   return (
@@ -70,7 +77,20 @@ export function EmailResendingPage() {
 
       <Resending />
 
-      {openModalEmail && <EmailSentModal email={openModalEmail} onClose={() => setOpenModalEmail(null)} />}
+      {openModalEmail && (
+        <div>
+          <BaseModal open={isModalOpen} onOpenChange={handleClose} title="Email sent">
+            <Typography variant="regular_16" className={s.textModal}>
+              We have sent a link to confirm your email to <b>{openModalEmail}</b>
+            </Typography>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px' }}>
+              <Button className={s.buttonModal} onClick={handleClose}>
+                Ok
+              </Button>
+            </div>
+          </BaseModal>
+        </div>
+      )}
     </div>
   )
 }
