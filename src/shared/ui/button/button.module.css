@@ -83,26 +83,26 @@
   border: 1px solid var(--color-accent-900);
 }
 
-/*!* ========== Text  ========== *!*/
+/* ========== Text  ========== */
 
-/*.textButton {*/
+.textButton {
+  color: var(--color-accent-500);
+  padding: 6px 24px;
+}
+
+/*.textButton:active {*/
 /*  color: var(--color-accent-500);*/
-/*  padding: 6px 24px;*/
 /*}*/
 
-/*!*.textButton:active {*!*/
-/*!*  color: var(--color-accent-500);*!*/
-/*!*}*!*/
+.textButton:hover {
+  color: var(--color-accent-700);
+}
 
-/*.textButton:hover {*/
-/*  color: var(--color-accent-700);*/
-/*}*/
+.textButton:focus {
+  color: var(--color-accent-500);
+  border: 1px solid var(--color-accent-500);
+}
 
-/*.textButton:focus {*/
-/*  color: var(--color-accent-500);*/
-/*  border: 1px solid var(--color-accent-500);*/
-/*}*/
-
-/*.textButton:disabled {*/
-/*  color: var(--color-accent-900);*/
-/*}*/
+.textButton:disabled {
+  color: var(--color-accent-900);
+}

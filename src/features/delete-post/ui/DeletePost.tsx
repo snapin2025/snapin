@@ -26,7 +26,7 @@ export const DeletePost = () => {
         >
           <>
             <AlertDescription asChild style={{ textAlign: 'left', width: '100%' }}>
-              <Typography variant={'regular_16'}>Are you sure to want logout?</Typography>
+              <Typography variant={'regular_16'}>Do you really want to delete this post?</Typography>
             </AlertDescription>
             <div style={{ display: 'flex', justifyContent: 'end', gap: '24px' }}>
               <AlertAction asChild>
