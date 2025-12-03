@@ -11,25 +11,35 @@ type Props = {
   post: Post
 }
 
-const countLetter = 82
-const maxLetters = 210
+const SHORT_DESCRIPTION_LENGTH = 82
 
 export const HomePostsList = ({ post }: Props) => {
-  const [text, setText] = useState('Show more')
-  const postDescriptionLength =
-    post && post.description && post.description.length > countLetter
-      ? post.description.slice(0, countLetter) + '...'
-      : post.description
-  const [textDescription, setTextDescription] = useState(postDescriptionLength)
+  const [isExpanded, setIsExpanded] = useState(false)
 
-  const handleChangeHeightText = (value?: number) => {
-    if (value) {
-      setTimeout(() => {
-        setTextDescription(post.description.slice(0, value) + '...')
-      }, 390)
-    } else {
-      setTextDescription(post.description.slice(0, countLetter) + '...')
+  // const description = post?.description || ''
+  const description =
+    'gfdgdsfgsdfgsdfgsdfgsdfgsdfgsdfgdsfgdsfgsdfgdsfgsdfgsdfgdfsgdfsgdfgsdfgdfsgsdfgdsfgsdfgdfgdsfgsdffgsdgdsfggsgdfgsfsdfsdfgsdfgsdfgd'
+  const descriptionLength = description.trim().length
+
+  const shouldShowButton = descriptionLength > SHORT_DESCRIPTION_LENGTH
+
+  const getDisplayedText = () => {
+    // Если текст короткий, показываем полностью
+    if (!shouldShowButton) {
+      return description
     }
+
+    // Если текст развернут, показываем полностью
+    if (isExpanded) {
+      return description
+    }
+
+    // Если текст свернут, показываем только первые 82 символа
+    return description.slice(0, SHORT_DESCRIPTION_LENGTH) + '...'
+  }
+
+  const handleToggleDescription = () => {
+    setIsExpanded((prev) => !prev)
   }
 
   const firstImage = post.images && post.images.length > 0 ? post.images[0] : null
@@ -63,22 +73,10 @@ export const HomePostsList = ({ post }: Props) => {
       <span className={s.time}>{getTimeDifference(post.createdAt)}</span>
 
       <p className={s.description}>
-        {textDescription}
-        {textDescription.length > countLetter && (
-          <Button
-            variant={'textButton'}
-            className={s.showMoreButton}
-            onClick={() => {
-              if (text === 'Show more') {
-                handleChangeHeightText(maxLetters)
-                setText('Show less')
-              } else {
-                handleChangeHeightText()
-                setText('Show more')
-              }
-            }}
-          >
-            {text}
+        {getDisplayedText()}
+        {shouldShowButton && (
+          <Button variant={'textButton'} className={s.showMoreButton} onClick={handleToggleDescription}>
+            {isExpanded ? 'Hide' : 'Show more'}
           </Button>
         )}
       </p>

@@ -53,13 +53,19 @@
   font-weight: 400;
   font-size: 14px;
   line-height: 171%;
-  text-overflow: ellipsis;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  margin: 0;
+  color: var(--color-light-100);
 }
 
 .showMoreButton {
   margin-left: 5px;
   padding: 0;
   border: none;
+  color: var(--color-accent-500);
+  text-decoration: underline;
+  text-decoration-skip-ink: none;
 }
 
 .showMoreButton:focus,

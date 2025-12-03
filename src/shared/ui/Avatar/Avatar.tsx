@@ -8,7 +8,7 @@ type AvatarProps = {
   size?: 'very_small' | 'small' | 'medium' | 'large'
   withStatus?: boolean
 }
-const FALLBACK_SRC = '/images/ava.png';
+const FALLBACK_SRC = '/img.png'
 
 const Avatar: FC<AvatarProps> = ({ src, alt, size = 'medium', withStatus = false }) => {
   const imgSrc = src && src.trim().length > 0 ? src : FALLBACK_SRC;
