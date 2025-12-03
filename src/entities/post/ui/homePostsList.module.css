@@ -1,0 +1,69 @@
+.postItem {
+  position: relative;
+  width: 234px;
+}
+
+.postImageWraper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1/1;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.postImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.postImagePlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-dark-300);
+  color: var(--color-light-900);
+}
+
+.userInfo {
+  margin-top: 12px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.userName {
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 150%;
+  cursor: pointer;
+}
+
+.time {
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 133%;
+  color: var(--color-light-900);
+}
+
+.description {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 171%;
+  text-overflow: ellipsis;
+}
+
+.showMoreButton {
+  margin-left: 5px;
+  padding: 0;
+  border: none;
+}
+
+.showMoreButton:focus,
+.showMoreButton:active {
+  outline: none;
+  border: none;
+}
