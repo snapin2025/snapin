@@ -10,7 +10,7 @@ export type TextareaProps = ComponentPropsWithRef<'textarea'> & {
 
 export const Textarea = ({ label, error, className, ...textareaProps }: TextareaProps) => {
   const textareaClassName = `${s.textarea} ${className || ''}`
-  const cardClassName = `${s.textareaCard} ${error ? s.errorCard : ''}` // ← оставляем
+  const cardClassName = `${s.textareaCard} ${error ? s.errorCard : ''}`
 
   return (
     <div className={s.container}>
@@ -20,7 +20,6 @@ export const Textarea = ({ label, error, className, ...textareaProps }: Textarea
         </label>
       )}
       <div className={cardClassName}>
-        {/* ← бордеры здесь */}
         <textarea {...textareaProps} className={textareaClassName} />
       </div>
       {error && typeof error === 'string' && <span className={s.errorText}>{error}</span>}

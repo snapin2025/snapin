@@ -1,22 +1,22 @@
-// src/shared/ui/dropdown/DropMenu.tsx
 'use client'
 
 import { Dropdown } from './Dropdown'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
-// Импортируем стили из CSS-модуля
 import s from './Dropdown.module.css'
 import { CopyLinkIcon, DeleteIcon, DotsIcon, EditIcon, FollowIcon, UnfollowIcon } from '@/shared/ui'
 
 export const DropMenu = () => {
   const myTrigger = (
-    // ИСПРАВЛЕНО: Используем класс s.IconButton из модуля 'Dropdown.module.css'
+    // обертка
+
     <button className={s.IconButton} aria-label="Post options">
-      <DotsIcon />
+      {/*три точки*/}
+      <DotsIcon className={s.dots} />
     </button>
   )
 
   return (
-    <Dropdown trigger={myTrigger}>
+    <Dropdown trigger={myTrigger} align="end">
       <DropdownMenu.Item className={s.DropdownMenuItem} onSelect={() => console.log('Edit')}>
         <EditIcon className={s.icon} />
         Edit Post

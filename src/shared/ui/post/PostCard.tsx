@@ -12,6 +12,7 @@ type PostCardProps = {
   timeAgo?: string
   showDropMenu?: boolean
   showActions?: boolean
+  className?: string
 }
 
 export function PostCard({
@@ -20,15 +21,16 @@ export function PostCard({
   description,
   timeAgo,
   showDropMenu = true,
-  showActions = false
+  showActions = false,
+  className = ''
 }: PostCardProps) {
   const shouldShowMenu = showDropMenu && !description
 
   return (
-    <Card className={s.postCard}>
+    <Card className={`${s.postCard} ${className}`}>
       {/* Вся карточка */}
       <div className={s.card}>
-        <Image src="/girl.png" alt={`${userName}'s Avatar`} width={36} height={36} className={s.avatar} />
+        <Image src={avatar} alt={`${userName}'s Avatar`} width={36} height={36} className={s.avatar} />
 
         <div className={s.content}>
           {/* Если есть описание - используем textBlock как в примере */}
@@ -38,9 +40,18 @@ export function PostCard({
             </div>
           ) : (
             /* Если нет описания - используем top для имени и меню */
+            // <div className={s.top}>
+            //   <span className={s.userName}>{userName}</span>
+            //   {shouldShowMenu && <DropMenu />}
+            // </div>
             <div className={s.top}>
               <span className={s.userName}>{userName}</span>
-              {shouldShowMenu && <DropMenu />}
+
+              {shouldShowMenu && (
+                <div className={s.menuWrapper}>
+                  <DropMenu />
+                </div>
+              )}
             </div>
           )}
 

@@ -1,11 +1,13 @@
+'use client'
+
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { ComponentPropsWithoutRef, ReactNode } from 'react'
 import s from './Dropdown.module.css'
-import { clsx } from 'clsx' // Убедитесь, что установили clsx
+import { clsx } from 'clsx'
 
 // --- ОПРЕДЕЛЕНИЕ ТИПОВ ДЛЯ УНИВЕРСАЛЬНОГО КОМПОНЕНТА ---
 type Props = {
-  className?: string // Класс для стилизации Content
+  className?: string
   trigger: ReactNode // Элемент-триггер (обязательный)
   children: ReactNode // ✨ Содержимое меню (обязательный)
 
@@ -18,16 +20,28 @@ type Props = {
 
 // --- КОМПОНЕНТ Dropdown ---
 export const Dropdown = (props: Props) => {
-  const { className, trigger, children, sideOffset = 5, ...restRootProps } = props
+  const {
+    className,
+    trigger,
+    children,
+    side = 'bottom',
+    align = 'end',
+    sideOffset = 8,
+    alignOffset = 0,
+    ...restRootProps
+  } = props
 
   return (
     <DropdownMenu.Root {...restRootProps}>
       <DropdownMenu.Trigger asChild>{trigger}</DropdownMenu.Trigger>
-
       <DropdownMenu.Portal>
         <DropdownMenu.Content
           className={clsx(className, s.DropdownMenuContent)}
+          side={side} // ← используем side
+          align={align} // ← используем align
           sideOffset={sideOffset}
+          alignOffset={alignOffset} // ← используем alignOffset
+          avoidCollisions={false}
           forceMount // Хорошая практика для универсальных компонентов
         >
           {children} {/* ✨ Рендерим ПЕРЕДАМ контент (ваши Item-ы с иконками) */}
