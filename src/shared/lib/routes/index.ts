@@ -12,7 +12,12 @@ export const ROUTES = {
 
   APP: {
     USER_PROFILE: `/profile`,
-    DASHBOARD: '/settings'
+    DASHBOARD: '/settings',
+    CREATE_POST: '/create',
+    MESSENGER: '/messenger',
+    SEARCH: '/search',
+    STATISTICS: '/statistics',
+    FAVORITES: '/favorites'
   },
   LEGAL: {
     TERMS_OF_SERVICE: '/terms-of-service',

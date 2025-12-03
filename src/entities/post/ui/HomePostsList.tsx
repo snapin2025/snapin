@@ -1,9 +1,10 @@
 import s from './homePostsList.module.css'
-import { Post } from '@/widgets/postList/api/types'
+import { Post } from '@/entities/post/api/types'
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Button } from '@/shared/ui'
+import { clsx } from 'clsx'
+import { Button, Typography } from '@/shared/ui'
 import { getTimeDifference } from '@/shared/lib/getTimeDifference'
 import { Avatar } from '@/shared/ui/Avatar'
 
@@ -11,14 +12,14 @@ type Props = {
   post: Post
 }
 
-const SHORT_DESCRIPTION_LENGTH = 82
+const SHORT_DESCRIPTION_LENGTH = 66
 
 export const HomePostsList = ({ post }: Props) => {
   const [isExpanded, setIsExpanded] = useState(false)
 
   // const description = post?.description || ''
   const description =
-    'gfdgdsfgsdfgsdfgsdfgsdfgsdfgsdfgdsfgdsfgsdfgdsfgsdfgsdfgdfsgdfsgdfgsdfgdfsgsdfgdsfgsdfgdfgdsfgsdffgsdgdsfggsgdfgsfsdfsdfgsdfgsdfgd'
+    'Добавлена  динамического уменьшения изображения высоте текста. работает,Добавлена  динамического уменьшения изображения высоте текста. работает'
   const descriptionLength = description.trim().length
 
   const shouldShowButton = descriptionLength > SHORT_DESCRIPTION_LENGTH
@@ -34,7 +35,7 @@ export const HomePostsList = ({ post }: Props) => {
       return description
     }
 
-    // Если текст свернут, показываем только первые 82 символа
+    // Если текст свернут, показываем только первые 66 символов
     return description.slice(0, SHORT_DESCRIPTION_LENGTH) + '...'
   }
 
@@ -46,14 +47,14 @@ export const HomePostsList = ({ post }: Props) => {
 
   return (
     <li className={s.postItem}>
-      <div className={s.postImageWraper}>
+      <div className={clsx(s.postImageWraper, isExpanded && s.postImageWraperExpanded)}>
         <Link href={`/profile/${post.ownerId}/post/${post.id}`} prefetch={false}>
           {firstImage ? (
             <Image
               src={firstImage.url}
               alt={post.description || 'Post image'}
               width={firstImage.width || 234}
-              height={firstImage.height || 234}
+              height={firstImage.height || 240}
               className={s.postImage}
               loading="lazy"
             />
@@ -72,14 +73,14 @@ export const HomePostsList = ({ post }: Props) => {
 
       <span className={s.time}>{getTimeDifference(post.createdAt)}</span>
 
-      <p className={s.description}>
-        {getDisplayedText()}
+      <Typography variant="regular_14" className={s.description}>
+        <span className={s.descriptionText}>{getDisplayedText()}</span>
         {shouldShowButton && (
           <Button variant={'textButton'} className={s.showMoreButton} onClick={handleToggleDescription}>
             {isExpanded ? 'Hide' : 'Show more'}
           </Button>
         )}
-      </p>
+      </Typography>
     </li>
   )
 }

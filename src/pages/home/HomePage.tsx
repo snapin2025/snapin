@@ -1,42 +1,52 @@
-import { RegisteredUsers } from '@/widgets/registeredUsers/ui/registeredUsers'
-import { PostList } from '@/widgets'
-import { ResponsesPosts } from '@/widgets/postList/api/types'
-import s from './homePage.module.css'
+import { ResponsesPosts } from '@/entities/post/api/types'
+import { HomePageContent } from './HomePageContent'
 
 // SSG: Страница будет статически сгенерирована на этапе сборки
 // ISR: Страница будет перегенерирована каждые 60 секунд при запросах
 export const revalidate = 60
 
+type TotalCountUsersResponse = {
+  totalCount: number
+}
+
 export const HomePage = async () => {
-  const apiUrl = 'https://inctagram.work/api/v1'
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL
+
   let postsData: ResponsesPosts = {
     totalCount: 0,
     pageSize: 0,
     items: [],
     totalUsers: 0
   }
+  let totalCountUsers = 0
 
   try {
-    // Для SSG используем cache: 'force-cache' (по умолчанию) или не указываем cache
-    // Это позволит Next.js кешировать данные на этапе сборки
-    const response = await fetch(`${apiUrl}/posts/all`, {
-      next: { revalidate: 60 } // ISR: перегенерировать каждые 60 секунд
-    })
+    // Делаем два запроса параллельно для SSG
+    const [postsResponse, usersResponse] = await Promise.all([
+      fetch(`${apiUrl}posts/all`, {
+        next: { revalidate: 60 } // ISR: перегенерировать каждые 60 секунд
+      }),
+      fetch(`${apiUrl}public-user`, {
+        next: { revalidate: 60 } // ISR: перегенерировать каждые 60 секунд
+      })
+    ])
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch posts: ${response.status}`)
+    if (postsResponse.ok) {
+      postsData = await postsResponse.json()
+    } else {
+      console.error(`Failed to fetch posts: ${postsResponse.status}`)
     }
 
-    postsData = await response.json()
+    if (usersResponse.ok) {
+      const usersData: TotalCountUsersResponse = await usersResponse.json()
+      totalCountUsers = usersData.totalCount
+    } else {
+      console.error(`Failed to fetch users count: ${usersResponse.status}`)
+    }
   } catch (error) {
-    console.error('Error fetching posts:', error)
+    console.error('Error fetching data:', error)
     // В случае ошибки возвращаем пустые данные, страница все равно будет сгенерирована
   }
 
-  return (
-    <div className={s.container}>
-      <RegisteredUsers />
-      <PostList userPosts={postsData.items} />
-    </div>
-  )
+  return <HomePageContent posts={postsData.items} totalCountUsers={totalCountUsers} />
 }

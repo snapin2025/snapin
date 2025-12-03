@@ -76,9 +76,5 @@ export const userApi = {
 
   logout: async (): Promise<LogoutResponse> => {
     await api.post<LogoutResponse>('/auth/logout')
-  },
-  totalCountUsers: async () => {
-    const { data } = await api.get<TotalCountUsersResponse>('/public-user')
-    return data
   }
 }

@@ -1,6 +1,9 @@
 .postItem {
   position: relative;
   width: 234px;
+  height: 390px;
+  display: flex;
+  flex-direction: column;
 }
 
 .postImageWraper {
@@ -9,6 +12,12 @@
   aspect-ratio: 1/1;
   overflow: hidden;
   border-radius: 4px;
+  transition: height 0.3s ease;
+}
+
+.postImageWraperExpanded {
+ 
+  aspect-ratio: auto;
 }
 
 .postImage {
@@ -50,13 +59,14 @@
 }
 
 .description {
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 171%;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  margin: 0;
   color: var(--color-light-100);
+}
+
+.descriptionText {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .showMoreButton {
@@ -66,6 +76,8 @@
   color: var(--color-accent-500);
   text-decoration: underline;
   text-decoration-skip-ink: none;
+  white-space: nowrap;
+  display: inline;
 }
 
 .showMoreButton:focus,
