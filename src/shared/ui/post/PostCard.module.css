@@ -2,7 +2,6 @@
 .postCard {
   display: flex;
   justify-content: space-between;
-  /*position: relative;*/
   background-color: #333333;
   padding: 12px;
   width: 100%;
@@ -11,7 +10,6 @@
 .card {
   display: flex;
   gap: 12px;
-  /*position: relative;*/
 }
 
 .header {
@@ -20,10 +18,10 @@
   gap: 12px;
 }
 
-
 .content {
   flex: 1;
-  min-width: 100px;
+  min-width: 0;
+  width: 100%
 }
 
 /* Стиль для блока с именем и меню (когда нет описания) */
@@ -31,8 +29,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  /*здесь должно быть расстояние*/
   gap: 290px;
-  /*position: relative;*/
+
 }
 
 /* Стиль для блока с именем и текстом вместе (когда есть описание) */
@@ -74,9 +73,3 @@
   white-space: wrap;
 }
 
-/* дабавила */
-.menuWrapper {
-  margin-left: auto;
-  position: relative;
-  display: inline-block;
-}

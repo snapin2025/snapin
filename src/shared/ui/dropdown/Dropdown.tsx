@@ -26,8 +26,8 @@ export const Dropdown = (props: Props) => {
     children,
     side = 'bottom',
     align = 'end',
-    sideOffset = 8,
-    alignOffset = 0,
+    // sideOffset = 50,
+    // alignOffset = -50,
     ...restRootProps
   } = props
 
@@ -37,10 +37,10 @@ export const Dropdown = (props: Props) => {
       <DropdownMenu.Portal>
         <DropdownMenu.Content
           className={clsx(className, s.DropdownMenuContent)}
-          side={side} // ← используем side
-          align={align} // ← используем align
-          sideOffset={sideOffset}
-          alignOffset={alignOffset} // ← используем alignOffset
+          side={side}
+          align={align}
+          // sideOffset={sideOffset}
+          // alignOffset={alignOffset}
           avoidCollisions={false}
           forceMount // Хорошая практика для универсальных компонентов
         >

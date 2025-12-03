@@ -40,18 +40,9 @@ export function PostCard({
             </div>
           ) : (
             /* Если нет описания - используем top для имени и меню */
-            // <div className={s.top}>
-            //   <span className={s.userName}>{userName}</span>
-            //   {shouldShowMenu && <DropMenu />}
-            // </div>
             <div className={s.top}>
               <span className={s.userName}>{userName}</span>
-
-              {shouldShowMenu && (
-                <div className={s.menuWrapper}>
-                  <DropMenu />
-                </div>
-              )}
+              {shouldShowMenu && <DropMenu />}
             </div>
           )}
 
