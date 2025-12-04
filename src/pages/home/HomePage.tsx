@@ -10,7 +10,7 @@ type TotalCountUsersResponse = {
 }
 
 export const HomePage = async () => {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inctagram.work/api/v1'
 
   let postsData: ResponsesPosts = {
     totalCount: 0,
@@ -48,5 +48,8 @@ export const HomePage = async () => {
     // В случае ошибки возвращаем пустые данные, страница все равно будет сгенерирована
   }
 
-  return <HomePageContent posts={postsData.items} totalCountUsers={totalCountUsers} />
+  // Ограничиваем количество постов на сервере (лучше для SSG)
+  const limitedPosts = postsData.items.slice(0, 4)
+
+  return <HomePageContent posts={limitedPosts} totalCountUsers={totalCountUsers} />
 }

@@ -2,10 +2,11 @@
 
 import { useAuth } from '@/shared/lib'
 import { Spinner } from '@/shared/ui'
-import { RegisteredUsers } from '@/widgets/registeredUsers/ui/registeredUsers'
-import { HomePostsList } from '@/entities/post/ui/HomePostsList'
+
+import { HomePostsList } from '@/widgets/homePostsList'
 import { Post } from '@/entities/post/api/types'
 import s from './homePage.module.css'
+import { RegisteredUsers } from '@/widgets/registeredUsers/RegisteredUsers'
 
 type Props = {
   posts: Post[]
@@ -31,7 +32,7 @@ export const HomePageContent = ({ posts, totalCountUsers }: Props) => {
     <div className={s.container}>
       <RegisteredUsers totalCount={totalCountUsers} />
       <ul className={s.userPostsList}>
-        {posts?.slice(0, 4).map((post) => (
+        {posts?.map((post) => (
           <HomePostsList key={post.id} post={post} />
         ))}
       </ul>

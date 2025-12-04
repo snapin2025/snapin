@@ -4,12 +4,11 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { clsx } from 'clsx'
 
-import { Bookmark, Home, Logout, Message, PlusSquare, Profile, Search, TrendingIcon } from '@/shared/ui'
-
-import { useLogout } from '@/features/auth/logout/api/useLogout'
+import { Bookmark, Home, Message, PlusSquare, Profile, Search, TrendingIcon } from '@/shared/ui'
 
 import s from './sidebar.module.css'
 import { ROUTES } from '@/shared/lib/routes'
+import { LogoutButton } from '@/features/auth/logout'
 
 type NavItem = {
   name: string
@@ -29,7 +28,6 @@ const navItems: NavItem[] = [
 
 export const Sidebar = () => {
   const pathname = usePathname()
-  const { mutate: handleLogout } = useLogout()
 
   const isActive = (href: string) => {
     if (href === '/') {
@@ -57,11 +55,8 @@ export const Sidebar = () => {
             </Link>
           )
         })}
-
-        <button onClick={() => handleLogout()} className={s.logout}>
-          <Logout className={s.icon} />
-          <span className={s.text}>Log Out</span>
-        </button>
+        <LogoutButton className={s.logout} />
+       
       </div>
     </nav>
   )

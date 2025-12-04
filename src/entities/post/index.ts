@@ -1,2 +1,2 @@
-export { Post } from './ui/HomePostsList'
-export type { PostProps } from './ui/HomePostsList'
+// Экспортируем только типы из API
+export type { Post, ImagePost, Owner, ResponsesPosts } from './api/types'

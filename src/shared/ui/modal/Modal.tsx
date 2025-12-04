@@ -6,7 +6,7 @@ import { Close, Typography } from '@/shared/ui'
 import s from './modal.module.css'
 
 function Dialog({ ...props }: React.ComponentProps<typeof DialogPrimitive.Root>) {
-  return <DialogPrimitive.Root {...props} />
+  return <DialogPrimitive.Root  {...props} />
 }
 
 function DialogTrigger({ ...props }: React.ComponentProps<typeof DialogPrimitive.Trigger>) {

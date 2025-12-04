@@ -1,3 +1,4 @@
+'use client'
 import s from './homePostsList.module.css'
 import { Post } from '@/entities/post/api/types'
 import { useState } from 'react'
@@ -17,9 +18,7 @@ const SHORT_DESCRIPTION_LENGTH = 66
 export const HomePostsList = ({ post }: Props) => {
   const [isExpanded, setIsExpanded] = useState(false)
 
-  // const description = post?.description || ''
-  const description =
-    'Добавлена  динамического уменьшения изображения высоте текста. работает,Добавлена  динамического уменьшения изображения высоте текста. работает'
+  const description = post?.description || ''
   const descriptionLength = description.trim().length
 
   const shouldShowButton = descriptionLength > SHORT_DESCRIPTION_LENGTH
