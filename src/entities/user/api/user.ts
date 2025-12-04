@@ -2,16 +2,18 @@ import { api } from '@/shared/api'
 import {
   CheckRecoveryCodePayload,
   CheckRecoveryCodeResponse,
+  ConfirmErrorResponse,
   ConfirmRequest,
-  ConfirmResponse,
+  EmailResendingErrorResponse,
+  EmailResendingRequest,
   LogoutResponse,
   ResendRecoveryEmailType,
   SendRecoveryEmailType,
   SetNewPasswordType,
   SignInRequest,
   SignInResponse,
+  SignUpErrorResponse,
   SignUpRequest,
-  SignUpResponse,
   User
 } from './user-types'
 
@@ -22,17 +24,17 @@ export const userApi = {
   },
   signIn: async (payload: SignInRequest) => {
     const { data } = await api.post<SignInResponse>('/auth/login', payload)
+    console.log(data)
     return data
   },
-  signUp: async (payload: SignUpRequest): Promise<SignUpResponse> => {
-    const res = await api.post<SignUpResponse>('/auth/registration', payload)
-    if (res.status === 204) {
-      return { statusCode: 204 }
-    }
-    return res.data
+  signUp: async (payload: SignUpRequest): Promise<void> => {
+    await api.post<void | SignUpErrorResponse>('/auth/registration', payload)
   },
   confirm: async (payload: ConfirmRequest): Promise<void> => {
-    await api.post<ConfirmResponse>('/auth/registration-confirmation', payload)
+    await api.post<void | ConfirmErrorResponse>('/auth/registration-confirmation', payload)
+  },
+  emailResending: async (payload: EmailResendingRequest): Promise<void> => {
+    await api.post<EmailResendingErrorResponse>('/auth/registration-email-resending', payload)
   },
 
   // ✔ Исправление №1 — Swagger: /auth/password-recovery возвращает 204 без тела

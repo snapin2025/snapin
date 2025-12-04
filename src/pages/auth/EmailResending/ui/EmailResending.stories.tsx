@@ -30,7 +30,6 @@ export const Default: Story = {
   parameters: {
     nextjs: {
       navigation: {
-        // pathname: '/auth/signin',
         query: {}
       }
     }
