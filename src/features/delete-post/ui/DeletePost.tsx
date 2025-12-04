@@ -1,9 +1,19 @@
-import React from 'react'
-import { Button, TrashOutline, Typography } from '@/shared/ui'
+import React, { useState } from 'react'
+import { Button, Spinner, TrashOutline, Typography } from '@/shared/ui'
 import { AlertAction, AlertCancel, AlertDescription, AlertDialog } from '@/shared/ui/alert-dilog'
 import s from './DeletePost.module.css'
+import { useDeletePost } from '@/features/delete-post/api'
 
-export const DeletePost = () => {
+export const DeletePost = (id: string) => {
+  const { mutate: deletePost, isPending } = useDeletePost()
+
+  const deletePostHandler = (id: string) => {
+    deletePost(id, {
+      onSuccess: () => {},
+      onError: () => {}
+    })
+  }
+
   return (
     <>
       <AlertDialog
@@ -30,7 +40,9 @@ export const DeletePost = () => {
             </AlertDescription>
             <div style={{ display: 'flex', justifyContent: 'end', gap: '24px' }}>
               <AlertAction asChild>
-                <Button variant={'outlined'}>Ok</Button>
+                <Button variant={'outlined'} onClick={() => deletePostHandler(id)}>
+                  {isPending ? <Spinner inline /> : 'OK'}
+                </Button>
               </AlertAction>
               <AlertCancel asChild>
                 <Button style={{ minWidth: '96px' }}>Cancel</Button>
