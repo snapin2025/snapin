@@ -5,7 +5,7 @@
 //
 // const recaptchaAdapter = {
 //   async isValid(value: string) {
-//     const response = await axios.post(
+//     const response = await axios.posts(
 //       'https://www.google.com/recaptcha/api/siteverify',
 //       `secret=6LdHxG4qAAAAAPKRxEHrlV5VvLFHIf2BO5NMI8YM&response=${value}`,
 //       {
