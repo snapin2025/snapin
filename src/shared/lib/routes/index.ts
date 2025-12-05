@@ -11,7 +11,7 @@ export const ROUTES = {
   },
 
   APP: {
-    USER_PROFILE: `/profile`,
+    USER_PROFILE: (userId: number) => `/profile/${userId}`,
     DASHBOARD: '/settings'
   },
   LEGAL: {
