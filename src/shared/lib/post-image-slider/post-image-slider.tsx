@@ -77,7 +77,7 @@ export const PostImageSlider = ({ images, postId, ownerId, description }: Props)
       <div className={s.imagesWrapper} style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
         {images.map((image, index) => (
           <div key={image.uploadId || index} className={s.imageSlide}>
-            <Link href={`/profile/${ownerId}/post/${postId}`} prefetch={false} className={s.imageLink}>
+            <Link href={`/post/${postId}`} prefetch={false} className={s.imageLink}>
               <Image
                 src={image.url}
                 alt={description || `Post image ${index + 1}`}
