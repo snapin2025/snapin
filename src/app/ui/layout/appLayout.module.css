@@ -1,0 +1,16 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main {
+  flex: 1;
+  width: 100%;
+  margin-top: 60px;
+}
+
+.mainWithSidebar {
+  margin-left: 220px;
+}
+
