@@ -56,7 +56,6 @@ export const Sidebar = () => {
           )
         })}
         <LogoutButton className={s.logout} />
-       
       </div>
     </nav>
   )

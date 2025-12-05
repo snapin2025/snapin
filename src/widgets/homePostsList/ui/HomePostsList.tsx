@@ -8,6 +8,8 @@ import { clsx } from 'clsx'
 import { Button, Typography } from '@/shared/ui'
 import { getTimeDifference } from '@/shared/lib/getTimeDifference'
 import { Avatar } from '@/shared/ui/Avatar'
+import { PostImageSlider } from '@/shared/lib/post-image-slider'
+
 
 type Props = {
   post: Post
@@ -42,13 +44,27 @@ export const HomePostsList = ({ post }: Props) => {
     setIsExpanded((prev) => !prev)
   }
 
-  const firstImage = post.images && post.images.length > 0 ? post.images[0] : null
+
+
+  const hasImages = post.images && post.images.length > 0
+  const hasMultipleImages = hasImages && post.images.length > 1
+  const firstImage = hasImages ? post.images[0] : null
 
   return (
     <li className={s.postItem}>
       <div className={clsx(s.postImageWraper, isExpanded && s.postImageWraperExpanded)}>
-        <Link href={`/profile/${post.ownerId}/post/${post.id}`} prefetch={false}>
-          {firstImage ? (
+        {hasMultipleImages ? (
+          // Используем слайдер только если больше одного изображения
+          // Link уже внутри слайдера
+          <PostImageSlider
+            images={post.images}
+            postId={post.id}
+            ownerId={post.ownerId}
+            description={post.description}
+          />
+        ) : firstImage ? (
+          // Одно изображение - показываем без слайдера
+          <Link href={`/profile/${post.ownerId}/post/${post.id}`} prefetch={false}>
             <Image
               src={firstImage.url}
               alt={post.description || 'Post image'}
@@ -57,10 +73,10 @@ export const HomePostsList = ({ post }: Props) => {
               className={s.postImage}
               loading="lazy"
             />
-          ) : (
-            <div className={s.postImagePlaceholder}>No image</div>
-          )}
-        </Link>
+          </Link>
+        ) : (
+          <div className={s.postImagePlaceholder}>No image</div>
+        )}
       </div>
 
       <div className={s.userInfo}>

@@ -33,6 +33,7 @@ export const HomePage = async () => {
 
     if (postsResponse.ok) {
       postsData = await postsResponse.json()
+      console.log(postsData)
     } else {
       console.error(`Failed to fetch posts: ${postsResponse.status}`)
     }
