@@ -1,6 +1,8 @@
 import { ResponsesPosts } from '@/entities/post/api/types'
-import { HomePageContent } from './HomePageContent'
 
+import s from './homePage.module.css'
+import { RegisteredUsers } from '@/widgets/registeredUsers/RegisteredUsers'
+import { HomePostsList } from '@/widgets'
 // SSG: Страница будет статически сгенерирована на этапе сборки
 // ISR: Страница будет перегенерирована каждые 60 секунд при запросах
 export const revalidate = 60
@@ -52,5 +54,14 @@ export const HomePage = async () => {
   // Ограничиваем количество постов на сервере (лучше для SSG)
   const limitedPosts = postsData.items.slice(0, 4)
 
-  return <HomePageContent posts={limitedPosts} totalCountUsers={totalCountUsers} />
+  return (
+    <div className={s.container}>
+      <RegisteredUsers totalCount={totalCountUsers} />
+      <ul className={s.userPostsList}>
+        {limitedPosts?.map((post) => (
+          <HomePostsList key={post.id} post={post} />
+        ))}
+      </ul>
+    </div>
+  )
 }

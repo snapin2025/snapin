@@ -17,7 +17,7 @@ type NavItem = {
 }
 
 const navItems: NavItem[] = [
-  { name: 'Home', href: ROUTES.HOME, icon: Home },
+  { name: 'Feed', href: ROUTES.HOME, icon: Home },
   { name: 'Create', href: ROUTES.APP.CREATE_POST, icon: PlusSquare },
   { name: 'My Profile', href: ROUTES.APP.USER_PROFILE, icon: Profile },
   { name: 'Messenger', href: ROUTES.APP.MESSENGER, icon: Message },
@@ -31,7 +31,7 @@ export const Sidebar = () => {
 
   const isActive = (href: string) => {
     if (href === '/') {
-      return pathname === '/'
+      return false
     }
     return pathname?.startsWith(href)
   }
