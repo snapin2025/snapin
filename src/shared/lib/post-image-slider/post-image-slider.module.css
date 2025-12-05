@@ -126,7 +126,7 @@
   justify-content: center;
   gap: 8px;
   /* Фон для лучшей видимости */
-  padding: 0px 8px;
+  padding: 0 8px;
   border-radius: 2px;
   background-color: var(--color-dark-300);
   backdrop-filter: blur(4px);
@@ -149,9 +149,6 @@
   border-radius: 50%;
 }
 
-.dotButton:hover {
-
-}
 
 .dotButton:focus-visible {
   outline: 2px solid var(--color-accent-500);
@@ -170,7 +167,39 @@
 /* Активная точка - синий цвет */
 .dotButtonActive .dotIcon {
   color: var(--color-accent-500);
+}
 
+/* Вариант большого размера - увеличивает иконки навигации */
+.sliderContainer.large .navButton {
+  width: 48px;
+  height: 48px;
+}
+
+.sliderContainer.large .navIcon {
+  width: 24px;
+  height: 24px;
+}
+
+.sliderContainer.large .navButtonLeft {
+  left: 16px;
+}
+
+.sliderContainer.large .navButtonRight {
+  right: 16px;
+}
+
+.sliderContainer.large .dotsContainer {
+  bottom: 24px;
+}
+
+.sliderContainer.large .dotButton {
+  width: 16px;
+  height: 24px;
+}
+
+.sliderContainer.large .dotIcon {
+  width: 8px;
+  height: 8px;
 }
 
 /* Адаптивность для мобильных устройств */

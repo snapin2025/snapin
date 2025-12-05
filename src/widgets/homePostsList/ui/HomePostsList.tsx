@@ -61,7 +61,7 @@ export const HomePostsList = ({ post }: Props) => {
           />
         ) : firstImage ? (
           // Одно изображение - показываем без слайдера
-          <Link href={`/post/${post.id}`} prefetch={false}>
+          <Link href={`/post/${post.id}`}>
             <Image
               src={firstImage.url}
               alt={post.description || 'Post image'}
