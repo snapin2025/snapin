@@ -14,7 +14,6 @@ import {
   SignInResponse,
   SignUpErrorResponse,
   SignUpRequest,
-  TotalCountUsersResponse,
   User
 } from './user-types'
 
