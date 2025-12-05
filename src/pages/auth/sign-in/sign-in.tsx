@@ -6,7 +6,7 @@ import { WithGuestGuard } from '@/shared/lib/hoc/WithGuestGuard'
 import { SignInForm } from '@/features/auth'
 import s from './sign-in.module.css'
 
-const Page = () => {
+export const Page = () => {
   return (
     <Card className={s.card}>
       <Typography variant={'h1'} asChild className={s.title}>
