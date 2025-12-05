@@ -10,7 +10,6 @@ import { getTimeDifference } from '@/shared/lib/getTimeDifference'
 import { Avatar } from '@/shared/ui/Avatar'
 import { PostImageSlider } from '@/shared/lib/post-image-slider'
 
-
 type Props = {
   post: Post
 }
@@ -44,8 +43,6 @@ export const HomePostsList = ({ post }: Props) => {
     setIsExpanded((prev) => !prev)
   }
 
-
-
   const hasImages = post.images && post.images.length > 0
   const hasMultipleImages = hasImages && post.images.length > 1
   const firstImage = hasImages ? post.images[0] : null
@@ -64,7 +61,7 @@ export const HomePostsList = ({ post }: Props) => {
           />
         ) : firstImage ? (
           // Одно изображение - показываем без слайдера
-          <Link href={`/profile/${post.ownerId}/post/${post.id}`} prefetch={false}>
+          <Link href={`/post/${post.id}`} prefetch={false}>
             <Image
               src={firstImage.url}
               alt={post.description || 'Post image'}
