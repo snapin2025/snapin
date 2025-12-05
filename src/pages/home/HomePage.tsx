@@ -26,10 +26,10 @@ export const HomePage = async () => {
   try {
     // Делаем два запроса параллельно для SSG
     const [postsResponse, usersResponse] = await Promise.all([
-      fetch(`${apiUrl}posts/all`, {
+      fetch(`${apiUrl}/posts/all`, {
         next: { revalidate: 60 } // ISR: перегенерировать каждые 60 секунд
       }),
-      fetch(`${apiUrl}public-user`, {
+      fetch(`${apiUrl}/public-user`, {
         next: { revalidate: 60 } // ISR: перегенерировать каждые 60 секунд
       })
     ])
