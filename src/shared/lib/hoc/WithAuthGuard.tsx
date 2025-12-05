@@ -15,7 +15,7 @@ export function WithAuthGuard<T extends object>(Component: ComponentType<T>) {
 
     useEffect(() => {
       if (!isLoading && (!user || isError)) {
-        router.replace(ROUTES.AUTH.SIGN_IN)
+        router.replace(ROUTES.HOME)
       }
     }, [user, isLoading, isError, router])
 
