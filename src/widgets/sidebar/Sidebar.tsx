@@ -19,7 +19,7 @@ type NavItem = {
 const navItems: NavItem[] = [
   { name: 'Feed', href: ROUTES.HOME, icon: Home },
   { name: 'Create', href: ROUTES.APP.CREATE_POST, icon: PlusSquare },
-  { name: 'My Profile', href: ROUTES.APP.USER_PROFILE, icon: Profile },
+  // { name: 'My Profile', href: ROUTES.APP.USER_PROFILE, icon: Profile },
   { name: 'Messenger', href: ROUTES.APP.MESSENGER, icon: Message },
   { name: 'Search', href: ROUTES.APP.SEARCH, icon: Search },
   { name: 'Statistics', href: ROUTES.APP.STATISTICS, icon: TrendingIcon },

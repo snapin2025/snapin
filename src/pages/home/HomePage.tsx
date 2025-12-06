@@ -13,7 +13,8 @@ type TotalCountUsersResponse = {
 }
 
 export const HomePage = async () => {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inctagram.work/api/v1'
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL //todo
+  // const apiUrl = 'https://inctagram.work/api/v1'
 
   let postsData: ResponsesPosts = {
     totalCount: 0,
@@ -26,10 +27,10 @@ export const HomePage = async () => {
   try {
     // Делаем два запроса параллельно для SSG
     const [postsResponse, usersResponse] = await Promise.all([
-      fetch(`${apiUrl}posts/all`, {
+      fetch(`${apiUrl}/posts/all`, {
         next: { revalidate: 60 } // ISR: перегенерировать каждые 60 секунд
       }),
-      fetch(`${apiUrl}public-user`, {
+      fetch(`${apiUrl}/public-user`, {
         next: { revalidate: 60 } // ISR: перегенерировать каждые 60 секунд
       })
     ])

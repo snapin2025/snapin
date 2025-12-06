@@ -4,9 +4,7 @@ export type {
   SignInRequest,
   SignInResponse,
   SignUpRequest,
-  SignUpSuccessResponse,
   SignUpErrorResponse,
-  SignUpResponse,
   SendRecoveryEmailType,
   ResendRecoveryEmailType,
   SetNewPasswordType
