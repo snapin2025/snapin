@@ -1,11 +1,11 @@
 
+
 .dialog {
-  margin-top: 400px;
+  margin-top: 350px;
   background-color: #333333;
   padding:0;
   z-index: 100;
   /*all: unset; отменяет все стиля радикса*/
-
 }
 /* Переопределение для контента (убираем padding: 24px)  это времено пока колега изменит стили */
 .dialog :global(.Dialog_content__1SCiD) {
@@ -20,14 +20,12 @@
   border: none;
   background: #333333;
   position: relative;
-
 }
 
 .imgBox {
   display: flex;
   flex: 0 0 490px;
   width: 100%;
-  /*max-width: 490px;*/
   background: #f5f5f5;
   align-items: center;
   justify-content: center;
@@ -42,12 +40,11 @@
 
 .form {
   flex: 1;
-  padding:  0 24px;
+  padding: 0 24px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   width: 480px;
-
 }
 
 /* PostCard - верхняя часть */
@@ -55,11 +52,6 @@
   flex-shrink: 0;
   margin-bottom: 24px;
   box-shadow: none;
-}
-
-.textarea {
-  width: 100%;
-  min-height: 144px;
 }
 
 /* Счетчик - фиксированная высота */
@@ -71,10 +63,14 @@
   flex-shrink: 0;
 }
 
-.button {
-  max-width: 100%;
+.button, .buttoninfo {
+  /*max-width: 100%;*/
   margin-top: 200px;
   align-self: flex-end;
+}
+
+.buttoninfo {
+  margin-top: 30px;
 }
 /*стили для  мадального окна сообщение */
 .editbutton {
@@ -87,13 +83,13 @@
   color: var(--color-light-100);
 }
 
-/*для мыдального окна c сщобзщением  */
+/*для мыдального окна c сообщением  */
 .confirmContent {
   padding: 24px;
 }
 
 .confirmText {
-  margin-bottom: 30px;
+  /*margin-bottom: 30px;*/
   font-size: 16px;
   line-height: 24px;
   color: var(--color-light-100);
@@ -105,23 +101,16 @@
   justify-content: flex-end;
 }
 
+
 /* Стили для confirm диалогового окна */
 .confirmDialog {
-  z-index: 1000; /* Должен быть выше основного окна */
+  z-index: 1000; /* Выше overlay (999), должен быть выше основного окна */
   position: fixed;
   margin-top: 350px;
-  /*left: 50%;*/
-  /*transform: translate(-50%, -50%);*/
   background-color: #333333;
   max-width: 486px;
   padding: 0;
-
 }
-
-/*!* Переопределение для контента confirm окна *!*/
-/*.confirmDialog :global(.Dialog_content__1SCiD) {*/
-/*  padding: 24px !important; !* Возвращаем нормальный padding для маленького окна *!*/
-/*}*/
 
 .confirmContent {
   padding: 0;
@@ -129,7 +118,6 @@
 }
 
 .confirmText {
-  margin-bottom: 30px;
   font-size: 16px;
   line-height: 24px;
   color: var(--color-light-100);
@@ -142,5 +130,4 @@
   gap: 24px;
   justify-content: flex-end;
 }
-
 
