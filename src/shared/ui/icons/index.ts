@@ -1,7 +1,5 @@
-export { Closes } from './Closes'
 export { CopyLinkIcon } from './CopyLinkIcon'
 export { DeleteIcon } from './DeleteIcon'
-export { Flag } from './Flag'
 export { FollowIcon } from './FollowIcon'
 export { UnfollowIcon } from './UnfollowIcon'
 export { Add } from './Add'

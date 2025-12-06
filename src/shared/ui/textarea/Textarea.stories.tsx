@@ -16,8 +16,7 @@ export const Default: Story = {
   args: {
     // label: 'Text-area', // под вопросом
     placeholder: 'Text-area',
-    value: '',
-    onChange: () => {}
+    value: ''
   }
 }
 
@@ -26,8 +25,7 @@ export const WithLabel: Story = {
   args: {
     label: 'Add publication descriptions',
     placeholder: 'Text-area',
-    value: '',
-    onChange: () => {}
+    value: ''
   }
 }
 

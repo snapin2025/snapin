@@ -1,10 +1,11 @@
-
+/*стили ка поста */
 .postCard {
   display: flex;
   justify-content: space-between;
   background-color: #333333;
-  padding: 12px;
+  padding: 12px 24px;
   width: 100%;
+  max-width: 480px;
 }
 
 .card {
@@ -12,64 +13,26 @@
   gap: 12px;
 }
 
-.header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
 .content {
   flex: 1;
   min-width: 0;
-  width: 100%
+  width: 100%;
 }
 
-/* Стиль для блока с именем и меню (когда нет описания) */
+/* Только имя пользователя */
 .top {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  /*здесь должно быть расстояние*/
-  gap: 290px;
-
-}
-
-/* Стиль для блока с именем и текстом вместе (когда есть описание) */
-.textBlock, .userName  {
-  color: #ffffff;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 24px;
-  max-width: 385px;
-  word-wrap: break-word;
 }
 
 .userName {
   font-size: 16px;
+  line-height: 24px;
   font-weight: 600;
-  /*white-space: nowrap;*/
-}
-
-.bottom {
-  display: flex;
-  text-align: left;
-  gap: 12px;
-  margin-top: 5px;
-}
-
-.description {
-  font-size: 14px;
   color: #ffffff;
-  line-height: 1.4;
-  flex: 1;
-  word-wrap: break-word;
 }
 
-.timeAgo, .answer {
-  font-weight: 600;
-  font-size: 12px;
-  line-height: 16px;
-  color: #8D9094;
-  white-space: wrap;
+/* Стили для аватарки (если нужно) */
+.avatar {
+  border-radius: 50%;
 }
-

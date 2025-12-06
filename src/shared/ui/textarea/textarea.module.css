@@ -1,5 +1,4 @@
 
-/* Контейнер */
 .container {
   width: 100%;
   display: flex;
@@ -20,7 +19,6 @@
 .textareaCard {
   width: 100%;
   /*макету для формы надо 433px*/
-
   outline: none;
   background: #171717;
   border: 1px solid #4c4c4c;
@@ -31,7 +29,6 @@
 .textareaCard:hover {
   border-color: #4c4c4c;
 }
-
 
 /* Active/Focus */
 .textareaCard:focus-within {
