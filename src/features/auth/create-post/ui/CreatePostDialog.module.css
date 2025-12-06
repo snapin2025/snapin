@@ -1,0 +1,34 @@
+.modal {
+  background-color: var(--color-dark-300);
+}
+
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 492px;
+  width: 100%;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.placeholder {
+  width: 222px;
+  height: 228px;
+  background: var(--color-dark-500);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 2px;
+  margin-bottom: 60px;
+}
+
+.containerBtn {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+

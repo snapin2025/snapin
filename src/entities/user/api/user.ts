@@ -4,9 +4,13 @@ import {
   CheckRecoveryCodeResponse,
   ConfirmErrorResponse,
   ConfirmRequest,
+  CreatePostPayload,
+  CreatePostResponse,
   EmailResendingErrorResponse,
   EmailResendingRequest,
   LogoutResponse,
+  PostImagesPayload,
+  PostImagesResponse,
   ResendRecoveryEmailType,
   SendRecoveryEmailType,
   SetNewPasswordType,
@@ -75,5 +79,23 @@ export const userApi = {
 
   logout: async (): Promise<LogoutResponse> => {
     await api.post<LogoutResponse>('/auth/logout')
+  },
+  createPost: async (payload: CreatePostPayload): Promise<CreatePostResponse> => {
+    const { data } = await api.post<CreatePostResponse>('/api/v1/posts', payload)
+    return data
+  },
+
+  createPostImage: async (payload: PostImagesPayload): Promise<PostImagesResponse> => {
+    const formData = new FormData()
+    payload.files.forEach((file) => {
+      formData.append('file', file)
+    })
+
+    const { data } = await api.post<PostImagesResponse>('/api/v1/posts/image', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    return data
   }
 }
