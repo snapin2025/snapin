@@ -2,7 +2,6 @@
   background-color: var(--color-dark-300);
 }
 
-
 .container {
   display: flex;
   flex-direction: column;
@@ -31,4 +30,3 @@
   flex-direction: column;
   gap: 30px;
 }
-

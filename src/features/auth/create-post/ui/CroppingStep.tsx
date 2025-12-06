@@ -1,35 +1,37 @@
 'use client'
 
-import React, { useEffect, useRef, useState, useMemo } from 'react'
+import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react'
 import { Button, ArrowLeft, Typography } from '@/shared/ui'
 import s from './CroppingStep.module.css'
+
+type ImageThumbnail = {
+  id: string
+  url: string
+  isCurrent: boolean
+}
 
 type Props = {
   imageUrl: string
   onBack: () => void
   onNext: (blob: Blob) => void
-  onPrevImage?: () => void
-  onNextImage?: () => void
   onDeleteImage?: () => void
-  onAddPhotos?: () => void
-  canPrev?: boolean
-  canNext?: boolean
+  onAddPhotos: () => void // Теперь обязательный проп
   index?: number
   total?: number
+  allImages?: ImageThumbnail[]
+  onSelectImage?: (index: number) => void
 }
 
 export const CroppingStep: React.FC<Props> = ({
   imageUrl,
   onBack,
   onNext,
-  onPrevImage,
-  onNextImage,
   onDeleteImage,
   onAddPhotos,
-  canPrev = false,
-  canNext = false,
   index = 0,
-  total = 0
+  total = 0,
+  allImages = [],
+  onSelectImage
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null)
   const imgRef = useRef<HTMLImageElement | null>(null)
@@ -59,6 +61,7 @@ export const CroppingStep: React.FC<Props> = ({
     return () => ro.disconnect()
   }, [])
 
+  // Инициализация изображения с центрированием
   useEffect(() => {
     if (!imageUrl) return
     const img = new Image()
@@ -69,13 +72,15 @@ export const CroppingStep: React.FC<Props> = ({
       if (!node) return
       const fit = Math.min(node.clientWidth / img.naturalWidth, node.clientHeight / img.naturalHeight)
       setScale(fit)
+      // Центрируем изображение: позиция = центр контейнера минус половина размера изображения
       setPos({
-        x: (node.clientWidth - img.naturalWidth * fit) / 2,
-        y: (node.clientHeight - img.naturalHeight * fit) / 2
+        x: node.clientWidth / 2 - (img.naturalWidth * fit) / 2,
+        y: node.clientHeight / 2 - (img.naturalHeight * fit) / 2
       })
     }
   }, [imageUrl])
 
+  // Ограничение позиции с учетом центрирования
   const clampPos = (p: { x: number; y: number }, s = scaleRef.current) => {
     const node = containerRef.current
     if (!node || !natural.w || !natural.h) return p
@@ -83,9 +88,19 @@ export const CroppingStep: React.FC<Props> = ({
     const ch = node.clientHeight
     const dispW = natural.w * s
     const dispH = natural.h * s
+
+    // Если изображение меньше контейнера - центрируем
+    if (dispW <= cw && dispH <= ch) {
+      return {
+        x: cw / 2 - dispW / 2,
+        y: ch / 2 - dispH / 2
+      }
+    }
+
+    // Если больше - ограничиваем движение
     return {
-      x: dispW <= cw ? (cw - dispW) / 2 : Math.max(Math.min(p.x, 0), cw - dispW),
-      y: dispH <= ch ? (ch - dispH) / 2 : Math.max(Math.min(p.y, 0), ch - dispH)
+      x: Math.max(cw / 2 - dispW, Math.min(p.x, cw / 2)),
+      y: Math.max(ch / 2 - dispH, Math.min(p.y, ch / 2))
     }
   }
 
@@ -123,19 +138,25 @@ export const CroppingStep: React.FC<Props> = ({
     }
   }, [isPointerDown])
 
+  // Зум с центрированием относительно центра контейнера
   const onWheel = (e: React.WheelEvent) => {
     e.preventDefault()
     const delta = -e.deltaY * 0.0025
     setScale((prev) => {
       const next = Math.min(Math.max(0.1, prev + delta), 4)
       const node = containerRef.current
-      if (!node) return next
-      const rect = node.getBoundingClientRect()
-      const cx = rect.width / 2
-      const cy = rect.height / 2
-      const prevPos = posRef.current
+      if (!node || !natural.w || !natural.h) return next
+
+      const cw = node.clientWidth
+      const ch = node.clientHeight
       const factor = next / prev
-      setPos(clampPos({ x: prevPos.x * factor + (1 - factor) * cx, y: prevPos.y * factor + (1 - factor) * cy }, next))
+      const prevPos = posRef.current
+
+      // Масштабируем относительно центра контейнера
+      const newX = cw / 2 - (cw / 2 - prevPos.x) * factor
+      const newY = ch / 2 - (ch / 2 - prevPos.y) * factor
+
+      setPos(clampPos({ x: newX, y: newY }, next))
       return next
     })
   }
@@ -186,66 +207,107 @@ export const CroppingStep: React.FC<Props> = ({
     )
   }
 
+  // Обработчик добавления фото через плюс
+  const handleAddPhoto = useCallback(() => {
+    onAddPhotos()
+  }, [onAddPhotos])
+
   return (
     <div className={s.wrapper}>
       <div className={s.header}>
-        <Button variant="textButton" onClick={onBack}>
+        <Button variant="textButton" onClick={onBack} aria-label="Back">
           <ArrowLeft />
         </Button>
         <Typography variant="h1">Cropping</Typography>
-        <Button onClick={doCrop} variant="outlined">
+        <Button onClick={doCrop} variant="outlined" aria-label="Next">
           <Typography variant="h3">Next</Typography>
         </Button>
       </div>
-      <div className={s.subHeader}>
-        <div className={s.nav}>
-          <Button onClick={onPrevImage} disabled={!canPrev} variant="outlined">
-            Prev
-          </Button>
-          <Typography>
-            {index + 1} / {total}
-          </Typography>
-          <Button onClick={onNextImage} disabled={!canNext} variant="outlined">
-            Next
-          </Button>
-        </div>
-        <div className={s.actions}>
-          <Button onClick={onAddPhotos} variant="outlined">
-            Add photos
-          </Button>
-          <Button onClick={onDeleteImage} variant="outlined">
-            Delete
-          </Button>
-        </div>
-      </div>
+
+      {/* Основной контейнер для обрезки с центрированием */}
       <div ref={containerRef} className={s.cropContainer} onWheel={onWheel}>
         <img
           ref={imgRef}
           src={imageUrl}
+          alt="Crop preview"
+          className={s.cropImage}
           style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
             transform: `translate(${pos.x}px,${pos.y}px) scale(${scale})`,
-            opacity: 1
+            transformOrigin: 'top left'
           }}
           draggable={false}
         />
         <div className={s.overlay} style={{ width: frame.w, height: frame.h }} />
       </div>
+
+      {/* Контролы для аспекта и зума */}
       <div className={s.controls}>
         <div className={s.aspect}>
-          <Button onClick={() => setAspect(null)}>Free</Button>
-          <Button onClick={() => setAspect(1)}>1:1</Button>
-          <Button onClick={() => setAspect(4 / 5)}>4:5</Button>
-          <Button onClick={() => setAspect(16 / 9)}>16:9</Button>
+          <Button onClick={() => setAspect(null)} variant="outlined">
+            Free
+          </Button>
+          <Button onClick={() => setAspect(1)} variant="outlined">
+            1:1
+          </Button>
+          <Button onClick={() => setAspect(4 / 5)} variant="outlined">
+            4:5
+          </Button>
+          <Button onClick={() => setAspect(16 / 9)} variant="outlined">
+            16:9
+          </Button>
         </div>
         <div className={s.zoom}>
-          <Button onClick={zoomOut}>-</Button>
-          <Typography>{scale.toFixed(2)}x</Typography>
-          <Button onClick={zoomIn}>+</Button>
+          <Button onClick={zoomOut} variant="outlined" aria-label="Zoom out">
+            -
+          </Button>
+          <Typography variant="small">{scale.toFixed(2)}x</Typography>
+          <Button onClick={zoomIn} variant="outlined" aria-label="Zoom in">
+            +
+          </Button>
         </div>
       </div>
+
+      {/* Миниатюры с плюсом для добавления */}
+      {allImages.length > 0 && (
+        <div className={s.thumbnails}>
+          <div className={s.thumbnailsList}>
+            {allImages.map((img, idx) => (
+              <button
+                key={img.id}
+                className={`${s.thumbnail} ${img.isCurrent ? s.thumbnailActive : ''}`}
+                onClick={() => onSelectImage?.(idx)}
+                type="button"
+                aria-label={`Select image ${idx + 1}`}
+              >
+                <img src={img.url} alt={`Thumbnail ${idx + 1}`} />
+                {onDeleteImage && idx === index && (
+                  <button
+                    className={s.thumbnailDelete}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      onDeleteImage()
+                    }}
+                    type="button"
+                    aria-label="Delete image"
+                  >
+                    ×
+                  </button>
+                )}
+              </button>
+            ))}
+            {total < 10 && (
+              <button className={s.thumbnailAdd} onClick={handleAddPhoto} type="button" aria-label="Add photo">
+                <span>+</span>
+              </button>
+            )}
+          </div>
+          {total > 0 && (
+            <Typography variant="small" className={s.thumbnailsCount}>
+              {total} / 10
+            </Typography>
+          )}
+        </div>
+      )}
     </div>
   )
 }
