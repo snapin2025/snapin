@@ -14,7 +14,7 @@ type Props = {
   imageUrl: string
   onBack: () => void
   onNext: (blob: Blob) => void
-  onDeleteImage?: () => void
+  onDeleteImage?: (index: number) => void // Теперь принимает индекс изображения
   onAddPhotos: () => void // Теперь обязательный проп
   index?: number
   total?: number
@@ -280,15 +280,15 @@ export const CroppingStep: React.FC<Props> = ({
                 aria-label={`Select image ${idx + 1}`}
               >
                 <img src={img.url} alt={`Thumbnail ${idx + 1}`} />
-                {onDeleteImage && idx === index && (
+                {onDeleteImage && (
                   <button
                     className={s.thumbnailDelete}
                     onClick={(e) => {
                       e.stopPropagation()
-                      onDeleteImage()
+                      onDeleteImage(idx)
                     }}
                     type="button"
-                    aria-label="Delete image"
+                    aria-label={`Delete image ${idx + 1}`}
                   >
                     ×
                   </button>

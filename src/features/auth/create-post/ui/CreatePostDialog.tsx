@@ -120,25 +120,33 @@ export const CreatePostDialog = ({ open, onOpenChange, onFileSelect }: Props) =>
     [currentImageIndex]
   )
 
-  // Удаление изображения
-  const handleDeleteImage = useCallback(() => {
-    const img = images[currentImageIndex]
-    if (!img) return
+  // Удаление изображения по индексу
+  const handleDeleteImage = useCallback(
+    (deleteIndex: number) => {
+      const img = images[deleteIndex]
+      if (!img) return
 
-    URL.revokeObjectURL(img.originalUrl)
-    if (img.croppedUrl) URL.revokeObjectURL(img.croppedUrl)
+      URL.revokeObjectURL(img.originalUrl)
+      if (img.croppedUrl) URL.revokeObjectURL(img.croppedUrl)
 
-    const newImages = images.filter((_, idx) => idx !== currentImageIndex)
-    setImages(newImages)
+      const newImages = images.filter((_, idx) => idx !== deleteIndex)
+      setImages(newImages)
 
-    if (newImages.length === 0) {
-      setStep('select')
-      setCurrentImageIndex(0)
-    } else {
-      // Переключаемся на предыдущее изображение или остаемся на том же индексе
-      setCurrentImageIndex((i) => Math.min(i, newImages.length - 1))
-    }
-  }, [currentImageIndex, images])
+      if (newImages.length === 0) {
+        setStep('select')
+        setCurrentImageIndex(0)
+      } else {
+        // Если удаляемое изображение было текущим или после текущего - корректируем индекс
+        if (deleteIndex <= currentImageIndex) {
+          // Удаляем изображение до или на текущей позиции
+          const newIndex = Math.max(0, currentImageIndex - 1)
+          setCurrentImageIndex(newIndex)
+        }
+        // Если удаляемое изображение было после текущего - индекс не меняется
+      }
+    },
+    [currentImageIndex, images]
+  )
 
   // Открытие файлового диалога для добавления фото
   const handleAddPhotos = useCallback(() => {
@@ -206,15 +214,6 @@ export const CreatePostDialog = ({ open, onOpenChange, onFileSelect }: Props) =>
       case 'select':
         return (
           <>
-            <input
-              ref={inputRef}
-              id={inputId}
-              type="file"
-              accept="image/*"
-              multiple
-              className={s.hiddenInput}
-              onChange={handleFileChange}
-            />
             <div className={s.placeholder}>
               <SvgImage width={48} height={48} />
             </div>
@@ -230,7 +229,7 @@ export const CreatePostDialog = ({ open, onOpenChange, onFileSelect }: Props) =>
             imageUrl={currentImage.originalUrl}
             onBack={() => setStep('select')}
             onNext={handleCropNext}
-            onDeleteImage={images.length > 1 ? handleDeleteImage : undefined}
+            onDeleteImage={handleDeleteImage}
             onAddPhotos={handleAddPhotos}
             index={currentImageIndex}
             total={images.length}
@@ -279,6 +278,16 @@ export const CreatePostDialog = ({ open, onOpenChange, onFileSelect }: Props) =>
       title={step === 'select' ? 'Add Photo' : undefined}
       closeOutContent={step === 'select' || step === 'publication'}
     >
+      {/* Input всегда доступен для добавления фото на любом шаге */}
+      <input
+        ref={inputRef}
+        id={inputId}
+        type="file"
+        accept="image/*"
+        multiple
+        className={s.hiddenInput}
+        onChange={handleFileChange}
+      />
       <div className={s.container}>{renderContent()}</div>
     </Dialog>
   )
