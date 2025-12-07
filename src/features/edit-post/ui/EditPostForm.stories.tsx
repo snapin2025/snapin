@@ -24,12 +24,6 @@ export const Open = {
 // Кнопка
 export const EditButton = {
   render: () => (
-    <EditPostButton
-      postId={2}
-      userName="UserName"
-      userAvatar="/girl.png"
-      postImage="/img.png"
-      initialDescription="Click the button to edit"
-    />
+    <EditPostButton postId={2} userName="UserName" userAvatar="/girl.png" postImage="/img.png" initialDescription=" " />
   )
 }

@@ -2,10 +2,11 @@
 .postCard {
   display: flex;
   justify-content: space-between;
-  background-color: #333333;
-  padding: 12px 24px;
+  background: #333333;
+  padding: 12px 18px  12px 0;
   width: 100%;
   max-width: 480px;
+
 }
 
 .card {
@@ -22,7 +23,7 @@
 /* Только имя пользователя */
 .top {
   display: flex;
-  align-items: center;
+  /*align-items: center;*/
 }
 
 .userName {

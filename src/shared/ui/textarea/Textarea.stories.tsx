@@ -14,7 +14,6 @@ type Story = StoryObj<typeof Textarea>
 // 1. Базовая стори (без label)
 export const Default: Story = {
   args: {
-    // label: 'Text-area', // под вопросом
     placeholder: 'Text-area',
     value: ''
   }
@@ -23,6 +22,7 @@ export const Default: Story = {
 // 2. С лейблом (статичная)
 export const WithLabel: Story = {
   args: {
+    id: 'description', // ← добавь уникальный id
     label: 'Add publication descriptions',
     placeholder: 'Text-area',
     value: ''
