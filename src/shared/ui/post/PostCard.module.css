@@ -2,16 +2,16 @@
 .postCard {
   display: flex;
   justify-content: space-between;
-  background: #333333;
   padding: 12px 18px  12px 0;
   width: 100%;
   max-width: 480px;
-
 }
 
 .card {
   display: flex;
   gap: 12px;
+  margin-right: auto;
+  align-items: center;
 }
 
 .content {
@@ -21,10 +21,9 @@
 }
 
 /* Только имя пользователя */
-.top {
-  display: flex;
-  /*align-items: center;*/
-}
+/*.top {*/
+/*  display: flex;*/
+/*}*/
 
 .userName {
   font-size: 16px;

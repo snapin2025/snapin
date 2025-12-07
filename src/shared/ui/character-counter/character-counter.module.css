@@ -1,0 +1,8 @@
+/* Счетчик - фиксированная высота */
+.counter {
+  font-size: 12px;
+  line-height: 24px;
+  color: #8D9094;
+  text-align: right;
+  flex-shrink: 0;
+}

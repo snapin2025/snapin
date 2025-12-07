@@ -37,7 +37,7 @@
   height: 100%;
   object-fit: cover;
 }
-
+/*форма */
 .form {
   flex: 1;
   padding: 0 24px;
@@ -48,20 +48,21 @@
 }
 
 /* PostCard - верхняя часть */
-.post {
+.postContainer {
+  background-color: #333333;
   flex-shrink: 0;
   margin-bottom: 24px;
   box-shadow: none;
 }
 
-/* Счетчик - фиксированная высота */
-.counter {
-  font-size: 12px;
-  line-height: 24px;
-  color: #8D9094;
-  text-align: right;
-  flex-shrink: 0;
-}
+/*!* Счетчик - фиксированная высота *!*/
+/*.counter {*/
+/*  font-size: 12px;*/
+/*  line-height: 24px;*/
+/*  color: #8D9094;*/
+/*  text-align: right;*/
+/*  flex-shrink: 0;*/
+/*}*/
 
 .button, .buttoninfo {
   /*max-width: 100%;*/

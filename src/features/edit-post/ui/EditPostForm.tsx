@@ -12,6 +12,7 @@ import { Button } from '@/shared/ui/button/Button'
 import { useEditPost } from '../api/use-edit-post'
 import { Dialog, DialogClose } from '@/shared/ui/temp/dialog'
 import { editPostFormSchema, EditPostFormValues } from '@/shared/ui/textarea/textarea-validation'
+import { CharacterCounter } from '@/shared/ui/character-counter'
 
 export type EditPostFormProps = {
   isOpen: boolean
@@ -90,15 +91,17 @@ export const EditPostForm = ({
           </div>
 
           <div className={s.form}>
-            <PostCard userName={userName} avatar={userAvatar} className={s.post} />
+            <PostCard userName={userName} avatar={userAvatar} className={s.postContainer} />
+            {/*текстерия*/}
             <Textarea
               label="Add publication descriptions"
               {...register('description')}
               error={errors.description?.message}
               maxLength={500}
             />
-            <div className={s.counter}>{watch('description')?.length || 0}/500</div>
-
+            {/*Счетчик*/}
+            <CharacterCounter current={watch('description')?.length || 0} max={500} />
+            {/*кнопка*/}
             <Button
               variant="primary"
               className={s.button}
@@ -112,6 +115,7 @@ export const EditPostForm = ({
       </Dialog>
 
       {showCloseConfirm && (
+        // маленкое мадальное окно
         <Dialog
           title="Close Post"
           open={showCloseConfirm}
