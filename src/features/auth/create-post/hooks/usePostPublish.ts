@@ -1,0 +1,60 @@
+import { useCallback } from 'react'
+import { useCreatePostImage } from '../api/useCreatePostImage'
+import { useCreatePost } from '../api/useCreatePost'
+import type { ImageItem } from '../model/types'
+
+type UsePostPublishParams = {
+  images: ImageItem[]
+  onOpenChange: (v: boolean) => void
+}
+
+export const usePostPublish = ({ images, onOpenChange }: UsePostPublishParams) => {
+  const { mutate: uploadImages, isPending: isUploadingImages } = useCreatePostImage()
+  const { mutate: createPost, isPending: isCreatingPost } = useCreatePost()
+
+  const handlePublish = useCallback(
+    (data: { description: string; location: string }) => {
+      const files = images
+        .map((img, idx) =>
+          img.croppedBlob ? new File([img.croppedBlob], `cropped-${idx}.jpg`, { type: 'image/jpeg' }) : null
+        )
+        .filter((f): f is File => f !== null)
+      if (files.length === 0) return
+
+      uploadImages(
+        { files },
+        {
+          onSuccess: (response) => {
+            const childrenMetadata = response.images.map((item) => ({
+              uploadId: item.uploadId
+            }))
+
+            createPost(
+              {
+                description: data.description,
+                childrenMetadata
+              },
+              {
+                onSuccess: () => {
+                  onOpenChange(false)
+                },
+                onError: (err) => {
+                  console.error('Error creating post:', err)
+                }
+              }
+            )
+          },
+          onError: (err) => {
+            console.error('Error uploading images:', err)
+          }
+        }
+      )
+    },
+    [images, uploadImages, createPost, onOpenChange]
+  )
+
+  return {
+    handlePublish,
+    isPublishing: isUploadingImages || isCreatingPost
+  }
+}

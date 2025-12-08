@@ -8,4 +8,3 @@ export const useCreatePost = () => {
     mutationFn: (payload) => userApi.createPost(payload)
   })
 }
-

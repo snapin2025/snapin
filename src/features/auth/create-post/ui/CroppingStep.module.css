@@ -46,16 +46,56 @@
   cursor: grabbing;
 }
 
+/* Контейнер для затемнения */
+.darkOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.darkTop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.darkBottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.darkLeft {
+  position: absolute;
+  left: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.darkRight {
+  position: absolute;
+  right: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* Рамка выделения */
 .overlay {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   pointer-events: none;
-  border: 1px solid rgba(255, 255, 255, 0.9);
-  box-shadow: 0 0 0 99999px rgba(0, 0, 0, 0.45) inset;
+  border: 2px solid rgba(255, 255, 255, 0.9);
   z-index: 10;
   border-radius: 8px;
+  box-sizing: border-box;
 }
 
 .controls {

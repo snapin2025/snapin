@@ -54,14 +54,12 @@ export const PublicationStep: React.FC<Props> = ({
   const handleLocationChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     setLocation(value)
-    
+
     // Простая логика предложений (в реальном приложении здесь будет API запрос)
     if (value.length > 0) {
       // Моковые данные для примера
       const suggestions = ['New York', 'Washington Square Park', 'Los Angeles', 'San Francisco']
-      const filtered = suggestions.filter(s => 
-        s.toLowerCase().includes(value.toLowerCase())
-      )
+      const filtered = suggestions.filter((s) => s.toLowerCase().includes(value.toLowerCase()))
       setLocationSuggestions(filtered.slice(0, 4))
     } else {
       setLocationSuggestions([])
@@ -91,12 +89,7 @@ export const PublicationStep: React.FC<Props> = ({
           <ArrowLeft />
         </Button>
         <Typography variant="h1">Publication</Typography>
-        <Button 
-          onClick={handlePublish} 
-          variant="primary" 
-          disabled={isPublishing || !currentImage}
-          aria-label="Publish"
-        >
+        <Button onClick={handlePublish} variant="primary" disabled={isPublishing || !currentImage} aria-label="Publish">
           {isPublishing ? 'Publishing...' : 'Publish'}
         </Button>
       </div>
@@ -107,12 +100,12 @@ export const PublicationStep: React.FC<Props> = ({
           {currentImage && (
             <>
               <div className={s.imageContainer}>
-                <img 
-                  src={currentImage.croppedUrl || currentImage.originalUrl} 
+                <img
+                  src={currentImage.croppedUrl || currentImage.originalUrl}
                   alt={`Publication ${currentImageIndex + 1}`}
                   className={s.image}
                 />
-                
+
                 {/* Кнопки навигации по изображениям */}
                 {canPrev && (
                   <button
@@ -142,10 +135,7 @@ export const PublicationStep: React.FC<Props> = ({
               {images.length > 1 && (
                 <div className={s.indicators}>
                   {images.map((_, idx) => (
-                    <div
-                      key={idx}
-                      className={`${s.indicator} ${idx === currentImageIndex ? s.indicatorActive : ''}`}
-                    />
+                    <div key={idx} className={`${s.indicator} ${idx === currentImageIndex ? s.indicatorActive : ''}`} />
                   ))}
                 </div>
               )}
@@ -157,9 +147,7 @@ export const PublicationStep: React.FC<Props> = ({
         <div className={s.formSection}>
           {/* Профиль пользователя */}
           <div className={s.profile}>
-            <div className={s.avatar}>
-              {user?.userName?.[0]?.toUpperCase() || 'U'}
-            </div>
+            <div className={s.avatar}>{user?.userName?.[0]?.toUpperCase() || 'U'}</div>
             <Typography variant="regular_14">{user?.userName || 'User'}</Typography>
           </div>
 
@@ -220,4 +208,3 @@ export const PublicationStep: React.FC<Props> = ({
     </div>
   )
 }
-

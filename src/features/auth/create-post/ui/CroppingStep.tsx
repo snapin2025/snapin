@@ -1,7 +1,7 @@
 'use client'
 
-import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react'
-import { Button, ArrowLeft, Typography } from '@/shared/ui'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { ArrowLeft, Button, Typography } from '@/shared/ui'
 import s from './CroppingStep.module.css'
 
 type ImageThumbnail = {
@@ -237,7 +237,49 @@ export const CroppingStep: React.FC<Props> = ({
           }}
           draggable={false}
         />
-        <div className={s.overlay} style={{ width: frame.w, height: frame.h }} />
+        {/* Затемнение области вне выделения */}
+        <div className={s.darkOverlay}>
+          {/* Верхняя полоса затемнения */}
+          <div
+            className={s.darkTop}
+            style={{
+              height: `calc(50% - ${frame.h / 2}px)`
+            }}
+          />
+          {/* Нижняя полоса затемнения */}
+          <div
+            className={s.darkBottom}
+            style={{
+              height: `calc(50% - ${frame.h / 2}px)`
+            }}
+          />
+          {/* Левая полоса затемнения */}
+          <div
+            className={s.darkLeft}
+            style={{
+              width: `calc(50% - ${frame.w / 2}px)`,
+              top: `calc(50% - ${frame.h / 2}px)`,
+              height: frame.h
+            }}
+          />
+          {/* Правая полоса затемнения */}
+          <div
+            className={s.darkRight}
+            style={{
+              width: `calc(50% - ${frame.w / 2}px)`,
+              top: `calc(50% - ${frame.h / 2}px)`,
+              height: frame.h
+            }}
+          />
+        </div>
+        {/* Рамка выделения */}
+        <div
+          className={s.overlay}
+          style={{
+            width: frame.w,
+            height: frame.h
+          }}
+        />
       </div>
 
       {/* Контролы для аспекта и зума */}
