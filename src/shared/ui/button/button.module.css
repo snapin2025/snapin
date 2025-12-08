@@ -90,9 +90,9 @@
   padding: 6px 24px;
 }
 
-.textButton:active {
-  color: var(--color-accent-500);
-}
+/*.textButton:active {*/
+/*  color: var(--color-accent-500);*/
+/*}*/
 
 .textButton:hover {
   color: var(--color-accent-700);

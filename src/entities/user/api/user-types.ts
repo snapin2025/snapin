@@ -87,43 +87,6 @@ export type EmailResendingErrorResponse = {
   error: string
 }
 
-export type PostImage = {
-  url: string
-  width: number
-  height: number
-  fileSize: number
-  createdAt: string
-  uploadId: string
-}
-export type PostImagesResponse = {
-  images: PostImage[]
-}
-export type PostImagesPayload = {
-  files: File[]
-}
-
-export type CreatePostPayload = {
-  description: string
-  childrenMetadata: { uploadId: string }[]
-}
-
-export type PostOwner = {
-  firstName: string
-  lastName: string
-}
-
-export type CreatePostResponse = {
-  id: number
-  userName: string
-  description: string
-  location: string
-  images: PostImage[]
-  createdAt: string
-  updatedAt: string
-  ownerId: number
-  avatarOwner: string
-  owner: PostOwner
-  likesCount: number
-  isLiked: boolean
-  avatarWhoLikes: boolean
+export type TotalCountUsersResponse = {
+  totalCount: number
 }

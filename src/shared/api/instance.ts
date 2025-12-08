@@ -22,7 +22,7 @@ api.interceptors.request.use((config) => {
 // 	async (error: AxiosError) => {
 // 		if (error.response?.status === 401) {
 // 			try {
-// 				const response = await axios.post(
+// 				const response = await axios.posts(
 // 					"https://inctagram.work/api/v1/auth/update-tokens",
 // 					{},
 // 					{ withCredentials: true },

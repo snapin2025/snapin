@@ -11,8 +11,13 @@ export const ROUTES = {
   },
 
   APP: {
-    USER_PROFILE: `/profile`,
-    DASHBOARD: '/settings'
+    USER_PROFILE: (userId: number) => `/profile/${userId}`,
+    DASHBOARD: '/settings',
+    CREATE_POST: '/create',
+    MESSENGER: '/messenger',
+    SEARCH: '/search',
+    STATISTICS: '/statistics',
+    FAVORITES: '/favorites'
   },
   LEGAL: {
     TERMS_OF_SERVICE: '/terms-of-service',
