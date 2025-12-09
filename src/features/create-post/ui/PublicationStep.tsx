@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useCallback } from 'react'
-import { Button, Typography, Input } from '@/shared/ui'
+import { Button, Typography } from '@/shared/ui'
 import { ArrowLeft } from '@/shared/ui/icons/ArrowLeft'
 import { useAuth } from '@/shared/lib'
 import s from './PublicationStep.module.css'
@@ -16,7 +16,7 @@ type Props = {
   images: ImageItem[]
   currentImageIndex: number
   onBack: () => void
-  onPublish: (data: { description: string; location: string }) => void
+  onPublish: (data: { description: string }) => void
   onPrevImage: () => void
   onNextImage: () => void
   isPublishing?: boolean
@@ -35,8 +35,6 @@ export const PublicationStep: React.FC<Props> = ({
 }) => {
   const { user } = useAuth()
   const [description, setDescription] = useState('')
-  const [location, setLocation] = useState('')
-  const [locationSuggestions, setLocationSuggestions] = useState<string[]>([])
 
   const currentImage = images[currentImageIndex]
   const canPrev = currentImageIndex > 0
@@ -50,35 +48,12 @@ export const PublicationStep: React.FC<Props> = ({
     }
   }, [])
 
-  // Обработчик изменения локации с поиском
-  const handleLocationChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    setLocation(value)
-
-    // Простая логика предложений (в реальном приложении здесь будет API запрос)
-    if (value.length > 0) {
-      // Моковые данные для примера
-      const suggestions = ['New York', 'Washington Square Park', 'Los Angeles', 'San Francisco']
-      const filtered = suggestions.filter((s) => s.toLowerCase().includes(value.toLowerCase()))
-      setLocationSuggestions(filtered.slice(0, 4))
-    } else {
-      setLocationSuggestions([])
-    }
-  }, [])
-
-  // Выбор локации из предложений
-  const handleSelectLocation = useCallback((selectedLocation: string) => {
-    setLocation(selectedLocation)
-    setLocationSuggestions([])
-  }, [])
-
   // Публикация
   const handlePublish = useCallback(() => {
     onPublish({
-      description: description.trim(),
-      location: location.trim()
+      description: description.trim()
     })
-  }, [description, location, onPublish])
+  }, [description, onPublish])
 
   const remainingChars = MAX_DESCRIPTION_LENGTH - description.length
 
@@ -168,40 +143,6 @@ export const PublicationStep: React.FC<Props> = ({
             <div className={s.charCount}>
               {remainingChars} / {MAX_DESCRIPTION_LENGTH}
             </div>
-          </div>
-
-          {/* Локация */}
-          <div className={s.field}>
-            <label htmlFor="location" className={s.label}>
-              Add location
-            </label>
-            <div className={s.locationWrapper}>
-              <Input
-                id="location"
-                type="text"
-                placeholder="New York"
-                value={location}
-                onChange={handleLocationChange}
-                className={s.locationInput}
-              />
-              <span className={s.locationIcon}>📍</span>
-            </div>
-
-            {/* Предложения локаций */}
-            {locationSuggestions.length > 0 && (
-              <div className={s.suggestions}>
-                {locationSuggestions.map((suggestion, idx) => (
-                  <button
-                    key={idx}
-                    className={s.suggestionItem}
-                    onClick={() => handleSelectLocation(suggestion)}
-                    type="button"
-                  >
-                    {suggestion}
-                  </button>
-                ))}
-              </div>
-            )}
           </div>
         </div>
       </div>

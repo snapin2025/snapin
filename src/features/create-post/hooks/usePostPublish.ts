@@ -13,11 +13,14 @@ export const usePostPublish = ({ images, onOpenChange }: UsePostPublishParams) =
   const { mutate: createPost, isPending: isCreatingPost } = useCreatePost()
 
   const handlePublish = useCallback(
-    (data: { description: string; location: string }) => {
+    (data: { description: string }) => {
       const files = images
-        .map((img, idx) =>
-          img.croppedBlob ? new File([img.croppedBlob], `cropped-${idx}.jpg`, { type: 'image/jpeg' }) : null
-        )
+        .map((img, idx) => {
+          if (img.croppedBlob) {
+            return new File([img.croppedBlob], `cropped-${idx}.jpg`, { type: 'image/jpeg' })
+          }
+          return img.originalFile ?? null
+        })
         .filter((f): f is File => f !== null)
       if (files.length === 0) return
 

@@ -9,6 +9,7 @@ type UseFileUploadParams = {
   setCurrentImageIndex: Dispatch<SetStateAction<number>>
   setStep: Dispatch<SetStateAction<Step>>
   onFileSelect?: (file: File) => void
+  onValidationError?: () => void
 }
 
 export const useFileUpload = ({
@@ -16,7 +17,8 @@ export const useFileUpload = ({
   setImages,
   setCurrentImageIndex,
   setStep,
-  onFileSelect
+  onFileSelect,
+  onValidationError
 }: UseFileUploadParams) => {
   const inputRef = useRef<HTMLInputElement | null>(null)
   const inputId = useId()
@@ -31,6 +33,7 @@ export const useFileUpload = ({
         if (!validation.valid) {
           console.error('File validation errors:', validation.errors)
           e.target.value = ''
+          onValidationError?.()
           return prevImages
         }
 
@@ -63,7 +66,7 @@ export const useFileUpload = ({
         return updatedImages
       })
     },
-    [setImages, setCurrentImageIndex, setStep, onFileSelect]
+    [setImages, setCurrentImageIndex, setStep, onFileSelect, onValidationError]
   )
 
   const handleAddPhotos = useCallback(() => {

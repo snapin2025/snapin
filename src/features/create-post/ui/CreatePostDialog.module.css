@@ -1,7 +1,11 @@
 .modal {
   background-color: var(--color-dark-300);
+/*padding: 0 !important;*/
 }
 
+.modal :global(.Dialog-module__X669Ia__content) {
+  padding: 0 !important;
+}
 .container {
   display: flex;
   flex-direction: column;
@@ -22,11 +26,12 @@
   justify-content: center;
   align-items: center;
   border-radius: 2px;
-  margin-bottom: 60px;
+  margin: 70px 0 60px;
 }
 
 .containerBtn {
   display: flex;
   flex-direction: column;
   gap: 30px;
+  margin-bottom: 48px;
 }

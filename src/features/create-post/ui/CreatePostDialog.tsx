@@ -1,7 +1,8 @@
 'use client'
 
+import { useState } from 'react'
 import { Dialog } from '@/shared/ui/temp/dialog/Dialog'
-import { Button, SvgImage } from '@/shared/ui'
+import { Button, Typography } from '@/shared/ui'
 import { CroppingStep } from './CroppingStep'
 import { PublicationStep } from './PublicationStep'
 import { usePostDialogState } from '../hooks/usePostDialogState'
@@ -9,6 +10,9 @@ import { useFileUpload } from '../hooks/useFileUpload'
 import { useImageHandlers } from '../hooks/useImageHandlers'
 import { usePostPublish } from '../hooks/usePostPublish'
 import s from './CreatePostDialog.module.css'
+import { SvgImage } from '@/shared/ui/icons/SvgImage'
+import { CloseConfirmDialog } from './CloseConfirmDialog'
+import { PhotoValidationModal } from './PhotoValidationModal'
 
 type Props = {
   open: boolean
@@ -19,6 +23,8 @@ type Props = {
 export const CreatePostDialog = ({ open, onOpenChange, onFileSelect }: Props) => {
   // Управление состоянием
   const state = usePostDialogState(open)
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false)
+  const [showValidationModal, setShowValidationModal] = useState(false)
 
   // Работа с файлами
   const fileUpload = useFileUpload({
@@ -26,7 +32,8 @@ export const CreatePostDialog = ({ open, onOpenChange, onFileSelect }: Props) =>
     setImages: state.setImages,
     setCurrentImageIndex: state.setCurrentImageIndex,
     setStep: state.setStep,
-    onFileSelect
+    onFileSelect,
+    onValidationError: () => setShowValidationModal(true)
   })
 
   // Обработчики изображений
@@ -45,6 +52,25 @@ export const CreatePostDialog = ({ open, onOpenChange, onFileSelect }: Props) =>
   })
 
   const currentImage = state.images[state.currentImageIndex]
+
+  const handleCloseAttempt = (newOpen: boolean) => {
+    if (!newOpen) {
+      // Всегда показываем модалку подтверждения при попытке закрыть
+      setShowConfirmDialog(true)
+    } else {
+      onOpenChange(newOpen)
+    }
+  }
+
+  const handleDiscard = () => {
+    setShowConfirmDialog(false)
+  }
+
+  const handleSaveDraft = () => {
+    // TODO: Реализовать сохранение черновика
+    setShowConfirmDialog(false)
+    onOpenChange(false)
+  }
 
   const renderContent = () => {
     switch (state.step) {
@@ -107,23 +133,34 @@ export const CreatePostDialog = ({ open, onOpenChange, onFileSelect }: Props) =>
   }
 
   return (
-    <Dialog
-      className={s.modal}
-      open={open}
-      onOpenChange={onOpenChange}
-      title={state.step === 'select' ? 'Add Photo' : undefined}
-      closeOutContent={state.step === 'select' || state.step === 'publication'}
-    >
-      <input
-        ref={fileUpload.inputRef}
-        id={fileUpload.inputId}
-        type="file"
-        accept="image/*"
-        multiple
-        className={s.hiddenInput}
-        onChange={fileUpload.handleFileChange}
+    <>
+      <Dialog
+        className={s.modal}
+        open={open}
+        onOpenChange={handleCloseAttempt}
+        title={state.step === 'select' ? 'Add Photo' : undefined}
+        closeOutContent={true}
+      >
+        <input
+          ref={fileUpload.inputRef}
+          id={fileUpload.inputId}
+          type="file"
+          accept="image/*"
+          multiple
+          className={s.hiddenInput}
+          onChange={fileUpload.handleFileChange}
+        />
+        <div className={s.container}>{renderContent()}</div>
+      </Dialog>
+
+      <CloseConfirmDialog
+        open={showConfirmDialog}
+        onOpenChange={setShowConfirmDialog}
+        onDiscard={handleDiscard}
+        onSaveDraft={handleSaveDraft}
       />
-      <div className={s.container}>{renderContent()}</div>
-    </Dialog>
+
+      <PhotoValidationModal open={showValidationModal} onOpenChange={setShowValidationModal} />
+    </>
   )
 }

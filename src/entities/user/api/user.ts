@@ -81,7 +81,7 @@ export const userApi = {
     await api.post<LogoutResponse>('/auth/logout')
   },
   createPost: async (payload: CreatePostPayload): Promise<CreatePostResponse> => {
-    const { data } = await api.post<CreatePostResponse>('/api/v1/posts', payload)
+    const { data } = await api.post<CreatePostResponse>('/posts', payload)
     return data
   },
 
@@ -91,7 +91,7 @@ export const userApi = {
       formData.append('file', file)
     })
 
-    const { data } = await api.post<PostImagesResponse>('/api/v1/posts/image', formData, {
+    const { data } = await api.post<PostImagesResponse>('/posts/image', formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }

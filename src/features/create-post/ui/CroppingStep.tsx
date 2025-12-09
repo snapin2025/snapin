@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { ArrowLeft, Button, Typography } from '@/shared/ui'
+import { ArrowLeft, Button, PlusCircleOutline, Typography } from '@/shared/ui'
 import s from './CroppingStep.module.css'
 
 type ImageThumbnail = {
@@ -215,7 +215,7 @@ export const CroppingStep: React.FC<Props> = ({
   return (
     <div className={s.wrapper}>
       <div className={s.header}>
-        <Button variant="textButton" onClick={onBack} aria-label="Back">
+        <Button style={{ padding: '0' }} variant="textButton" onClick={onBack} aria-label="Back">
           <ArrowLeft />
         </Button>
         <Typography variant="h1">Cropping</Typography>
@@ -285,25 +285,25 @@ export const CroppingStep: React.FC<Props> = ({
       {/* Контролы для аспекта и зума */}
       <div className={s.controls}>
         <div className={s.aspect}>
-          <Button onClick={() => setAspect(null)} variant="outlined">
-            Free
-          </Button>
-          <Button onClick={() => setAspect(1)} variant="outlined">
+          {/*<Button onClick={() => setAspect(null)} variant="outlined">*/}
+          {/*  Free*/}
+          {/*</Button>*/}
+          <Button className={s.btnScale} onClick={() => setAspect(1)} variant="outlined">
             1:1
           </Button>
-          <Button onClick={() => setAspect(4 / 5)} variant="outlined">
+          <Button className={s.btnScale} onClick={() => setAspect(4 / 5)} variant="outlined">
             4:5
           </Button>
-          <Button onClick={() => setAspect(16 / 9)} variant="outlined">
+          <Button className={s.btnScale} onClick={() => setAspect(16 / 9)} variant="outlined">
             16:9
           </Button>
         </div>
         <div className={s.zoom}>
-          <Button onClick={zoomOut} variant="outlined" aria-label="Zoom out">
+          <Button className={s.btnScale} onClick={zoomOut} variant="outlined" aria-label="Zoom out">
             -
           </Button>
           <Typography variant="small">{scale.toFixed(2)}x</Typography>
-          <Button onClick={zoomIn} variant="outlined" aria-label="Zoom in">
+          <Button className={s.btnScale} onClick={zoomIn} variant="outlined" aria-label="Zoom in">
             +
           </Button>
         </div>
@@ -338,16 +338,12 @@ export const CroppingStep: React.FC<Props> = ({
               </button>
             ))}
             {total < 10 && (
-              <button className={s.thumbnailAdd} onClick={handleAddPhoto} type="button" aria-label="Add photo">
-                <span>+</span>
-              </button>
+              // <button className={s.thumbnailAdd} onClick={handleAddPhoto} type="button" aria-label="Add photo">
+              //   <span>+</span>
+              // </button>
+              <PlusCircleOutline className={s.plusCircleOutline} onClick={handleAddPhoto} />
             )}
           </div>
-          {total > 0 && (
-            <Typography variant="small" className={s.thumbnailsCount}>
-              {total} / 10
-            </Typography>
-          )}
         </div>
       )}
     </div>

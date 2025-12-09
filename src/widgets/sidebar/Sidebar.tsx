@@ -2,14 +2,18 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useState, type MouseEvent } from 'react'
 import { clsx } from 'clsx'
 
-import { Bookmark, Home, Message, PlusSquare, Profile, Search, TrendingIcon } from '@/shared/ui'
+import { Bookmark, Home, Message, Profile, Search } from '@/shared/ui'
 
 import s from './sidebar.module.css'
 import { ROUTES } from '@/shared/lib/routes'
 import { LogoutButton } from '@/features/auth/logout'
 import { useAuth } from '@/shared/lib'
+import { CreatePostDialog } from '@/features/create-post/ui/CreatePostDialog'
+import { PlusSquare } from '@/shared/ui/icons/PlusSquare'
+import { TrendingIcon } from '@/shared/ui/icons/TrendingIcon'
 
 type NavItem = {
   name: string
@@ -20,6 +24,7 @@ type NavItem = {
 export const Sidebar = () => {
   const pathname = usePathname()
   const { user } = useAuth()
+  const [isCreateOpen, setIsCreateOpen] = useState(false)
 
   const navItems: NavItem[] = [
     { name: 'Feed', href: ROUTES.HOME, icon: Home },
@@ -38,6 +43,11 @@ export const Sidebar = () => {
     return pathname?.startsWith(href)
   }
 
+  const handleCreateClick = (event: MouseEvent) => {
+    event.preventDefault()
+    setIsCreateOpen(true)
+  }
+
   return (
     <nav className={s.container}>
       <div className={s.content}>
@@ -45,12 +55,14 @@ export const Sidebar = () => {
           const active = isActive(item.href)
           const Icon = item.icon
           const isSearch = item.name === 'Search'
+          const isCreate = item.name === 'Create'
 
           return (
             <Link
               key={item.name}
               href={item.href}
               className={clsx(s.link, active && s.active, isSearch && s.searchItem)}
+              onClick={isCreate ? handleCreateClick : undefined}
             >
               <Icon className={s.icon} />
               <span className={s.text}>{item.name}</span>
@@ -59,6 +71,7 @@ export const Sidebar = () => {
         })}
         <LogoutButton className={s.logout} />
       </div>
+      <CreatePostDialog open={isCreateOpen} onOpenChange={setIsCreateOpen} />
     </nav>
   )
 }

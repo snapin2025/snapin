@@ -122,7 +122,7 @@ export type CreatePostResponse = {
   avatarWhoLikes: boolean
 }
 export type PostImagesPayload = {
-  file: File[]
+  files: File[]
 }
 export type PostImagesResponse = {
   images: {
