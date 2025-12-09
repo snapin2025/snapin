@@ -86,3 +86,7 @@ export type EmailResendingErrorResponse = {
   }[]
   error: string
 }
+
+export type TotalCountUsersResponse = {
+  totalCount: number
+}
