@@ -1,4 +1,4 @@
-import { ResponsesPosts } from '@/entities/post/api/types'
+import { ResponsesPosts } from '@/entities/posts/types'
 
 import s from './homePage.module.css'
 import { RegisteredUsers } from '@/widgets/registeredUsers/RegisteredUsers'
