@@ -1,11 +1,11 @@
 import { StoryObj } from '@storybook/nextjs'
 import { useState } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { EmailResendingPage } from '@/pages/auth/EmailResending'
+import { EmailResending } from '@/pages/auth/EmailResending'
 
 const meta = {
   title: 'Page/EmailResendingPage',
-  component: EmailResendingPage,
+  component: EmailResending,
   parameters: {
     layout: 'centered',
     nextjs: {
@@ -23,7 +23,7 @@ export const Default: Story = {
     const [client] = useState(() => new QueryClient())
     return (
       <QueryClientProvider client={client}>
-        <EmailResendingPage />
+        <EmailResending />
       </QueryClientProvider>
     )
   },
