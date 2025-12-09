@@ -21,10 +21,11 @@ background-color: var(--color-dark-700);
 }
 
 .link,
+.buttonLink,
 .logout {
   display: flex;
   align-items: center;
-padding: 0;
+  padding: 0;
   color: var(--color-light-100);
   text-decoration: none;
   background: transparent;
@@ -35,7 +36,11 @@ padding: 0;
   line-height: 24px;
   transition: color 0.2s ease;
   border-radius: 4px;
+}
 
+.buttonLink {
+  width: 100%;
+  text-align: left;
 }
 
 .link:hover {
