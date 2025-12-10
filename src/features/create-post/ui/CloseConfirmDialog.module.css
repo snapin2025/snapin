@@ -17,6 +17,10 @@
 
 .actions {
   display: flex;
-  justify-content: end;
-  gap: 24px;
+  width: 100%;
+  justify-content: space-between;
+}
+.btnDiscard:active{
+  background-color: var(--color-accent-500);
+  color: var(--color-light-100);
 }

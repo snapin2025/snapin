@@ -16,10 +16,7 @@ export const PhotoValidationModal = ({ open, onOpenChange }: Props) => {
   return (
     <BaseModal open={open} onOpenChange={handleClose} title="Photo requirements">
       <Typography variant="regular_16" className={s.textModal}>
-        The uploaded photo does not meet the requirements.
-      </Typography>
-      <Typography variant="regular_16" className={s.textModal}>
-        Requirements for the uploaded photo: format - <b>JPEG/PNG</b>, size - <b>not more than 20 MB</b>
+        The photo must be less than 20 Mb and have JPEG or PNG format
       </Typography>
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px' }}>
         <Button className={s.buttonModal} onClick={handleClose}>

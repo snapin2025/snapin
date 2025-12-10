@@ -1,6 +1,5 @@
 .modal {
   background-color: var(--color-dark-300);
-/*padding: 0 !important;*/
 }
 
 .modal :global(.Dialog-module__X669Ia__content) {

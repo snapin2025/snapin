@@ -26,7 +26,7 @@ export const CloseConfirmDialog = ({ open, onOpenChange, onDiscard, onSaveDraft 
         </AlertDescription>
         <div className={s.actions}>
           <AlertCancel asChild>
-            <Button variant={'outlined'} onClick={onDiscard}>
+            <Button variant={'outlined'} onClick={onDiscard} className={s.btnDiscard}>
               Discard
             </Button>
           </AlertCancel>

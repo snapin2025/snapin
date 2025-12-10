@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState, type MouseEvent } from 'react'
@@ -26,17 +25,17 @@ type NavItem = {
 export const Sidebar = () => {
   const pathname = usePathname()
   const { user } = useAuth()
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
 
-  const openNewPublication = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault()
-    setIsCreateModalOpen(true)
-  }
   const [isCreateOpen, setIsCreateOpen] = useState(false)
+
+  const handleCreateClick = (event: MouseEvent) => {
+    event.preventDefault()
+    setIsCreateOpen(true)
+  }
 
   const navItems: NavItem[] = [
     { name: 'Feed', href: ROUTES.HOME, icon: Home },
-    { name: 'Create', icon: PlusSquare, onClick: openNewPublication },
+    { name: 'Create', icon: PlusSquare, onClick: handleCreateClick },
     { name: 'My Profile', href: user ? ROUTES.APP.USER_PROFILE(user.userId) : '#', icon: Profile },
     { name: 'Messenger', href: ROUTES.APP.MESSENGER, icon: Message },
     { name: 'Search', href: ROUTES.APP.SEARCH, icon: Search },
@@ -49,11 +48,6 @@ export const Sidebar = () => {
       return false
     }
     return pathname?.startsWith(href)
-  }
-
-  const handleCreateClick = (event: MouseEvent) => {
-    event.preventDefault()
-    setIsCreateOpen(true)
   }
 
   return (
@@ -78,6 +72,7 @@ export const Sidebar = () => {
             )
           })}
           <LogoutButton className={s.logout} />
+          {isCreateOpen && <CreatePostDialog open={isCreateOpen} onOpenChange={setIsCreateOpen} />}
         </div>
       </nav>
     </>
