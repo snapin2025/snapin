@@ -12,45 +12,32 @@ type TotalCountUsersResponse = {
   totalCount: number
 }
 
+const defaultPostsData: ResponsesPosts = {
+  totalCount: 0,
+  pageSize: 0,
+  items: [],
+  totalUsers: 0
+}
+
 export const HomePage = async () => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inctagram.work/api/v1'
 
-  let postsData: ResponsesPosts = {
-    totalCount: 0,
-    pageSize: 0,
-    items: [],
-    totalUsers: 0
-  }
-  let totalCountUsers = 0
-
-  try {
-    // Делаем два запроса параллельно для SSG
-    const [postsResponse, usersResponse] = await Promise.all([
-      fetch(`${apiUrl}/posts/all`, {
-        next: { revalidate: 60 } // ISR: перегенерировать каждые 60 секунд
-      }),
-      fetch(`${apiUrl}/public-user`, {
-        next: { revalidate: 60 } // ISR: перегенерировать каждые 60 секунд
-      })
-    ])
-
-    if (postsResponse.ok) {
-      postsData = await postsResponse.json()
-      console.log(postsData)
-    } else {
-      console.error(`Failed to fetch posts: ${postsResponse.status}`)
-    }
-
-    if (usersResponse.ok) {
-      const usersData: TotalCountUsersResponse = await usersResponse.json()
-      totalCountUsers = usersData.totalCount
-    } else {
-      console.error(`Failed to fetch users count: ${usersResponse.status}`)
-    }
-  } catch (error) {
-    console.error('Error fetching data:', error)
-    // В случае ошибки возвращаем пустые данные, страница все равно будет сгенерирована
-  }
+  // Делаем два запроса параллельно для SSG
+  // fetch не бросает исключения для HTTP ошибок, только для сетевых
+  // Поэтому используем .catch() для обработки сетевых ошибок
+  const [postsResponse, usersResponse] = await Promise.all([
+    fetch(`${apiUrl}/posts/all`, {}).catch(() => null),
+    fetch(`${apiUrl}/public-user`, {}).catch(() => null)
+  ])
+  
+  const postsData: ResponsesPosts = postsResponse?.ok
+    ? await postsResponse.json().catch(() => defaultPostsData)
+    : defaultPostsData
+    console.log(postsData)
+  const totalCountUsers =
+    (usersResponse?.ok
+      ? ((await usersResponse.json().catch(() => null)) as TotalCountUsersResponse | null)?.totalCount
+      : null) ?? 0
 
   // Ограничиваем количество постов на сервере (лучше для SSG)
   const limitedPosts = postsData.items.slice(0, 4)
