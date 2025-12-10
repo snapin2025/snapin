@@ -26,14 +26,17 @@ export const HomePage = async () => {
   // fetch не бросает исключения для HTTP ошибок, только для сетевых
   // Поэтому используем .catch() для обработки сетевых ошибок
   const [postsResponse, usersResponse] = await Promise.all([
-    fetch(`${apiUrl}/posts/all`, {}).catch(() => null),
-    fetch(`${apiUrl}/public-user`, {}).catch(() => null)
+    fetch(`${apiUrl}/posts/all`, {
+      next: { revalidate: 60 } // ISR: перегенерировать каждые 60 секунд
+    }).catch(() => null),
+    fetch(`${apiUrl}/public-user`, {
+      next: { revalidate: 60 } // ISR: перегенерировать каждые 60 секунд
+    }).catch(() => null)
   ])
-  
+
   const postsData: ResponsesPosts = postsResponse?.ok
     ? await postsResponse.json().catch(() => defaultPostsData)
     : defaultPostsData
-    console.log(postsData)
   const totalCountUsers =
     (usersResponse?.ok
       ? ((await usersResponse.json().catch(() => null)) as TotalCountUsersResponse | null)?.totalCount
