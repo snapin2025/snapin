@@ -1,0 +1,41 @@
+
+.DropdownMenuContent {
+  min-width: 137px;
+  background-color: #171717;
+  padding: 13px 12px;
+  border: 1px solid #4c4c4c;
+}
+
+.DropdownMenuItem {
+  /* Стили для каждого отдельного пункта меню */
+  font-size: 14px;
+  line-height: 24px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  padding-top: 12px;
+  position: relative;
+  user-select: none;
+  outline: none;
+}
+
+.DropdownMenuItem .icon {
+  margin-right: 12px;
+}
+
+.dots {
+  width: 24px;
+  height: 24px;
+}
+
+.IconButton {
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  outline: none;
+  position: relative;
+}
+
+

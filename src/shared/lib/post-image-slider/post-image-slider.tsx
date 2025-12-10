@@ -4,11 +4,9 @@ import { useState, useCallback } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { clsx } from 'clsx'
-import { ImagePost } from '@/entities/post/api/types'
+import { ArrowBack, ArrowForward, Dot } from '@/shared/ui/icons'
+import { ImagePost } from '@/entities/posts/types'
 import s from './post-image-slider.module.css'
-import { ArrowBack } from '@/shared/ui/icons/ArrowBack'
-import { ArrowForward } from '@/shared/ui/icons/ArrowForward'
-import { Dot } from '@/shared/ui/icons/Dot'
 
 type Props = {
   images: ImagePost[]

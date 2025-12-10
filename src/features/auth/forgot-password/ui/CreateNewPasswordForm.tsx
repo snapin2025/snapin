@@ -8,7 +8,6 @@ import { useSetNewPassword } from '../api/useNewPassword'
 import { CreatePasswordInput, passwordSchema } from '../model/validatePassword'
 import s from './ForgotPasswordForm.module.css'
 import { ROUTES } from '@/shared/lib/routes'
-import { useState } from 'react'
 
 export const CreateNewPasswordForm = () => {
   const router = useRouter()
@@ -26,18 +25,10 @@ export const CreateNewPasswordForm = () => {
   })
 
   const { mutate: setNewPassword, isPending } = useSetNewPassword()
-
-  const [errorMessage, setErrorMessage] = useState('')
-
   const onSubmit: SubmitHandler<CreatePasswordInput> = (data) => {
     if (!recoveryCode) {
-      setErrorMessage('Recovery code not found in URL')
       return
     }
-
-    setErrorMessage('')
-
-    // Простая проверка кода перед установкой пароля
 
     setNewPassword(
       { newPassword: data.password, recoveryCode },
@@ -45,8 +36,7 @@ export const CreateNewPasswordForm = () => {
         onSuccess: () => {
           reset()
           router.replace(ROUTES.AUTH.SIGN_IN)
-        },
-        onError: () => setErrorMessage('Failed to set new password')
+        }
       }
     )
   }
@@ -64,7 +54,6 @@ export const CreateNewPasswordForm = () => {
           error={!!errors.password}
           {...register('password')}
         />
-        {errors.password && <span className={s.errorMessage}>{errors.password.message}</span>}
       </div>
 
       <div className={s.field}>
@@ -78,8 +67,6 @@ export const CreateNewPasswordForm = () => {
         />
         {errors.password_confirmation && <span className={s.errorMessage}>{errors.password_confirmation.message}</span>}
       </div>
-
-      {errorMessage && <span className={s.errorMessage}>{errorMessage}</span>}
 
       <p className={s.text}>Your password must be between 6 and 20 characters</p>
 
