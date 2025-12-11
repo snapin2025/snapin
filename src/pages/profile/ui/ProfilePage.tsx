@@ -3,8 +3,8 @@
 import { useParams } from 'next/navigation'
 import { Spinner } from '@/shared/ui'
 import { useAuth } from '@/shared/lib'
-import { UserProfile } from '@/pages/userProfile'
-import type { profileOwner } from '@/pages/userProfile/ButtonContainer'
+import { UserProfile } from '@/pages/profile/ui/userProfile'
+import type { profileOwner } from '@/pages/profile/ui/userProfile/ButtonContainer'
 
 export function ProfilePage() {
   const params = useParams<{ id?: string }>()

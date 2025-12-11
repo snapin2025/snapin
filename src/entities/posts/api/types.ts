@@ -6,6 +6,24 @@ export type Avatar = {
   createdAt: string
 }
 
+export type UserProfileResponse = {
+  id: number
+  userName: string
+  firstName: string
+  lastName: string
+  city: string
+  country: string
+  region: string
+  dateOfBirth: string
+  aboutMe: string
+  avatars: Avatar[]
+  isFollowing: boolean
+  isFollowedBy: boolean
+  followingCount: number
+  followersCount: number
+  publicationsCount: number
+}
+
 export type EditPost = {
   postId: number
   description: string

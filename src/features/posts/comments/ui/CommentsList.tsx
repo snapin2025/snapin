@@ -3,7 +3,7 @@
 import { CommentItem } from './CommentItem'
 import { Spinner } from '@/shared/ui'
 import s from './CommentsList.module.css'
-import { useComments } from '@/entities/posts/model/useComments'
+import { useComments } from '@/features/posts/comments/api/useComments'
 
 type CommentsListProps = {
   postId: number

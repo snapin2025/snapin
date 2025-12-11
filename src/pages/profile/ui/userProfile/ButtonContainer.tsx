@@ -39,10 +39,12 @@ export const ButtonContainer = ({ profileOwner }: Props) => {
           <Button variant="secondary">Send message</Button>
         </>
       ) : (
-        <>
-          <Button variant="primary">Follow</Button>
-          <Button variant="secondary">Send message</Button>
-        </>
+        userId && (
+          <>
+            <Button variant="primary">Follow</Button>
+            <Button variant="secondary">Send message</Button>
+          </>
+        )
       )}
     </div>
   )
