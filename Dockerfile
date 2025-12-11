@@ -11,6 +11,8 @@ FROM node:20.11-alpine as builder
 WORKDIR /app
 COPY . .
 COPY --from=dependencies /app/node_modules ./node_modules
+# NODE_ENV для билда Next.js
+ENV NODE_ENV=production
 RUN npm run build:production
 
 #Стейдж запуска
