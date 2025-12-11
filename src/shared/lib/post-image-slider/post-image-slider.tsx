@@ -5,7 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { clsx } from 'clsx'
 import { ArrowBack, ArrowForward, Dot } from '@/shared/ui/icons'
-import { ImagePost } from '@/entities/post/api/types'
+import { ImagePost } from '@/entities/posts/api/types'
 import s from './post-image-slider.module.css'
 
 type Props = {

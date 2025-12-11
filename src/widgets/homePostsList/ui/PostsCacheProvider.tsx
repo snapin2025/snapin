@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
-import { Post } from '@/entities/post/api/types'
+import { Post } from '@/entities/posts/api/types'
 
 type Props = {
   posts: Post[]

@@ -21,7 +21,7 @@ export type EditPostFormProps = {
   userName: string
   userAvatar: string
   postImage: string
-  initialDescription: string
+  initialDescription?: string
 }
 
 export const EditPostForm = ({
