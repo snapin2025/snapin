@@ -20,6 +20,7 @@ const defaultPostsData: ResponsesPosts = {
 }
 
 export const HomePage = async () => {
+  // const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inctagram.work/api/v1'
   const apiUrl = 'https://inctagram.work/api/v1'
 
   // Делаем два запроса параллельно для SSG

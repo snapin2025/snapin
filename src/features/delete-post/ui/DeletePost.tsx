@@ -4,10 +4,13 @@ import { AlertAction, AlertCancel, AlertDescription, AlertDialog } from '@/share
 import s from './DeletePost.module.css'
 import { useDeletePost } from '@/features/delete-post/api'
 
-export const DeletePost = (id: string) => {
+type Props = {
+  id: number
+}
+export const DeletePost = (props: Props) => {
   const { mutate: deletePost, isPending } = useDeletePost()
 
-  const deletePostHandler = (id: string) => {
+  const deletePostHandler = (id: number) => {
     deletePost(id, {
       onSuccess: () => {},
       onError: () => {}
@@ -40,7 +43,7 @@ export const DeletePost = (id: string) => {
             </AlertDescription>
             <div style={{ display: 'flex', justifyContent: 'end', gap: '24px' }}>
               <AlertAction asChild>
-                <Button variant={'outlined'} onClick={() => deletePostHandler(id)}>
+                <Button variant={'outlined'} onClick={() => deletePostHandler(props.id)}>
                   {isPending ? <Spinner inline /> : 'OK'}
                 </Button>
               </AlertAction>
