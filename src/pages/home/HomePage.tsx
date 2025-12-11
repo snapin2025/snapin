@@ -20,7 +20,8 @@ const defaultPostsData: ResponsesPosts = {
 }
 
 export const HomePage = async () => {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inctagram.work/api/v1'
+  // const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inctagram.work/api/v1'
+  const apiUrl = 'https://inctagram.work/api/v1'
 
   // Делаем два запроса параллельно для SSG
   // fetch не бросает исключения для HTTP ошибок, только для сетевых
@@ -44,6 +45,7 @@ export const HomePage = async () => {
 
   // Ограничиваем количество постов на сервере (лучше для SSG)
   const limitedPosts = postsData.items.slice(0, 4)
+  console.log('API URL:', process.env.NEXT_PUBLIC_API_URL)
 
   return (
     <PostsCacheProvider posts={limitedPosts}>
