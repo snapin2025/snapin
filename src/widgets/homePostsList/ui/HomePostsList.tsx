@@ -1,6 +1,6 @@
 'use client'
 import s from './homePostsList.module.css'
-import { Post } from '@/entities/post/api/types'
+import { Post } from '@/entities/posts/types'
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'

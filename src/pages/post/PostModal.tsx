@@ -3,11 +3,12 @@
 import { useRouter } from 'next/navigation'
 import { useCallback } from 'react'
 import { Dialog, DialogContent } from '@/shared/ui/modal'
-import { usePost } from '@/entities/post'
+
 import { Avatar, Spinner } from '@/shared/ui'
 import { getTimeDifference } from '@/shared/lib/getTimeDifference'
 import { PostImageSlider } from '@/shared/lib/post-image-slider'
 import s from './PostModal.module.css'
+import { usePost } from '@/entities/posts/usePost'
 
 type PostModalProps = {
   postId: number
