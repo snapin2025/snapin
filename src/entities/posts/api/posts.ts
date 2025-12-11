@@ -2,7 +2,7 @@
 // entities/post/api/posts.ts
 
 import { api } from '@/shared/api'
-import { CommentsResponse, EditPost, GetCommentsParams, Post } from '@/entities/posts/api/types'
+import { CommentsResponse, EditPost, GetCommentsParams, Post, ResponsesPosts } from '@/entities/posts/api/types'
 
 export const postsApi = {
   deletePost: async (id: string): Promise<void> => {
@@ -27,6 +27,12 @@ export const postsApi = {
         sortBy: sortBy ?? ''
       }
     })
+    return data
+  },
+
+  getUserPosts: async (userId: number): Promise<ResponsesPosts> => {
+    const { data } = await api.get<ResponsesPosts>(`/posts/user/${userId}`)
+
     return data
   }
 }
