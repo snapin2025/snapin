@@ -1,7 +1,11 @@
 'use client'
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useMemo, useRef, useState } from 'react'
 import { ArrowLeft, Button, PlusCircleOutline, Typography } from '@/shared/ui'
+import { useContainerSize } from '../hooks/useContainerSize'
+import { useImageInitialization } from '../hooks/useImageInitialization'
+import { useImageTransform } from '../hooks/useImageTransform'
+import { useImageDrag } from '../hooks/useImageDrag'
 import s from './CroppingStep.module.css'
 
 type ImageThumbnail = {
@@ -36,143 +40,33 @@ export const CroppingStep: React.FC<Props> = ({
   const containerRef = useRef<HTMLDivElement | null>(null)
   const imgRef = useRef<HTMLImageElement | null>(null)
 
-  const [natural, setNatural] = useState({ w: 0, h: 0 })
-  const [container, setContainer] = useState({ w: 0, h: 0 })
-  const [scale, setScale] = useState(1)
-  const [pos, setPos] = useState({ x: 0, y: 0 })
-
-  const posRef = useRef(pos)
-  posRef.current = pos
-  const scaleRef = useRef(scale)
-  scaleRef.current = scale
-
-  const [isPointerDown, setIsPointerDown] = useState(false)
-  const pointerStart = useRef({ x: 0, y: 0 })
-  const posStart = useRef({ x: 0, y: 0 })
   const [aspect, setAspect] = useState<number | null>(null)
 
-  useEffect(() => {
-    const node = containerRef.current
-    if (!node) return
-    const update = () => setContainer({ w: node.clientWidth, h: node.clientHeight })
-    update()
-    const ro = new ResizeObserver(update)
-    ro.observe(node)
-    return () => ro.disconnect()
-  }, [])
+  // Отслеживание размера контейнера
+  const container = useContainerSize(containerRef)
 
-  // Инициализация изображения с центрированием
-  useEffect(() => {
-    if (!imageUrl) return
-    const img = new Image()
-    img.src = imageUrl
-    img.onload = () => {
-      setNatural({ w: img.naturalWidth, h: img.naturalHeight })
-      const node = containerRef.current
-      if (!node) return
-      const fit = Math.min(node.clientWidth / img.naturalWidth, node.clientHeight / img.naturalHeight)
-      setScale(fit)
-      // Центрируем изображение: позиция = центр контейнера минус половина размера изображения
-      setPos({
-        x: node.clientWidth / 2 - (img.naturalWidth * fit) / 2,
-        y: node.clientHeight / 2 - (img.naturalHeight * fit) / 2
-      })
-    }
-  }, [imageUrl])
+  // Инициализация изображения
+  const { natural, initialScale, initialPos } = useImageInitialization({
+    imageUrl,
+    containerRef
+  })
 
-  // Ограничение позиции с учетом центрирования
-  const clampPos = (p: { x: number; y: number }, s = scaleRef.current) => {
-    const node = containerRef.current
-    if (!node || !natural.w || !natural.h) return p
-    const cw = node.clientWidth
-    const ch = node.clientHeight
-    const dispW = natural.w * s
-    const dispH = natural.h * s
+  // Управление трансформацией изображения (позиция, масштаб, зум)
+  const { scale, pos, setPos, clampPos, zoomIn, zoomOut, posRef, scaleRef } = useImageTransform({
+    containerRef,
+    natural,
+    container,
+    initialScale,
+    initialPos
+  })
 
-    // Если изображение меньше контейнера - центрируем
-    if (dispW <= cw && dispH <= ch) {
-      return {
-        x: cw / 2 - dispW / 2,
-        y: ch / 2 - dispH / 2
-      }
-    }
-
-    // Если больше - ограничиваем движение
-    return {
-      x: Math.max(cw / 2 - dispW, Math.min(p.x, cw / 2)),
-      y: Math.max(ch / 2 - dispH, Math.min(p.y, ch / 2))
-    }
-  }
-
-  useEffect(() => setPos((p) => clampPos(p, scale)), [scale, container, natural])
-
-  useEffect(() => {
-    const node = containerRef.current
-    if (!node) return
-    const onPointerDown = (e: PointerEvent) => {
-      if (e.pointerType === 'mouse' && e.button !== 0) return
-      node.setPointerCapture(e.pointerId)
-      setIsPointerDown(true)
-      pointerStart.current = { x: e.clientX, y: e.clientY }
-      posStart.current = { ...posRef.current }
-    }
-    const onPointerMove = (e: PointerEvent) => {
-      if (!isPointerDown) return
-      const dx = e.clientX - pointerStart.current.x
-      const dy = e.clientY - pointerStart.current.y
-      setPos(clampPos({ x: posStart.current.x + dx, y: posStart.current.y + dy }))
-    }
-    const onPointerUp = (e: PointerEvent) => {
-      try {
-        node.releasePointerCapture(e.pointerId)
-      } catch {}
-      setIsPointerDown(false)
-    }
-    node.addEventListener('pointerdown', onPointerDown)
-    window.addEventListener('pointermove', onPointerMove)
-    window.addEventListener('pointerup', onPointerUp)
-    return () => {
-      node.removeEventListener('pointerdown', onPointerDown)
-      window.removeEventListener('pointermove', onPointerMove)
-      window.removeEventListener('pointerup', onPointerUp)
-    }
-  }, [isPointerDown])
-
-  // Зум с центрированием относительно центра контейнера
-  const onWheel = (e: React.WheelEvent) => {
-    e.preventDefault()
-    const delta = -e.deltaY * 0.0025
-    setScale((prev) => {
-      const next = Math.min(Math.max(0.1, prev + delta), 4)
-      const node = containerRef.current
-      if (!node || !natural.w || !natural.h) return next
-
-      const cw = node.clientWidth
-      const ch = node.clientHeight
-      const factor = next / prev
-      const prevPos = posRef.current
-
-      // Масштабируем относительно центра контейнера
-      const newX = cw / 2 - (cw / 2 - prevPos.x) * factor
-      const newY = ch / 2 - (ch / 2 - prevPos.y) * factor
-
-      setPos(clampPos({ x: newX, y: newY }, next))
-      return next
-    })
-  }
-
-  const zoomIn = () =>
-    setScale((s) => {
-      const next = Math.min(4, s + 0.1)
-      setPos(clampPos(pos, next))
-      return next
-    })
-  const zoomOut = () =>
-    setScale((s) => {
-      const next = Math.max(0.1, s - 0.1)
-      setPos(clampPos(pos, next))
-      return next
-    })
+  // Обработка перетаскивания изображения
+  useImageDrag({
+    containerRef,
+    pos,
+    setPos,
+    clampPos
+  })
 
   const frame = useMemo(() => {
     const cw = container.w
@@ -225,7 +119,7 @@ export const CroppingStep: React.FC<Props> = ({
       </div>
 
       {/* Основной контейнер для обрезки с центрированием */}
-      <div ref={containerRef} className={s.cropContainer} onWheel={onWheel}>
+      <div ref={containerRef} className={s.cropContainer}>
         <img
           ref={imgRef}
           src={imageUrl}
@@ -285,9 +179,6 @@ export const CroppingStep: React.FC<Props> = ({
       {/* Контролы для аспекта и зума */}
       <div className={s.controls}>
         <div className={s.aspect}>
-          {/*<Button onClick={() => setAspect(null)} variant="outlined">*/}
-          {/*  Free*/}
-          {/*</Button>*/}
           <Button className={s.btnScale} onClick={() => setAspect(1)} variant="outlined">
             1:1
           </Button>
@@ -314,35 +205,31 @@ export const CroppingStep: React.FC<Props> = ({
         <div className={s.thumbnails}>
           <div className={s.thumbnailsList}>
             {allImages.map((img, idx) => (
-              <button
-                key={img.id}
-                className={`${s.thumbnail} ${img.isCurrent ? s.thumbnailActive : ''}`}
-                onClick={() => onSelectImage?.(idx)}
-                type="button"
-                aria-label={`Select image ${idx + 1}`}
-              >
-                <img src={img.url} alt={`Thumbnail ${idx + 1}`} />
+              <div key={img.id} className={s.thumbnailWrapper}>
+                <Button
+                  className={`${s.thumbnail} ${img.isCurrent ? s.thumbnailActive : ''}`}
+                  onClick={() => onSelectImage?.(idx)}
+                  variant="textButton"
+                  aria-label={`Select image ${idx + 1}`}
+                >
+                  <img src={img.url} alt={`Thumbnail ${idx + 1}`} />
+                </Button>
                 {onDeleteImage && (
-                  <button
+                  <Button
                     className={s.thumbnailDelete}
                     onClick={(e) => {
                       e.stopPropagation()
                       onDeleteImage(idx)
                     }}
-                    type="button"
+                    variant="textButton"
                     aria-label={`Delete image ${idx + 1}`}
                   >
                     ×
-                  </button>
+                  </Button>
                 )}
-              </button>
+              </div>
             ))}
-            {total < 10 && (
-              // <button className={s.thumbnailAdd} onClick={handleAddPhoto} type="button" aria-label="Add photo">
-              //   <span>+</span>
-              // </button>
-              <PlusCircleOutline className={s.plusCircleOutline} onClick={handleAddPhoto} />
-            )}
+            {total < 10 && <PlusCircleOutline className={s.plusCircleOutline} onClick={handleAddPhoto} />}
           </div>
         </div>
       )}

@@ -13,7 +13,7 @@ export const usePostPublish = ({ images, onOpenChange }: UsePostPublishParams) =
   const { mutate: createPost, isPending: isCreatingPost } = useCreatePost()
 
   const handlePublish = useCallback(
-    (data: { description: string }) => {
+    (data: { description: string; location: string }) => {
       const files = images
         .map((img, idx) => {
           if (img.croppedBlob) {
@@ -32,20 +32,19 @@ export const usePostPublish = ({ images, onOpenChange }: UsePostPublishParams) =
               uploadId: item.uploadId
             }))
 
-            createPost(
-              {
-                description: data.description,
-                childrenMetadata
+            const postPayload = {
+              description: data.description,
+              ...(data.location && { location: data.location }),
+              childrenMetadata
+            }
+            createPost(postPayload, {
+              onSuccess: () => {
+                onOpenChange(false)
               },
-              {
-                onSuccess: () => {
-                  onOpenChange(false)
-                },
-                onError: (err) => {
-                  console.error('Error creating post:', err)
-                }
+              onError: (err) => {
+                console.error('Error creating post:', err)
               }
-            )
+            })
           },
           onError: (err) => {
             console.error('Error uploading images:', err)

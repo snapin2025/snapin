@@ -1,5 +1,6 @@
 .modal {
   background-color: var(--color-dark-300);
+  /*z-index: 100;*/
 }
 
 .modal :global(.Dialog-module__X669Ia__content) {

@@ -1,10 +1,10 @@
 import { useMutation } from '@tanstack/react-query'
-import { userApi } from '@/entities/user'
+import { postsApi } from '@/entities/posts/api/posts'
 import { AxiosError } from 'axios'
 import { PostImagesPayload, PostImagesResponse } from '@/entities/user/api/user-types'
 
 export const useCreatePostImage = () => {
   return useMutation<PostImagesResponse, AxiosError, PostImagesPayload>({
-    mutationFn: (payload) => userApi.createPostImage(payload)
+    mutationFn: (payload) => postsApi.createPostImage(payload)
   })
 }

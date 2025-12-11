@@ -79,24 +79,5 @@ export const userApi = {
 
   logout: async (): Promise<LogoutResponse> => {
     await api.post<LogoutResponse>('/auth/logout')
-  },
-  createPost: async (payload: CreatePostPayload): Promise<CreatePostResponse> => {
-    const { data } = await api.post<CreatePostResponse>('/posts', payload)
-    return data
-  },
-
-  createPostImage: async (payload: PostImagesPayload): Promise<PostImagesResponse> => {
-    const formData = new FormData()
-    payload.files.forEach((file) => {
-      formData.append('file', file)
-    })
-
-    const { data } = await api.post<PostImagesResponse>('/posts/image', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
-    console.log(data)
-    return data
-  }
+  } 
 }

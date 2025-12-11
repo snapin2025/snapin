@@ -5,6 +5,9 @@
   height: 100%;
 }
 
+
+
+
 .header {
   display: flex;
   align-items: center;
@@ -166,6 +169,11 @@
   background-color: var(--color-dark-100);
 }
 
+.thumbnailWrapper {
+  position: relative;
+  flex-shrink: 0;
+}
+
 .thumbnail {
   flex-shrink: 0;
   width: 64px;
@@ -176,15 +184,15 @@
   cursor: pointer;
   padding: 0;
   position: relative;
-  transition: border-color 0.2s,
-  transform 0.2s;
+  transition:
+    border-color 0.2s,
+    transform 0.2s;
 }
 
 .thumbnail:hover {
   transform: scale(1.05);
   border-color: var(--color-dark-100);
 }
-
 
 .thumbnail img {
   width: 100%;
@@ -212,10 +220,8 @@
   transition: all 0.2s;
 }
 
-
 .plusCircleOutline {
   width: 36px;
   height: 36px;
   text-align: start;
 }
-

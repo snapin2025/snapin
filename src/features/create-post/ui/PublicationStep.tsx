@@ -1,10 +1,14 @@
 'use client'
 
-import React, { useState, useCallback } from 'react'
-import { Button, Typography } from '@/shared/ui'
+import React, { useState, useCallback, useMemo } from 'react'
+import { Button, Typography, Textarea } from '@/shared/ui'
 import { ArrowLeft } from '@/shared/ui/icons/ArrowLeft'
 import { useAuth } from '@/shared/lib'
+import { PostImageSlider } from '@/shared/lib/post-image-slider/post-image-slider'
+import { ImagePost } from '@/entities/posts/types'
 import s from './PublicationStep.module.css'
+import { AddLocation } from '@/widgets'
+import Avatar from '../../../shared/ui/Avatar/Avatar'
 
 type ImageItem = {
   id: string
@@ -16,7 +20,7 @@ type Props = {
   images: ImageItem[]
   currentImageIndex: number
   onBack: () => void
-  onPublish: (data: { description: string }) => void
+  onPublish: (data: { description: string; location: string }) => void
   onPrevImage: () => void
   onNextImage: () => void
   isPublishing?: boolean
@@ -35,10 +39,24 @@ export const PublicationStep: React.FC<Props> = ({
 }) => {
   const { user } = useAuth()
   const [description, setDescription] = useState('')
+  const [location, setLocation] = useState('')
+  const [locationSuggestions, setLocationSuggestions] = useState<string[]>([])
 
-  const currentImage = images[currentImageIndex]
-  const canPrev = currentImageIndex > 0
-  const canNext = currentImageIndex < images.length - 1
+  // Преобразуем ImageItem[] в ImagePost[] для слайдера
+  const sliderImages: ImagePost[] = useMemo(
+    () =>
+      images.map((img, index) => ({
+        uploadId: img.id,
+        url: img.croppedUrl || img.originalUrl,
+        width: 600, // Дефолтные значения, так как у нас нет реальных размеров
+        height: 600,
+        fileSize: 0,
+        createdAt: new Date().toISOString()
+      })),
+    [images]
+  )
+
+  const hasImages = images.length > 0
 
   // Обработчик изменения описания
   const handleDescriptionChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -48,12 +66,33 @@ export const PublicationStep: React.FC<Props> = ({
     }
   }, [])
 
+  // Обработчик изменения локации с поиском
+  const handleLocationChange = useCallback((value: string) => {
+    setLocation(value)
+
+    // Простая логика предложений (в реальном приложении здесь будет API запрос)
+    if (value.length > 0) {
+      const suggestions = ['New York', 'Washington Square Park', 'Los Angeles', 'San Francisco']
+      const filtered = suggestions.filter((s) => s.toLowerCase().includes(value.toLowerCase()))
+      setLocationSuggestions(filtered.slice(0, 4))
+    } else {
+      setLocationSuggestions([])
+    }
+  }, [])
+
+  // Выбор локации из предложений
+  const handleSelectLocation = useCallback((selectedLocation: string) => {
+    setLocation(selectedLocation)
+    setLocationSuggestions([])
+  }, [])
+
   // Публикация
   const handlePublish = useCallback(() => {
     onPublish({
-      description: description.trim()
+      description: description.trim(),
+      location: location.trim()
     })
-  }, [description, onPublish])
+  }, [description, location, onPublish])
 
   const remainingChars = MAX_DESCRIPTION_LENGTH - description.length
 
@@ -64,7 +103,7 @@ export const PublicationStep: React.FC<Props> = ({
           <ArrowLeft />
         </Button>
         <Typography variant="h1">Publication</Typography>
-        <Button onClick={handlePublish} variant="primary" disabled={isPublishing || !currentImage} aria-label="Publish">
+        <Button onClick={handlePublish} variant="primary" disabled={isPublishing || !hasImages} aria-label="Publish">
           {isPublishing ? 'Publishing...' : 'Publish'}
         </Button>
       </div>
@@ -72,49 +111,16 @@ export const PublicationStep: React.FC<Props> = ({
       <div className={s.content}>
         {/* Левая часть - изображение с навигацией */}
         <div className={s.imageSection}>
-          {currentImage && (
-            <>
-              <div className={s.imageContainer}>
-                <img
-                  src={currentImage.croppedUrl || currentImage.originalUrl}
-                  alt={`Publication ${currentImageIndex + 1}`}
-                  className={s.image}
-                />
-
-                {/* Кнопки навигации по изображениям */}
-                {canPrev && (
-                  <button
-                    className={s.navButton}
-                    style={{ left: 12 }}
-                    onClick={onPrevImage}
-                    aria-label="Previous image"
-                    type="button"
-                  >
-                    <ArrowLeft />
-                  </button>
-                )}
-                {canNext && (
-                  <button
-                    className={s.navButton}
-                    style={{ right: 12 }}
-                    onClick={onNextImage}
-                    aria-label="Next image"
-                    type="button"
-                  >
-                    <ArrowLeft style={{ transform: 'rotate(180deg)' }} />
-                  </button>
-                )}
-              </div>
-
-              {/* Индикаторы изображений */}
-              {images.length > 1 && (
-                <div className={s.indicators}>
-                  {images.map((_, idx) => (
-                    <div key={idx} className={`${s.indicator} ${idx === currentImageIndex ? s.indicatorActive : ''}`} />
-                  ))}
-                </div>
-              )}
-            </>
+          {hasImages && (
+            <PostImageSlider
+              images={sliderImages}
+              postId={0} // Не используется, так как disableLink=true
+              ownerId={0} // Не используется
+              description={description}
+              disableLink={true}
+              className={s.imageSlider}
+              size="large"
+            />
           )}
         </div>
 
@@ -122,18 +128,20 @@ export const PublicationStep: React.FC<Props> = ({
         <div className={s.formSection}>
           {/* Профиль пользователя */}
           <div className={s.profile}>
-            <div className={s.avatar}>{user?.userName?.[0]?.toUpperCase() || 'U'}</div>
+            <Avatar
+              alt={user?.userName || 'User'}
+              src={(user as any)?.avatars?.small || (user as any)?.avatar || ''}
+              size="medium"
+              withStatus={false}
+            />
             <Typography variant="regular_14">{user?.userName || 'User'}</Typography>
           </div>
 
           {/* Описание публикации */}
           <div className={s.field}>
-            <label htmlFor="description" className={s.label}>
-              Add publication descriptions
-            </label>
-            <textarea
+            <Textarea
               id="description"
-              className={s.textarea}
+              label="Add publication descriptions"
               placeholder="Text-area"
               value={description}
               onChange={handleDescriptionChange}
@@ -143,6 +151,16 @@ export const PublicationStep: React.FC<Props> = ({
             <div className={s.charCount}>
               {remainingChars} / {MAX_DESCRIPTION_LENGTH}
             </div>
+          </div>
+
+          {/* Локация */}
+          <div className={s.field}>
+            <AddLocation
+            // value={location}
+            // onChange={handleLocationChange}
+            // suggestions={locationSuggestions}
+            // onSelectSuggestion={handleSelectLocation}
+            />
           </div>
         </div>
       </div>

@@ -1,5 +1,7 @@
 'use client'
 
+// можно ли избавиться от пропс дрилинга. open много прокидывается
+
 import { useState } from 'react'
 import { Dialog } from '@/shared/ui/temp/dialog/Dialog'
 import { Button, Typography } from '@/shared/ui'

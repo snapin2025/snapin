@@ -92,6 +92,7 @@ export type TotalCountUsersResponse = {
 }
 export type CreatePostPayload = {
   description: string
+  location?: string
   childrenMetadata: {
     uploadId: string
   }[]
