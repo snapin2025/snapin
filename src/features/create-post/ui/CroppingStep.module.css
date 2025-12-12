@@ -103,7 +103,7 @@
 
 .controls {
   position: absolute;
-  top: 70%;
+  top: 90%;
   right: 18px;
   display: flex;
   align-items: center;
@@ -111,6 +111,7 @@
   padding: 12px 16px;
   gap: 12px;
   flex-shrink: 0;
+  z-index: 100;
 }
 
 .aspect {
@@ -130,7 +131,7 @@
 
 .thumbnails {
   position: absolute;
-  top: 80%;
+  top: 74%;
   right: 40px;
   display: flex;
   flex-direction: column;
@@ -142,6 +143,7 @@
   flex-shrink: 0;
   max-height: 120px;
   overflow-y: auto;
+  z-index: 100;
 }
 
 .thumbnailsList {
@@ -218,6 +220,7 @@
   padding: 0;
   z-index: 10;
   transition: all 0.2s;
+  opacity: 60%;
 }
 
 .plusCircleOutline {

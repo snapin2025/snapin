@@ -9,6 +9,7 @@ import { ImagePost } from '@/entities/posts/types'
 import s from './PublicationStep.module.css'
 import { AddLocation } from '@/widgets'
 import Avatar from '../../../shared/ui/Avatar/Avatar'
+import { CharacterCounter } from '@/shared/ui/character-counter'
 
 type ImageItem = {
   id: string
@@ -145,12 +146,9 @@ export const PublicationStep: React.FC<Props> = ({
               placeholder="Text-area"
               value={description}
               onChange={handleDescriptionChange}
-              rows={6}
               maxLength={MAX_DESCRIPTION_LENGTH}
             />
-            <div className={s.charCount}>
-              {remainingChars} / {MAX_DESCRIPTION_LENGTH}
-            </div>
+            <CharacterCounter current={remainingChars} max={MAX_DESCRIPTION_LENGTH} />
           </div>
 
           {/* Локация */}
