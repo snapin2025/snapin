@@ -1,15 +1,10 @@
 
 
 .dialog {
-  margin-top: 350px;
   background-color: var(--color-dark-300);
-  padding:0;
+  padding: 0;
   z-index: 100;
-  /*all: unset; отменяет все стиля радикса*/
-}
-/* Переопределение для контента (убираем padding: 24px)  это времено пока колега изменит стили */
-.dialog :global(.Dialog_content__1SCiD) {
-  padding: 0 !important;
+
 }
 
 .wrapper {
@@ -20,6 +15,7 @@
   border: none;
   background: var(--color-dark-300);
   position: relative;
+  box-shadow: none;
 }
 
 .imgBox {
@@ -44,6 +40,7 @@
   flex-direction: column;
   justify-content: space-between;
   width: 480px;
+
 }
 
 /* PostCard - верхняя часть */
@@ -97,7 +94,6 @@
 .confirmDialog {
   z-index: 1000; /* Выше overlay (999), должен быть выше основного окна */
   position: fixed;
-  margin-top: 350px;
   background-color: var(--color-dark-300);
   max-width: 486px;
   padding: 0;

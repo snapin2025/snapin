@@ -4,13 +4,9 @@ import {
   CheckRecoveryCodeResponse,
   ConfirmErrorResponse,
   ConfirmRequest,
-  CreatePostPayload,
-  CreatePostResponse,
   EmailResendingErrorResponse,
   EmailResendingRequest,
   LogoutResponse,
-  PostImagesPayload,
-  PostImagesResponse,
   ResendRecoveryEmailType,
   SendRecoveryEmailType,
   SetNewPasswordType,
@@ -18,7 +14,8 @@ import {
   SignInResponse,
   SignUpErrorResponse,
   SignUpRequest,
-  User
+  User,
+  UserProfileResponse
 } from './user-types'
 
 export const userApi = {
@@ -79,5 +76,9 @@ export const userApi = {
 
   logout: async (): Promise<LogoutResponse> => {
     await api.post<LogoutResponse>('/auth/logout')
-  } 
+  },
+  userProfile: async (userName: string) => {
+    const response = await api.get<UserProfileResponse>(`/users/${userName}`)
+    return response.data
+  }
 }

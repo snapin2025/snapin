@@ -5,11 +5,12 @@ import { Button, Typography, Textarea } from '@/shared/ui'
 import { ArrowLeft } from '@/shared/ui/icons/ArrowLeft'
 import { useAuth } from '@/shared/lib'
 import { PostImageSlider } from '@/shared/lib/post-image-slider/post-image-slider'
-import { ImagePost } from '@/entities/posts/types'
+
 import s from './PublicationStep.module.css'
 import { AddLocation } from '@/widgets'
-import Avatar from '../../../shared/ui/Avatar/Avatar'
+import Avatar from '../../../../shared/ui/Avatar/Avatar'
 import { CharacterCounter } from '@/shared/ui/character-counter'
+import { ImagePost } from '@/entities/posts/api/types'
 
 type ImageItem = {
   id: string

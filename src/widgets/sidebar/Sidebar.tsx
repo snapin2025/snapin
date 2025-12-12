@@ -11,7 +11,7 @@ import s from './sidebar.module.css'
 import { ROUTES } from '@/shared/lib/routes'
 import { LogoutButton } from '@/features/auth/logout'
 import { useAuth } from '@/shared/lib'
-import { CreatePostDialog } from '@/features/create-post/ui/CreatePostDialog'
+import { CreatePostDialog } from '@/features/posts/create-post/ui/CreatePostDialog'
 import { PlusSquare } from '@/shared/ui/icons/PlusSquare'
 import { TrendingIcon } from '@/shared/ui/icons/TrendingIcon'
 

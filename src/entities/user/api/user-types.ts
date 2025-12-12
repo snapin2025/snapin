@@ -4,6 +4,23 @@ export type User = {
   email: string
   isBlocked: boolean
 }
+export type UserProfileResponse = {
+  id: number
+  userName: string
+  firstName: string
+  lastName: string
+  city: string
+  country: string
+  region: string
+  dateOfBirth: string
+  aboutMe: string
+  avatars: Avatar[]
+  isFollowing: boolean
+  isFollowedBy: boolean
+  followingCount: number
+  followersCount: number
+  publicationsCount: number
+}
 
 export type SignInRequest = {
   email: string
@@ -90,48 +107,10 @@ export type EmailResendingErrorResponse = {
 export type TotalCountUsersResponse = {
   totalCount: number
 }
-export type CreatePostPayload = {
-  description: string
-  location?: string
-  childrenMetadata: {
-    uploadId: string
-  }[]
-}
-export type CreatePostResponse = {
-  id: number
-  userName: string
-  description: string
-  location: string
-  images: {
-    url: string
-    width: number
-    height: number
-    fileSize: number
-    createdAt: string
-    uploadId: string
-  }[]
+export type Avatar = {
+  url: string
+  width: number
+  height: number
+  fileSize: number
   createdAt: string
-  updatedAt: string
-  ownerId: number
-  avatarOwner: string
-  owner: {
-    firstName: string
-    lastName: string
-  }
-  likesCount: number
-  isLiked: boolean
-  avatarWhoLikes: boolean
-}
-export type PostImagesPayload = {
-  files: File[]
-}
-export type PostImagesResponse = {
-  images: {
-    url: string
-    width: number
-    height: number
-    fileSize: number
-    createdAt: string
-    uploadId: string
-  }[]
 }

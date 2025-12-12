@@ -1,7 +1,7 @@
 // EditPostForm.stories.tsx
 import { EditPostForm } from './EditPostForm'
 import { Meta } from '@storybook/nextjs'
-import { EditPostButton } from '@/features/edit-post'
+import { EditPostButton } from '@/features/posts/edit-post'
 
 const meta: Meta<typeof EditPostForm> = {
   title: 'Components/EditPostForm',

@@ -1,6 +1,6 @@
 'use client'
 import s from './homePostsList.module.css'
-import { Post } from '@/entities/posts/types'
+
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -9,6 +9,7 @@ import { Button, Typography } from '@/shared/ui'
 import { getTimeDifference } from '@/shared/lib/getTimeDifference'
 import { Avatar } from '@/shared/ui/Avatar'
 import { PostImageSlider } from '@/shared/lib/post-image-slider'
+import { Post } from '@/entities/posts/api/types'
 
 type Props = {
   post: Post

@@ -1,9 +1,8 @@
-import { ResponsesPosts } from '@/entities/posts/types'
-
 import s from './homePage.module.css'
 import { RegisteredUsers } from '@/widgets/registeredUsers/RegisteredUsers'
 import { HomePostsList } from '@/widgets'
 import { PostsCacheProvider } from '@/widgets/homePostsList/ui/PostsCacheProvider'
+import { ResponsesPosts } from '@/entities/posts/api/types'
 // SSG: Страница будет статически сгенерирована на этапе сборки
 // ISR: Страница будет перегенерирована каждые 60 секунд при запросах
 export const revalidate = 60
@@ -20,8 +19,8 @@ const defaultPostsData: ResponsesPosts = {
 }
 
 export const HomePage = async () => {
-  // const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inctagram.work/api/v1'
-  const apiUrl = 'https://inctagram.work/api/v1'
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inctagram.work/api/v1'
+  // const apiUrl = 'https://inctagram.work/api/v1'
 
   // Делаем два запроса параллельно для SSG
   // fetch не бросает исключения для HTTP ошибок, только для сетевых

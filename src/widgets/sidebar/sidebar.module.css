@@ -1,14 +1,23 @@
 .container {
-  position: fixed;
-  left: 0;
+  position: sticky;
+  /*left: 0;*/
   top: 60px;
 background-color: var(--color-dark-700);
-  height: 100vh;
+  height: calc(100vh - 60px);
   z-index: 10;
   overflow-y: auto;
-  border-top: 1px solid var(--color-dark-300);
+
   border-right: 1px solid var(--color-dark-300);
+  flex-shrink: 0;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
 }
+
+.container::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
 
 .content {
   width: 160px;

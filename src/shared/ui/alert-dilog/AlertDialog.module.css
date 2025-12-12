@@ -3,6 +3,7 @@
   opacity: 0.6;
   position: fixed;
   inset: 0;
+  z-index: 60;
 }
 
 .container {
@@ -12,7 +13,7 @@
   transform: translate(-50%, -50%);
   display: grid;
   grid-template-rows: repeat(2, auto);
-
+  z-index: 61;
 }
 
 .content {
