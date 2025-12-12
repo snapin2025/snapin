@@ -1,14 +1,21 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { useCallback } from 'react'
-import { Dialog, DialogContent } from '@/shared/ui/modal'
+import { useCallback, useState } from 'react'
+import { Dialog, DialogContent, DialogClose } from '@/shared/ui/modal'
 
-import { Avatar, Spinner } from '@/shared/ui'
-import { getTimeDifference } from '@/shared/lib/getTimeDifference'
+import { Avatar, Spinner, Close, Typography, Button } from '@/shared/ui'
+
 import { PostImageSlider } from '@/shared/lib/post-image-slider'
+
 import s from './PostModal.module.css'
-import { usePost } from '@/entities/posts/usePost'
+import { useAuth } from '@/shared/lib'
+import { CommentsList } from '@/features/posts/comments'
+import { usePost } from '@/entities/posts/model/usePost'
+import DropMenu from '../../shared/ui/dropdown/DropMenu'
+import { AlertAction, AlertCancel, AlertDescription, AlertDialog } from '@/shared/ui/alert-dilog'
+import { useDeletePost } from '@/features/posts/delete-post/api'
+import { EditPostForm } from '@/features/posts/edit-post/ui/EditPostForm'
 
 type PostModalProps = {
   postId: number
@@ -26,16 +33,23 @@ type PostModalProps = {
  */
 export const PostModal = ({ postId }: PostModalProps) => {
   const router = useRouter()
-  const { data: post, isLoading, error } = usePost(postId)
+  const { user } = useAuth()
+  const [isEditOpen, setIsEditOpen] = useState(false)
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false)
+  const [isDeletingPost, setIsDeletingPost] = useState(false)
+  const { mutate: deletePost, isPending: isDeleting } = useDeletePost()
+
+  // Отключаем запрос поста если он удаляется
+  const { data: post, isLoading, error } = usePost(postId, { enabled: !isDeletingPost })
 
   // Закрытие модального окна с возвратом на предыдущую страницу
   const handleOpenChange = useCallback(
     (open: boolean) => {
-      if (!open) {
+      if (!open && !isEditOpen) {
         router.back()
       }
     },
-    [router]
+    [router, isEditOpen]
   )
 
   if (isLoading) {
@@ -45,7 +59,10 @@ export const PostModal = ({ postId }: PostModalProps) => {
   if (error) {
     return (
       <Dialog open={true} onOpenChange={handleOpenChange}>
-        <DialogContent showCloseButton={true} className={s.modalContent}>
+        <DialogContent showCloseButton={false} className={s.modalContent}>
+          <DialogClose className={s.closeButton} aria-label="Закрыть">
+            <Close />
+          </DialogClose>
           <div className={s.error}>
             <p>Ошибка загрузки поста</p>
             <button type="button" onClick={() => router.back()} className={s.errorButton}>
@@ -62,8 +79,12 @@ export const PostModal = ({ postId }: PostModalProps) => {
   }
 
   return (
-    <Dialog open={true} onOpenChange={handleOpenChange}>
-      <DialogContent className={s.modalContent}>
+    <Dialog open={!isEditOpen} onOpenChange={handleOpenChange}>
+      <DialogContent showCloseButton={false} className={s.modalContent}>
+        {/* Кнопка закрытия справа вверху */}
+        <DialogClose className={s.closeButton} aria-label="Закрыть">
+          <Close />
+        </DialogClose>
         <div className={s.postContainer}>
           {/* Левая часть - карусель изображений */}
           <div className={s.imageSection}>
@@ -80,29 +101,28 @@ export const PostModal = ({ postId }: PostModalProps) => {
 
           {/* Правая часть - комментарии и информация */}
           <div className={s.sidebar}>
-            {/* Заголовок с информацией о пользователе */}
-            <header className={s.sidebarHeader}>
-              <div className={s.userInfo}>
+            <div className={s.description}>
+              <div className={s.avatar}>
                 <Avatar src={post.avatarOwner} alt={post.userName} size="small" />
+                <Typography variant="h3" className={s.descriptionUser}>
+                  {post.userName}
+                </Typography>
+              </div>
+              {user?.userId && (
                 <div>
-                  <p className={s.userName}>{post.userName}</p>
-                  <p className={s.postDate}>{getTimeDifference(post.createdAt, 'ru')}</p>
+                  <DropMenu
+                    onEdit={() => setIsEditOpen(true)}
+                    onDelete={() => setIsDeleteOpen(true)}
+                    ownerId={post.ownerId}
+                    currentUserId={user?.userId ?? null}
+                  />
                 </div>
-              </div>
-            </header>
+              )}
+            </div>
 
-            {/* Описание поста */}
-            {post.description && (
-              <div className={s.description}>
-                <span className={s.descriptionUser}>{post.userName}</span>
-                <span className={s.descriptionText}>{post.description}</span>
-              </div>
-            )}
-
-            {/* Комментарии (заглушка - здесь будет реальный компонент комментариев) */}
+            {/* Комментарии */}
             <section className={s.comments} aria-label="Комментарии">
-              {/*  Добавить реальные комментарии через API */}
-              <div className={s.commentPlaceholder}>Комментарии будут здесь</div>
+              <CommentsList postId={post.id} user={user?.userId} />
             </section>
 
             {/* Футер с лайками и датой */}
@@ -118,7 +138,7 @@ export const PostModal = ({ postId }: PostModalProps) => {
                 </div>
               )}
 
-              <p className={s.likesCount}>{post.likesCount.toLocaleString('ru-RU')} отметок «Нравится»</p>
+              <p className={s.likesCount}>{post.likesCount.toLocaleString('ru-RU')} Likes </p>
 
               <p className={s.timestamp}>
                 {new Date(post.createdAt).toLocaleDateString('ru-RU', {
@@ -129,21 +149,49 @@ export const PostModal = ({ postId }: PostModalProps) => {
               </p>
 
               {/* Поле для добавления комментария */}
-              <div className={s.addComment}>
-                <input
-                  type="text"
-                  placeholder="Добавьте комментарий..."
-                  className={s.commentInput}
-                  aria-label="Поле для ввода комментария"
-                />
-                <button type="button" className={s.commentSubmit} aria-label="Опубликовать комментарий">
-                  Опубликовать
-                </button>
-              </div>
             </footer>
           </div>
         </div>
       </DialogContent>
+      <AlertDialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen} title="Удалить пост">
+        <AlertDescription asChild>
+          <p style={{ textAlign: 'left' }}>Вы уверены, что хотите удалить этот пост? Это действие нельзя отменить.</p>
+        </AlertDescription>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 16 }}>
+          <AlertCancel asChild>
+            <Button variant="outlined" onClick={() => setIsDeleteOpen(false)}>
+              Отмена
+            </Button>
+          </AlertCancel>
+          <AlertAction asChild>
+            <Button
+              variant="primary"
+              onClick={() => {
+                setIsDeletingPost(true)
+                deletePost(postId, {
+                  onSuccess: () => {
+                    router.back()
+                  },
+                  onError: () => {
+                    setIsDeletingPost(false)
+                  }
+                })
+              }}
+            >
+              {isDeleting ? 'Удаление...' : 'Удалить'}
+            </Button>
+          </AlertAction>
+        </div>
+      </AlertDialog>
+      <EditPostForm
+        isOpen={isEditOpen}
+        onClose={() => setIsEditOpen(false)}
+        postId={post.id}
+        userName={post.userName}
+        userAvatar={post.avatarOwner}
+        postImage={post.images[0]?.url}
+        initialDescription={post.description}
+      />
     </Dialog>
   )
 }

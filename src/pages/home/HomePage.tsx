@@ -1,9 +1,8 @@
-import { ResponsesPosts } from '@/entities/posts/types'
-
 import s from './homePage.module.css'
 import { RegisteredUsers } from '@/widgets/registeredUsers/RegisteredUsers'
 import { HomePostsList } from '@/widgets'
 import { PostsCacheProvider } from '@/widgets/homePostsList/ui/PostsCacheProvider'
+import { ResponsesPosts } from '@/entities/posts/api/types'
 // SSG: Страница будет статически сгенерирована на этапе сборки
 // ISR: Страница будет перегенерирована каждые 60 секунд при запросах
 export const revalidate = 60
@@ -45,7 +44,6 @@ export const HomePage = async () => {
 
   // Ограничиваем количество постов на сервере (лучше для SSG)
   const limitedPosts = postsData.items.slice(0, 4)
-  console.log('API URL:', process.env.NEXT_PUBLIC_API_URL)
 
   return (
     <PostsCacheProvider posts={limitedPosts}>

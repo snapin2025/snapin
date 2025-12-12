@@ -4,6 +4,23 @@ export type User = {
   email: string
   isBlocked: boolean
 }
+export type UserProfileResponse = {
+  id: number
+  userName: string
+  firstName: string
+  lastName: string
+  city: string
+  country: string
+  region: string
+  dateOfBirth: string
+  aboutMe: string
+  avatars: Avatar[]
+  isFollowing: boolean
+  isFollowedBy: boolean
+  followingCount: number
+  followersCount: number
+  publicationsCount: number
+}
 
 export type SignInRequest = {
   email: string
@@ -89,4 +106,11 @@ export type EmailResendingErrorResponse = {
 
 export type TotalCountUsersResponse = {
   totalCount: number
+}
+export type Avatar = {
+  url: string
+  width: number
+  height: number
+  fileSize: number
+  createdAt: string
 }

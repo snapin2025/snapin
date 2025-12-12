@@ -1,4 +1,3 @@
-
 .container {
   width: 100%;
   display: flex;
@@ -9,9 +8,9 @@
 .label {
   display: block;
   font-size: var(--font-size-s);
-  line-height: var( --line-height-m);
+  line-height: var(--line-height-m);
   font-weight: var(--font-weight-regular);
-  color: #8D9094;
+  color: #8d9094;
   margin-bottom: 2px;
 }
 
@@ -38,14 +37,13 @@
 
 .textarea:focus {
   outline: none;
-  border-color: var( --color-light-100);
-  color: var( --color-light-100);
+  border-color: var(--color-light-100);
+  color: var(--color-light-100);
 }
-
 
 /* Error */
 .errorCard {
-  color: var( --color-light-100);
+  color: var(--color-light-100);
   border-color: var(--color-danger-500);
 }
 
@@ -64,7 +62,7 @@
   background: transparent;
   font-size: 16px;
   line-height: 24px;
-  color: #8D9094;
+  color: #8d9094;
   resize: vertical;
   outline: none;
   font-weight: 400;

@@ -1,11 +1,12 @@
 'use client'
 
-import { Button, Confirmed, Spinner, Typography } from '@/shared/ui'
+import { Button, Spinner, Typography } from '@/shared/ui'
 import Link from 'next/link'
 import s from './ConfirmPage.module.css'
 import { notFound, useSearchParams } from 'next/navigation'
 import { useCheckConfirmCode } from '@/pages/auth/confirm/api/useCheckConfirmCode'
 import { EmailResending } from '@/pages/auth/EmailResending/ui/EmailResending'
+import { Confirmed } from '@/shared/ui/icons/Confirmed'
 
 export function ConfirmPage() {
   const params = useSearchParams()

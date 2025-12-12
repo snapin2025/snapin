@@ -1,16 +1,19 @@
 'use client'
 
-import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useState, type MouseEvent } from 'react'
 import { clsx } from 'clsx'
 
-import { Bookmark, Home, Message, PlusSquare, Profile, Search, TrendingIcon } from '@/shared/ui'
+import { Bookmark, Home, Message, Profile, Search } from '@/shared/ui'
 
 import s from './sidebar.module.css'
 import { ROUTES } from '@/shared/lib/routes'
 import { LogoutButton } from '@/features/auth/logout'
 import { useAuth } from '@/shared/lib'
+import { CreatePostDialog } from '@/features/posts/create-post/ui/CreatePostDialog'
+import { PlusSquare } from '@/shared/ui/icons/PlusSquare'
+import { TrendingIcon } from '@/shared/ui/icons/TrendingIcon'
 
 type NavItem = {
   name: string
@@ -22,16 +25,17 @@ type NavItem = {
 export const Sidebar = () => {
   const pathname = usePathname()
   const { user } = useAuth()
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
 
-  const openNewPublication = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault()
-    setIsCreateModalOpen(true)
+  const [isCreateOpen, setIsCreateOpen] = useState(false)
+
+  const handleCreateClick = (event: MouseEvent) => {
+    event.preventDefault()
+    setIsCreateOpen(true)
   }
 
   const navItems: NavItem[] = [
     { name: 'Feed', href: ROUTES.HOME, icon: Home },
-    { name: 'Create', icon: PlusSquare, onClick: openNewPublication },
+    { name: 'Create', icon: PlusSquare, onClick: handleCreateClick },
     { name: 'My Profile', href: user ? ROUTES.APP.USER_PROFILE(user.userId) : '#', icon: Profile },
     { name: 'Messenger', href: ROUTES.APP.MESSENGER, icon: Message },
     { name: 'Search', href: ROUTES.APP.SEARCH, icon: Search },
@@ -68,6 +72,7 @@ export const Sidebar = () => {
             )
           })}
           <LogoutButton className={s.logout} />
+          {isCreateOpen && <CreatePostDialog open={isCreateOpen} onOpenChange={setIsCreateOpen} />}
         </div>
       </nav>
     </>

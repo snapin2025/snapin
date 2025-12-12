@@ -5,7 +5,7 @@ export const AuthLayout = ({ children }: { children: ReactNode }) => {
   return (
     <>
       <Header />
-      <main>{children}</main>
+      <main style={{ marginTop: '24px' }}>{children}</main>
     </>
   )
 }

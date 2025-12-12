@@ -28,9 +28,8 @@
 // }
 'use client'
 
-import Image from 'next/image'
 import s from './PostCard.module.css'
-import { Card } from '@/shared/ui'
+import { Avatar, Card } from '@/shared/ui'
 
 type PostCardProps = {
   userName: string
@@ -43,8 +42,7 @@ export function PostCard({ userName, avatar, className = '' }: PostCardProps) {
     <Card className={`${s.postCard} ${className}`}>
       {/* Всё в одном div с классом s.card */}
       <div className={s.card}>
-        <Image src={avatar} alt={`${userName}'s Avatar`} width={36} height={36} className={s.avatar} />
-
+        <Avatar src={avatar} alt={userName} size="small" />
         {/*  имя пользователя */}
         <span className={s.userName}>{userName}</span>
       </div>

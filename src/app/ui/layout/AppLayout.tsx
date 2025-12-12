@@ -9,6 +9,7 @@ import { ROUTES } from '@/shared/lib/routes'
 import { Sidebar } from '@/widgets/sidebar/Sidebar'
 
 import s from './appLayout.module.css'
+import clsx from 'clsx'
 
 export const AppLayout = ({ children }: { children?: ReactNode }) => {
   const { user, isLoading } = useAuth()
@@ -40,9 +41,10 @@ export const AppLayout = ({ children }: { children?: ReactNode }) => {
         </Header>
       )}
 
-      {isAuth && <Sidebar />}
-
-      <main >{children}</main>
+      <div className={s.contentWithSidebar}>
+        {isAuth && <Sidebar />}
+        <main className={clsx(isAuth ? s.main : s.post)}>{children}</main>
+      </div>
     </div>
   )
 }
