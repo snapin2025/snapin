@@ -28,6 +28,7 @@
     "react-dom": "19.1.0",
     "react-google-recaptcha": "^3.1.0",
     "react-hook-form": "^7.65.0",
+    "react-image-crop": "^11.0.10",
     "zod": "^4.1.12"
   },
   "devDependencies": {

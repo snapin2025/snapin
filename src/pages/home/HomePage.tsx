@@ -45,7 +45,6 @@ export const HomePage = async () => {
 
   // Ограничиваем количество постов на сервере (лучше для SSG)
   const limitedPosts = postsData.items.slice(0, 4)
-  console.log('API URL:', process.env.NEXT_PUBLIC_API_URL)
 
   return (
     <PostsCacheProvider posts={limitedPosts}>

@@ -4,9 +4,13 @@ import {
   CheckRecoveryCodeResponse,
   ConfirmErrorResponse,
   ConfirmRequest,
+  CreatePostPayload,
+  CreatePostResponse,
   EmailResendingErrorResponse,
   EmailResendingRequest,
   LogoutResponse,
+  PostImagesPayload,
+  PostImagesResponse,
   ResendRecoveryEmailType,
   SendRecoveryEmailType,
   SetNewPasswordType,
@@ -75,5 +79,5 @@ export const userApi = {
 
   logout: async (): Promise<LogoutResponse> => {
     await api.post<LogoutResponse>('/auth/logout')
-  }
+  } 
 }
