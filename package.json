@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
-    "build:production": "npm run build",
+    "build:production": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
     "storybook": "storybook dev -p 6006",
@@ -28,6 +28,7 @@
     "react-dom": "19.1.0",
     "react-google-recaptcha": "^3.1.0",
     "react-hook-form": "^7.65.0",
+    "react-image-crop": "^11.0.10",
     "zod": "^4.1.12"
   },
   "devDependencies": {
