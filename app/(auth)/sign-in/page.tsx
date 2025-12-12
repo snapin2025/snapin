@@ -1,1 +1,1 @@
-export { SignInPage as default } from '@/pages/auth/sign-in'
+export { SignInPage as default, metadata } from '@/pages/auth/sign-in'
