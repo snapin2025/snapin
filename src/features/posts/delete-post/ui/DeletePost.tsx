@@ -2,7 +2,7 @@ import React from 'react'
 import { Button, Spinner, TrashOutline, Typography } from '@/shared/ui'
 import { AlertAction, AlertCancel, AlertDescription, AlertDialog } from '@/shared/ui/alert-dilog'
 import s from './DeletePost.module.css'
-import { useDeletePost } from '@/features/delete-post/api'
+import { useDeletePost } from '@/features/posts/delete-post/api'
 
 export const DeletePost = (id: string) => {
   const { mutate: deletePost, isPending } = useDeletePost()

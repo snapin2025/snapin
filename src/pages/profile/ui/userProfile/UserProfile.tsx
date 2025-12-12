@@ -1,62 +1,90 @@
 'use client'
 
-import { useMemo } from 'react'
+import { useMemo, useRef } from 'react'
 import Link from 'next/link'
 import s from './userProfile.module.css'
 
 import { ButtonContainer, profileOwner } from './ButtonContainer'
 import { PostImageSlider } from '@/shared/lib/post-image-slider'
-import { useAuth } from '@/shared/lib'
-import { useQuery } from '@tanstack/react-query'
-import { postsApi } from '@/entities/posts/api/posts'
-import { Post, ResponsesPosts } from '@/entities/posts/api/types'
-import { Avatar, Spinner, Typography } from '@/shared/ui'
+import { Avatar, Typography, PostSkeleton } from '@/shared/ui'
+import { UserProfileResponse } from '@/entities/user/api/user-types'
+import { InfiniteData } from '@tanstack/react-query'
+import { ResponsesPosts } from '@/entities/posts/api/types'
+import { useInfiniteScroll } from '@/shared/lib'
 
 type Props = {
-  userId: number
   profileOwner: profileOwner
-  /**
-   * Опциональное описание профиля (например, из настроек).
-   */
   bio?: string
-  /**
-   * Отображаемое имя (если нужно перекрыть userName из useAuth).
-   */
   displayName?: string
-  /**
-   * Кастомный аватар, если приходит вместе с профилем.
-   */
   avatarUrl?: string
+  profileData?: UserProfileResponse | null
+  postsData?: InfiniteData<ResponsesPosts>
+  isPostsLoading?: boolean
+  isPostsFetching?: boolean
+  isFetchingNextPage?: boolean
+  isPostsError?: boolean
+  postsError?: Error | null
+  refetchPosts?: () => void
+  fetchNextPage?: () => void
+  hasNextPage?: boolean
 }
 
-export const UserProfile = ({ userId, profileOwner, bio, displayName, avatarUrl }: Props) => {
-  const { user } = useAuth()
-  const name = displayName || user?.userName || 'User'
+export const UserProfile = ({
+  profileOwner,
+  bio,
+  displayName,
+  avatarUrl,
+  profileData,
+  postsData,
+  isPostsLoading = false,
+  isFetchingNextPage = false,
+  isPostsError = false,
+  postsError,
+  refetchPosts,
+  fetchNextPage,
+  hasNextPage = false
+}: Props) => {
+  const name = displayName || 'User'
+  const observerTarget = useRef<HTMLDivElement>(null)
 
-  const { data, isLoading, isFetching, isError, error, refetch } = useQuery<ResponsesPosts>({
-    queryKey: ['user-posts', userId],
-    queryFn: () => postsApi.getUserPosts(userId),
+  // Объединяем все страницы постов в один массив
+  // Мемоизируем, чтобы избежать пересчета при каждом рендере
+  const allPosts = useMemo(() => postsData?.pages.flatMap((page) => page.items) ?? [], [postsData?.pages])
 
-    staleTime: 60_000
-  })
-
+  // Используем данные из profileData для статистики, если они доступны
+  // Мемоизируем, чтобы избежать пересчета при каждом рендере
   const stats = useMemo(
     () => ({
-      following: 0, // нет явного эндпоинта — выводим placeholder до появления API
-      followers: 0,
-      publications: data?.totalCount
+      following: profileData?.followingCount ?? 0,
+      followers: profileData?.followersCount ?? 0,
+      publications: profileData?.publicationsCount ?? postsData?.pages[0]?.totalCount ?? 0
     }),
-    [data?.items]
+    [profileData?.followingCount, profileData?.followersCount, profileData?.publicationsCount, postsData?.pages]
   )
 
+  // Обработка бесконечной прокрутки через Intersection Observer
+  useInfiniteScroll({
+    targetRef: observerTarget,
+    hasNextPage: hasNextPage ?? false,
+    isFetchingNextPage,
+    fetchNextPage: fetchNextPage ?? (() => {}),
+    threshold: 0.1,
+    rootMargin: '10px'
+  })
+
+  // Простые вычисления - React 19 оптимизирует их автоматически
+  // Оставляем мемоизацию только для дорогих операций (allPosts) и объектов (stats)
   const profileDescription =
     bio ??
+    profileData?.aboutMe ??
     'Расскажите о себе в настройках профиля. Это поле можно обновить в разделе Profile settings — пользователи увидят его здесь.'
+
+  const finalAvatarUrl = avatarUrl || profileData?.avatars?.[0]?.url
 
   return (
     <section className={s.page}>
       <div className={s.header}>
-        <Avatar src={avatarUrl} alt={`${name} avatar`} size="large" />
+        <Avatar src={finalAvatarUrl} alt={`${name} avatar`} size="large" />
 
         <div className={s.summary}>
           <div className={s.titleRow}>
@@ -68,11 +96,11 @@ export const UserProfile = ({ userId, profileOwner, bio, displayName, avatarUrl 
 
           <div className={s.stats}>
             <div className={s.statCard}>
-              <span className={s.statValue}>{stats.following.toLocaleString('ru-RU')}</span>
+              <span className={s.statValue}>{stats.following}</span>
               <span className={s.statLabel}>Following</span>
             </div>
             <div className={s.statCard}>
-              <span className={s.statValue}>{stats.followers.toLocaleString('ru-RU')}</span>
+              <span className={s.statValue}>{stats.followers}</span>
               <span className={s.statLabel}>Followers</span>
             </div>
             <div className={s.statCard}>
@@ -91,37 +119,49 @@ export const UserProfile = ({ userId, profileOwner, bio, displayName, avatarUrl 
       </div>
 
       <div className={s.postsSection}>
-        <div className={s.titleRow} style={{ gap: 8 }}>
-          {isFetching && !isLoading && <Spinner inline size={16} />}
-        </div>
-
-        {isError && (
+       {isPostsError && (
           <div className={s.error}>
-            Не удалось загрузить посты: {(error as Error)?.message || 'попробуйте позже'}
+            Не удалось загрузить посты: {postsError?.message || 'попробуйте позже'}
             <br />
-            <button onClick={() => refetch()}>Повторить</button>
+            {refetchPosts && (
+              <button type="button" onClick={() => refetchPosts()}>
+                Повторить
+              </button>
+            )}
           </div>
         )}
 
-        {isLoading ? (
-          <div className={s.loader}>
-            <Spinner />
-          </div>
-        ) : data?.items.length ? (
-          <div className={s.grid}>
-            {data.items.map((post) => (
-              <div key={post.id} className={s.postCard}>
-                <div className={s.postContent}>
-                  <PostImageSlider
-                    images={post.images}
-                    postId={post.id}
-                    ownerId={post.ownerId}
-                    description={post.description}
-                  />
+        {isPostsLoading ? (
+          <div className={s.loader}>{/* <Spinner /> */}</div>
+        ) : allPosts.length > 0 ? (
+          <>
+            <div className={s.grid}>
+              {allPosts.map((post) => (
+                <div key={post.id} className={s.postCard}>
+                  <div className={s.postContent}>
+                    <PostImageSlider
+                      images={post.images}
+                      postId={post.id}
+                      ownerId={post.ownerId}
+                      description={post.description}
+                    />
+                  </div>
                 </div>
+              ))}
+            </div>
+            {/* Элемент для отслеживания скролла и загрузки следующей страницы */}
+            {hasNextPage && (
+              <div ref={observerTarget} className={s.skeletonContainer} aria-label="Загрузка следующих постов">
+                {isFetchingNextPage && (
+                  <div className={s.grid}>
+                    <PostSkeleton count={8} />
+                  </div>
+                )}
               </div>
-            ))}
-          </div>
+            )}
+            {/* Отступ внизу, когда все посты загружены */}
+            {!hasNextPage && allPosts.length > 0 && <div className={s.bottomSpacer} />}
+          </>
         ) : (
           <div className={s.emptyState}>У пользователя пока нет публикаций</div>
         )}

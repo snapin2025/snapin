@@ -14,8 +14,8 @@ import { CommentsList } from '@/features/posts/comments'
 import { usePost } from '@/entities/posts/model/usePost'
 import DropMenu from '../../shared/ui/dropdown/DropMenu'
 import { AlertAction, AlertCancel, AlertDescription, AlertDialog } from '@/shared/ui/alert-dilog'
-import { useDeletePost } from '@/features/delete-post/api'
-import { EditPostForm } from '@/features/edit-post/ui/EditPostForm'
+import { useDeletePost } from '@/features/posts/delete-post/api'
+import { EditPostForm } from '@/features/posts/edit-post/ui/EditPostForm'
 
 type PostModalProps = {
   postId: number
@@ -105,7 +105,7 @@ export const PostModal = ({ postId }: PostModalProps) => {
                   {post.userName}
                 </Typography>
               </div>
-              {user?.userId === post.ownerId && (
+              {user?.userId && (
                 <div>
                   <DropMenu
                     onEdit={() => setIsEditOpen(true)}

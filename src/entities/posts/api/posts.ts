@@ -30,8 +30,30 @@ export const postsApi = {
     return data
   },
 
-  getUserPosts: async (userId: number): Promise<ResponsesPosts> => {
-    const { data } = await api.get<ResponsesPosts>(`/posts/user/${userId}`)
+  /**
+   * Получение постов конкретного пользователя с cursor-based пагинацией.
+   * Бэкенд использует endCursorPostId для пагинации (ID последнего загруженного поста).
+   *
+   * @param userId - ID пользователя
+   * @param pageSize - Размер страницы (по умолчанию 8)
+   * @param endCursorPostId - ID последнего загруженного поста (опционально, для следующей страницы)
+   */
+  getUserPosts: async (
+    userId: number,
+    pageSize: number = 8,
+    endCursorPostId?: number
+  ): Promise<ResponsesPosts> => {
+    // Если endCursorPostId не передан, делаем первый запрос без cursor
+    // Если передан, используем его в path для получения следующих постов
+    const url = endCursorPostId
+      ? `/posts/user/${userId}/${endCursorPostId}`
+      : `/posts/user/${userId}`
+
+    const { data } = await api.get<ResponsesPosts>(url, {
+      params: {
+        pageSize
+      }
+    })
 
     return data
   }
