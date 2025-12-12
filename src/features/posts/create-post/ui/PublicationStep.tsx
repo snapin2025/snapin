@@ -8,7 +8,7 @@ import { PostImageSlider } from '@/shared/lib/post-image-slider/post-image-slide
 import { ImagePost } from '@/entities/posts/types'
 import s from './PublicationStep.module.css'
 import { AddLocation } from '@/widgets'
-import Avatar from '../../../shared/ui/Avatar/Avatar'
+import Avatar from '../../../../shared/ui/Avatar/Avatar'
 import { CharacterCounter } from '@/shared/ui/character-counter'
 
 type ImageItem = {

@@ -2,17 +2,21 @@
 // entities/post/api/posts.ts
 
 import { api } from '@/shared/api'
-import { Post } from '@/entities/posts/types'
+
 import {
+  CommentsResponse,
   CreatePostPayload,
   CreatePostResponse,
+  EditPost,
+  GetCommentsParams,
+  Post,
   PostImagesPayload,
-  PostImagesResponse
-} from '@/entities/user/api/user-types'
-import { CommentsResponse, EditPost, GetCommentsParams, Post, ResponsesPosts } from '@/entities/posts/api/types'
+  PostImagesResponse,
+  ResponsesPosts
+} from '@/entities/posts/api/types'
 
 export const postsApi = {
-  deletePost: async (id: string): Promise<void> => {
+  deletePost: async (id: number): Promise<void> => {
     await api.delete<void>(`/posts/${id}`)
   },
   editPost: async ({ postId, description }: EditPost) => {
@@ -34,6 +38,7 @@ export const postsApi = {
         sortBy: sortBy ?? ''
       }
     })
+    return data
   },
   createPost: async (payload: CreatePostPayload): Promise<CreatePostResponse> => {
     const { data } = await api.post<CreatePostResponse>('/posts', payload)
@@ -52,7 +57,6 @@ export const postsApi = {
       }
     })
     return data
-    return data
   },
 
   /**
@@ -63,16 +67,10 @@ export const postsApi = {
    * @param pageSize - Размер страницы (по умолчанию 8)
    * @param endCursorPostId - ID последнего загруженного поста (опционально, для следующей страницы)
    */
-  getUserPosts: async (
-    userId: number,
-    pageSize: number = 8,
-    endCursorPostId?: number
-  ): Promise<ResponsesPosts> => {
+  getUserPosts: async (userId: number, pageSize: number = 8, endCursorPostId?: number): Promise<ResponsesPosts> => {
     // Если endCursorPostId не передан, делаем первый запрос без cursor
     // Если передан, используем его в path для получения следующих постов
-    const url = endCursorPostId
-      ? `/posts/user/${userId}/${endCursorPostId}`
-      : `/posts/user/${userId}`
+    const url = endCursorPostId ? `/posts/user/${userId}/${endCursorPostId}` : `/posts/user/${userId}`
 
     const { data } = await api.get<ResponsesPosts>(url, {
       params: {
