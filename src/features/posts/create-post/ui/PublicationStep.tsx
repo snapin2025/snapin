@@ -11,7 +11,7 @@ import { AddLocation } from '@/widgets'
 import Avatar from '../../../../shared/ui/Avatar/Avatar'
 import { CharacterCounter } from '@/shared/ui/character-counter'
 import { ImagePost } from '@/entities/posts/api/types'
-import { useUserProfile } from '@/pages/profile/api'
+import { useUserProfile } from '@/entities/user'
 
 type ImageItem = {
   id: string
@@ -134,7 +134,7 @@ export const PublicationStep: React.FC<Props> = ({
           <div className={s.profile}>
             <Avatar
               alt={user?.userName || 'User'}
-              src={profileData?.avatars?.[0]?.url ?? ''}
+              src={profileData?.avatars[0]?.url || ''}
               size="medium"
               withStatus={false}
             />

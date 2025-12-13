@@ -1,4 +1,4 @@
-import { PostModal } from '@/pages/post'
+import { PostModal } from '@/features/posts'
 
 /**
  * Intercepting Route для модального окна поста

@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import { PostModal } from '@/pages/post'
+import { PostModal } from '@/features/posts'
 
 export const metadata: Metadata = { title: 'Post' }
 

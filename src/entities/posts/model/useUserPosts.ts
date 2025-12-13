@@ -1,7 +1,7 @@
 'use client'
 
 import { useInfiniteQuery } from '@tanstack/react-query'
-import { postsApi } from '@/entities/posts/api/posts'
+import { postsApi } from '../api/posts'
 
 type UseUserPostsParams = {
   userId: number
@@ -47,3 +47,4 @@ export const useUserPosts = ({ userId, pageSize = 8 }: UseUserPostsParams) => {
     refetchOnReconnect: true // Обновлять при восстановлении соединения
   })
 }
+

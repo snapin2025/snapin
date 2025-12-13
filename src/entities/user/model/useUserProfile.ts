@@ -1,8 +1,8 @@
 'use client'
 
 import { useQuery } from '@tanstack/react-query'
-import { userApi } from '@/entities/user/api/user'
-import { UserProfileResponse } from '@/entities/user/api/user-types'
+import { userApi } from '../api/user'
+import { UserProfileResponse } from '../api/user-types'
 
 /**
  * Хук для получения данных профиля пользователя по userName.
