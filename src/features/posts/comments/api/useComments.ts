@@ -7,7 +7,7 @@ import { GetCommentsParams } from '@/entities/posts/api/types'
  * Используется в Client Components
  */
 export const useComments = (params: GetCommentsParams) => {
-  const { postId, pageSize, pageNumber, sortBy, sortDirection } = params
+  const { postId, pageSize } = params
 
   return useQuery({
     queryKey: ['comments', postId, pageSize],

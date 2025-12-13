@@ -47,10 +47,8 @@ export const UserProfile = ({
   const name = displayName || 'User'
   const observerTarget = useRef<HTMLDivElement>(null)
 
-  
   const allPosts = useMemo(() => postsData?.pages.flatMap((page) => page.items) ?? [], [postsData?.pages])
 
-  
   const stats = useMemo(
     () => ({
       following: profileData?.followingCount ?? 0,
@@ -117,7 +115,7 @@ export const UserProfile = ({
       </div>
 
       <div className={s.postsSection}>
-       {isPostsError && (
+        {isPostsError && (
           <div className={s.error}>
             Не удалось загрузить посты: {postsError?.message || 'попробуйте позже'}
             <br />

@@ -59,7 +59,6 @@
 
 /* Кнопки навигации */
 .navButton {
-
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -79,7 +78,6 @@
   padding: 0;
   margin: 0;
   outline: none;
-
 }
 
 .navButton:hover {
@@ -89,7 +87,6 @@
 
 .navButton:active {
   transform: translateY(-50%) scale(1);
-
 }
 
 .navButton:focus-visible {
@@ -149,7 +146,6 @@
   border-radius: 50%;
 }
 
-
 .dotButton:focus-visible {
   outline: 2px solid var(--color-accent-500);
   outline-offset: 2px;
@@ -160,7 +156,9 @@
   width: 6px;
   height: 6px;
   color: var(--color-light-100);
-  transition: color 0.2s ease, transform 0.2s ease;
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
   flex-shrink: 0;
 }
 
@@ -225,4 +223,3 @@
     height: 6px;
   }
 }
-

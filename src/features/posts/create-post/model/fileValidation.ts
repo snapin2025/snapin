@@ -76,9 +76,3 @@ export const formatFileSize = (bytes: number): string => {
 export const getFileUploadHelperText = (): string => {
   return `JPEG/PNG, up to ${MAX_FILE_COUNT} files, max 20MB each`
 }
-
-
-
-
-
-

@@ -16,7 +16,7 @@ type CommentItemProps = {
  * Компонент для отображения одного комментария
  * Показывает аватар, имя пользователя, текст комментария и время создания
  */
-export const CommentItem = ({ comment, user, showLike }: CommentItemProps) => {
+export const CommentItem = ({ comment, showLike }: CommentItemProps) => {
   const userAvatar = comment.from.avatars?.[0]?.url || ''
   const userName = comment.from.username
 

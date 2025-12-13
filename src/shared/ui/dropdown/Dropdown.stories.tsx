@@ -7,4 +7,4 @@ export default {
   }
 }
 
-export const DropMenuStory = () => <DropMenu />
+export const DropMenuStory = () => <DropMenu ownerId={1} />

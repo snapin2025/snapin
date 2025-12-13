@@ -10,12 +10,7 @@
 .skeletonContent {
   width: 100%;
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    var(--color-dark-500) 0%,
-    var(--color-dark-300) 50%,
-    var(--color-dark-500) 100%
-  );
+  background: linear-gradient(90deg, var(--color-dark-500) 0%, var(--color-dark-300) 50%, var(--color-dark-500) 100%);
   background-size: 200% 100%;
   animation: shimmer 1.5s ease-in-out infinite;
 }
@@ -47,12 +42,7 @@
   width: 120px;
   height: 120px;
   border-radius: 50%;
-  background: linear-gradient(
-    90deg,
-    var(--color-dark-500) 0%,
-    var(--color-dark-300) 50%,
-    var(--color-dark-500) 100%
-  );
+  background: linear-gradient(90deg, var(--color-dark-500) 0%, var(--color-dark-300) 50%, var(--color-dark-500) 100%);
   background-size: 200% 100%;
   animation: shimmer 1.5s ease-in-out infinite;
   flex-shrink: 0;
@@ -77,12 +67,7 @@
   width: 200px;
   height: 28px;
   border-radius: 6px;
-  background: linear-gradient(
-    90deg,
-    var(--color-dark-500) 0%,
-    var(--color-dark-300) 50%,
-    var(--color-dark-500) 100%
-  );
+  background: linear-gradient(90deg, var(--color-dark-500) 0%, var(--color-dark-300) 50%, var(--color-dark-500) 100%);
   background-size: 200% 100%;
   animation: shimmer 1.5s ease-in-out infinite;
 }
@@ -91,12 +76,7 @@
   width: 120px;
   height: 36px;
   border-radius: 6px;
-  background: linear-gradient(
-    90deg,
-    var(--color-dark-500) 0%,
-    var(--color-dark-300) 50%,
-    var(--color-dark-500) 100%
-  );
+  background: linear-gradient(90deg, var(--color-dark-500) 0%, var(--color-dark-300) 50%, var(--color-dark-500) 100%);
   background-size: 200% 100%;
   animation: shimmer 1.5s ease-in-out infinite;
   margin-left: auto;
@@ -123,12 +103,7 @@
   width: 60px;
   height: 24px;
   border-radius: 4px;
-  background: linear-gradient(
-    90deg,
-    var(--color-dark-500) 0%,
-    var(--color-dark-300) 50%,
-    var(--color-dark-500) 100%
-  );
+  background: linear-gradient(90deg, var(--color-dark-500) 0%, var(--color-dark-300) 50%, var(--color-dark-500) 100%);
   background-size: 200% 100%;
   animation: shimmer 1.5s ease-in-out infinite;
 }
@@ -137,12 +112,7 @@
   width: 80px;
   height: 16px;
   border-radius: 4px;
-  background: linear-gradient(
-    90deg,
-    var(--color-dark-500) 0%,
-    var(--color-dark-300) 50%,
-    var(--color-dark-500) 100%
-  );
+  background: linear-gradient(90deg, var(--color-dark-500) 0%, var(--color-dark-300) 50%, var(--color-dark-500) 100%);
   background-size: 200% 100%;
   animation: shimmer 1.5s ease-in-out infinite;
 }
@@ -157,12 +127,7 @@
 .bioLineSkeleton {
   height: 16px;
   border-radius: 4px;
-  background: linear-gradient(
-    90deg,
-    var(--color-dark-500) 0%,
-    var(--color-dark-300) 50%,
-    var(--color-dark-500) 100%
-  );
+  background: linear-gradient(90deg, var(--color-dark-500) 0%, var(--color-dark-300) 50%, var(--color-dark-500) 100%);
   background-size: 200% 100%;
   animation: shimmer 1.5s ease-in-out infinite;
 }

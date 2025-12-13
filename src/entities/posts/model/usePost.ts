@@ -6,10 +6,7 @@ import type { Post } from '@/entities/posts/api/types'
  * React Query хук для получения поста
  * Используется в Client Components
  */
-export const usePost = (
-  postId: number,
-  options?: Omit<UseQueryOptions<Post>, 'queryKey' | 'queryFn'>
-) => {
+export const usePost = (postId: number, options?: Omit<UseQueryOptions<Post>, 'queryKey' | 'queryFn'>) => {
   return useQuery({
     queryKey: ['post', postId],
     queryFn: () => postsApi.getPost(postId),

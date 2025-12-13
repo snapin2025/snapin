@@ -41,26 +41,24 @@ export const LogoutButton = ({ variant = 'both', className }: Props) => {
         </div>
       </Button>
 
-     
-        <BaseModal open={isModalOpen} onOpenChange={handleOpenChange} title="Log Out">
-          <Typography variant="regular_16" className={s.message}>
-            Do you really want to log out of your account?
-          </Typography>
-          <div className={s.buttons}>
-            <Button variant="primary" onClick={() => handleLogout()} disabled={isPending} className={s.confirmButton}>
-              {isPending ? 'Logging out...' : 'Yes'}
-            </Button>
-            <Button
-              variant="secondary"
-              onClick={() => !isPending && setIsModalOpen(false)}
-              disabled={isPending}
-              className={s.cancelButton}
-            >
-              No
-            </Button>
-          </div>
-        </BaseModal>
-      
+      <BaseModal open={isModalOpen} onOpenChange={handleOpenChange} title="Log Out">
+        <Typography variant="regular_16" className={s.message}>
+          Do you really want to log out of your account?
+        </Typography>
+        <div className={s.buttons}>
+          <Button variant="primary" onClick={() => handleLogout()} disabled={isPending} className={s.confirmButton}>
+            {isPending ? 'Logging out...' : 'Yes'}
+          </Button>
+          <Button
+            variant="secondary"
+            onClick={() => !isPending && setIsModalOpen(false)}
+            disabled={isPending}
+            className={s.cancelButton}
+          >
+            No
+          </Button>
+        </div>
+      </BaseModal>
     </>
   )
 }
