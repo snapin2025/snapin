@@ -2,7 +2,7 @@
 
 import { ProfileSkeleton } from '@/shared/ui'
 import { UserProfile } from './UserProfile'
-import { useProfileData } from '../api'
+import { useProfileData } from '../api/useProfileData'
 
 type ProfilePageClientProps = {
   userId: number
