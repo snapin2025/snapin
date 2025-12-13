@@ -11,6 +11,7 @@ import { AddLocation } from '@/widgets'
 import Avatar from '../../../../shared/ui/Avatar/Avatar'
 import { CharacterCounter } from '@/shared/ui/character-counter'
 import { ImagePost } from '@/entities/posts/api/types'
+import { useUserProfile } from '@/entities/user'
 
 type ImageItem = {
   id: string
@@ -40,6 +41,7 @@ export const PublicationStep: React.FC<Props> = ({
   isPublishing = false
 }) => {
   const { user } = useAuth()
+  const { data: profileData, isLoading: isProfileLoading } = useUserProfile(user?.userName)
   const [description, setDescription] = useState('')
   const [location, setLocation] = useState('')
   const [locationSuggestions, setLocationSuggestions] = useState<string[]>([])
@@ -132,7 +134,7 @@ export const PublicationStep: React.FC<Props> = ({
           <div className={s.profile}>
             <Avatar
               alt={user?.userName || 'User'}
-              src={(user as any)?.avatars?.small || (user as any)?.avatar || ''}
+              src={profileData?.avatars[0]?.url || ''}
               size="medium"
               withStatus={false}
             />

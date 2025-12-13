@@ -18,7 +18,7 @@ type Props = {
  * Контейнер кнопок действий профиля.
  * Здесь же лежат обработчики переходов/подписок.
  */
-export const ButtonContainer = ({ profileOwner }: Props) => {
+export const ProfileActions = ({ profileOwner }: Props) => {
   const { user } = useAuth()
   const userId = user?.userId
 

@@ -3,9 +3,10 @@
 import { useParams } from 'next/navigation'
 import { ProfileSkeleton } from '@/shared/ui'
 import { useAuth } from '@/shared/lib'
-import { UserProfile } from '@/pages/profile/ui/userProfile'
-import type { profileOwner } from '@/pages/profile/ui/userProfile/ButtonContainer'
-import { useUserProfile, useUserPosts } from '@/pages/profile/api'
+import { useUserPosts } from '@/entities/posts/model'
+import { useUserProfile } from '@/entities/user'
+import { profileOwner } from '@/widgets/user-profile/ProfileActions'
+import { UserProfile } from '@/widgets'
 
 export function ProfilePage() {
   const params = useParams<{ id?: string }>()

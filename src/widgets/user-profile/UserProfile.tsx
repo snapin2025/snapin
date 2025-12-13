@@ -4,7 +4,7 @@ import { useMemo, useRef } from 'react'
 import Link from 'next/link'
 import s from './userProfile.module.css'
 
-import { ButtonContainer, profileOwner } from './ButtonContainer'
+import { ProfileActions, profileOwner } from './ProfileActions'
 import { PostImageSlider } from '@/shared/lib/post-image-slider'
 import { Avatar, Typography, PostSkeleton } from '@/shared/ui'
 import { UserProfileResponse } from '@/entities/user/api/user-types'
@@ -47,10 +47,8 @@ export const UserProfile = ({
   const name = displayName || 'User'
   const observerTarget = useRef<HTMLDivElement>(null)
 
-  
   const allPosts = useMemo(() => postsData?.pages.flatMap((page) => page.items) ?? [], [postsData?.pages])
 
-  
   const stats = useMemo(
     () => ({
       following: profileData?.followingCount ?? 0,
@@ -88,7 +86,7 @@ export const UserProfile = ({
           <div className={s.titleRow}>
             <span className={s.userName}>{name}</span>
             <div className={s.actions}>
-              <ButtonContainer profileOwner={profileOwner} />
+              <ProfileActions profileOwner={profileOwner} />
             </div>
           </div>
 
@@ -117,7 +115,7 @@ export const UserProfile = ({
       </div>
 
       <div className={s.postsSection}>
-       {isPostsError && (
+        {isPostsError && (
           <div className={s.error}>
             Не удалось загрузить посты: {postsError?.message || 'попробуйте позже'}
             <br />

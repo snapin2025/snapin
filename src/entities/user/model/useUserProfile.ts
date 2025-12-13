@@ -1,8 +1,8 @@
 'use client'
 
 import { useQuery } from '@tanstack/react-query'
-import { userApi } from '@/entities/user/api/user'
-import { UserProfileResponse } from '@/entities/user/api/user-types'
+import { userApi } from '../api/user'
+import { UserProfileResponse } from '../api/user-types'
 
 /**
  * Хук для получения данных профиля пользователя по userName.
@@ -12,13 +12,12 @@ import { UserProfileResponse } from '@/entities/user/api/user-types'
  * @returns Результат запроса с данными профиля, состоянием загрузки и ошибками
  */
 export const useUserProfile = (userName: string | null | undefined) => {
-  
   return useQuery<UserProfileResponse, Error>({
     queryKey: ['user-profile', userName],
     queryFn: () => {
       // Дополнительная проверка для TypeScript (enabled уже проверяет, но это для безопасности)
-     const result =  userApi.userProfile(userName!)
-     return result
+      const result = userApi.userProfile(userName!)
+      return result
     },
     enabled: !!userName && userName.trim().length > 0,
     staleTime: 2 * 60_000, // 2 минуты - данные профиля не меняются часто
