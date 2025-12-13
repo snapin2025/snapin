@@ -5,7 +5,7 @@
   max-width: calc(100vw - 48px) !important;
   max-height: calc(100vh - 48px) !important;
   overflow: visible !important;
-  
+
   border: none !important;
 
   /* position: fixed и центрирование наследуются из базового стиля .content */
@@ -19,7 +19,6 @@
   margin: 0 !important;
   padding: 0 !important;
   height: 0 !important;
-
 }
 
 /* Кнопка закрытия справа вверху - позиционируется относительно modalContent */
@@ -135,11 +134,11 @@
   font-size: 16px;
   color: #f8f9fa;
 }
-.avatar{
+.avatar {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap:12px;
+  gap: 12px;
 }
 
 .postDate {
@@ -350,4 +349,3 @@
     max-height: 50vh;
   }
 }
-

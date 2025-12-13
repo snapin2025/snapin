@@ -22,9 +22,6 @@ export const HomePage = async () => {
   // const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inctagram.work/api/v1'
   const apiUrl = 'https://inctagram.work/api/v1'
 
-  // Делаем два запроса параллельно для SSG
-  // fetch не бросает исключения для HTTP ошибок, только для сетевых
-  // Поэтому используем .catch() для обработки сетевых ошибок
   const [postsResponse, usersResponse] = await Promise.all([
     fetch(`${apiUrl}/posts/all`, {
       next: { revalidate: 60 } // ISR: перегенерировать каждые 60 секунд

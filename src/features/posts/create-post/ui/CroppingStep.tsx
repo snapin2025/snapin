@@ -32,7 +32,6 @@ export const CroppingStep: React.FC<Props> = ({
   onNext,
   onDeleteImage,
   onAddPhotos,
-  index = 0,
   total = 0,
   allImages = [],
   onSelectImage
@@ -52,7 +51,7 @@ export const CroppingStep: React.FC<Props> = ({
   })
 
   // Управление трансформацией изображения (позиция, масштаб, зум)
-  const { scale, pos, setPos, clampPos, zoomIn, zoomOut, posRef, scaleRef } = useImageTransform({
+  const { scale, pos, setPos, clampPos, zoomIn, zoomOut } = useImageTransform({
     containerRef,
     natural,
     container,

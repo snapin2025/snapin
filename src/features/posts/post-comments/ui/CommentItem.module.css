@@ -2,13 +2,12 @@
   display: flex;
   gap: 12px;
   padding: 12px 0;
-
 }
 
 .comment:last-child {
   border-bottom: none;
 }
-.like{
+.like {
   margin-top: 8px;
 }
 .avatar {
@@ -74,4 +73,3 @@
 .likeButton:hover {
   opacity: 0.8;
 }
-

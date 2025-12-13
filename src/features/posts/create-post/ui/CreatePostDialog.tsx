@@ -4,7 +4,7 @@
 
 import { useState } from 'react'
 import { Dialog } from '@/shared/ui/temp/dialog/Dialog'
-import { Button, Typography } from '@/shared/ui'
+import { Button } from '@/shared/ui'
 import { CroppingStep } from './CroppingStep'
 import { PublicationStep } from './PublicationStep'
 import { usePostDialogState } from '../hooks/usePostDialogState'

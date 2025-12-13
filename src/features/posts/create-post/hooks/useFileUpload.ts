@@ -13,7 +13,6 @@ type UseFileUploadParams = {
 }
 
 export const useFileUpload = ({
-  images,
   setImages,
   setCurrentImageIndex,
   setStep,

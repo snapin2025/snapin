@@ -13,7 +13,6 @@
   /*padding-top: 36px;*/
   /*margin-left: 24px;*/
   background: var(--color-dark-700);
-
 }
 
 .summary {
@@ -103,7 +102,6 @@
   grid-template-columns: repeat(auto-fill, max(230px));
   gap: 16px;
   max-width: 974px;
-
 }
 
 .postCard {
@@ -112,7 +110,9 @@
   border-radius: 14px;
   background: var(--color-dark-700);
   border: 1px solid var(--color-dark-300);
-  transition: transform 0.15s ease, border-color 0.2s ease;
+  transition:
+    transform 0.15s ease,
+    border-color 0.2s ease;
 }
 
 .postCard:hover {
@@ -163,4 +163,3 @@
   color: var(--color-danger-300);
   border: 1px solid rgba(204, 20, 57, 0.3);
 }
-
