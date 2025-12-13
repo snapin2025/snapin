@@ -33,11 +33,14 @@ type PostModalProps = {
  */
 export const PostModal = ({ postId }: PostModalProps) => {
   const router = useRouter()
-  const { data: post, isLoading, error } = usePost(postId)
   const { user } = useAuth()
   const [isEditOpen, setIsEditOpen] = useState(false)
   const [isDeleteOpen, setIsDeleteOpen] = useState(false)
+  const [isDeletingPost, setIsDeletingPost] = useState(false)
   const { mutate: deletePost, isPending: isDeleting } = useDeletePost()
+
+  // Отключаем запрос поста если он удаляется
+  const { data: post, isLoading, error } = usePost(postId, { enabled: !isDeletingPost })
 
   // Закрытие модального окна с возвратом на предыдущую страницу
   const handleOpenChange = useCallback(
@@ -161,7 +164,20 @@ export const PostModal = ({ postId }: PostModalProps) => {
             </Button>
           </AlertCancel>
           <AlertAction asChild>
-            <Button variant="primary" onClick={() => deletePost(postId, { onSuccess: () => router.back() })}>
+            <Button
+              variant="primary"
+              onClick={() => {
+                setIsDeletingPost(true)
+                deletePost(postId, {
+                  onSuccess: () => {
+                    router.back()
+                  },
+                  onError: () => {
+                    setIsDeletingPost(false)
+                  }
+                })
+              }}
+            >
               {isDeleting ? 'Удаление...' : 'Удалить'}
             </Button>
           </AlertAction>

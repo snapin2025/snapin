@@ -42,6 +42,10 @@ export const useDeletePost = () => {
         })
       }
 
+      // Отменяем активные запросы для удаляемого поста перед удалением из кэша
+      // Это предотвращает попытки загрузить данные удаленного поста
+      await queryClient.cancelQueries({ queryKey: ['post', postId] })
+
       // Удаляем конкретный пост из кэша
       queryClient.removeQueries({ queryKey: ['post', postId] })
 
