@@ -47,12 +47,10 @@ export const UserProfile = ({
   const name = displayName || 'User'
   const observerTarget = useRef<HTMLDivElement>(null)
 
-  // Объединяем все страницы постов в один массив
-  // Мемоизируем, чтобы избежать пересчета при каждом рендере
+  
   const allPosts = useMemo(() => postsData?.pages.flatMap((page) => page.items) ?? [], [postsData?.pages])
 
-  // Используем данные из profileData для статистики, если они доступны
-  // Мемоизируем, чтобы избежать пересчета при каждом рендере
+  
   const stats = useMemo(
     () => ({
       following: profileData?.followingCount ?? 0,

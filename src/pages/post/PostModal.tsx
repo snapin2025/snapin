@@ -161,7 +161,7 @@ export const PostModal = ({ postId }: PostModalProps) => {
             </Button>
           </AlertCancel>
           <AlertAction asChild>
-            <Button variant="primary" onClick={() => deletePost(String(postId), { onSuccess: () => router.back() })}>
+            <Button variant="primary" onClick={() => deletePost(postId, { onSuccess: () => router.back() })}>
               {isDeleting ? 'Удаление...' : 'Удалить'}
             </Button>
           </AlertAction>

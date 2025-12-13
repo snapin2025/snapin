@@ -42,8 +42,6 @@ export const useUserPosts = ({ userId, pageSize = 8 }: UseUserPostsParams) => {
     initialPageParam: null, // Первый запрос без cursor
     enabled: Number.isFinite(userId) && userId > 0, // Запрос выполняется только при валидном userId
     retry: 1, // Одна повторная попытка при ошибке
-    staleTime: 2 * 60_000, // 2 минуты - данные считаются свежими, не требуют refetch при возврате на страницу
-    gcTime: 5 * 60_000, // 5 минут в кэше
     refetchOnWindowFocus: false, // Не перезагружать при возврате на вкладку
     refetchOnMount: false, // Не перезагружать при монтировании - предотвращает лишние запросы при закрытии модального окна поста
     refetchOnReconnect: true // Обновлять при восстановлении соединения

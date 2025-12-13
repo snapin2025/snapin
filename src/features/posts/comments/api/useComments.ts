@@ -10,8 +10,8 @@ export const useComments = (params: GetCommentsParams) => {
   const { postId, pageSize, pageNumber, sortBy, sortDirection } = params
 
   return useQuery({
-    queryKey: ['comments', postId, pageSize, pageNumber, sortBy, sortDirection],
-    queryFn: () => postsApi.getComments({ postId, pageSize, pageNumber, sortBy, sortDirection }),
+    queryKey: ['comments', postId, pageSize],
+    queryFn: () => postsApi.getComments({ postId, pageSize }),
     enabled: !!postId && postId > 0,
     staleTime: 2 * 60 * 1000, // 2 минуты - комментарии могут обновляться чаще
     gcTime: 5 * 60 * 1000, // 5 минут в кэше
