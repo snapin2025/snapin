@@ -1,71 +1,20 @@
-'use client'
+import { ProfilePageClient } from '@/features/user-profile/ui/ProfilePageClient'
 
-import { useParams } from 'next/navigation'
-import { ProfileSkeleton } from '@/shared/ui'
-import { useAuth } from '@/shared/lib'
-import { useUserPosts } from '@/entities/posts/model'
-import { useUserProfile } from '@/entities/user'
-import { profileOwner } from '@/widgets/user-profile/ProfileActions'
-import { UserProfile } from '@/widgets'
+type ProfilePageProps = {
+  params: Promise<{ id?: string }>
+}
 
-export function ProfilePage() {
-  const params = useParams<{ id?: string }>()
-  const userId = Number(params?.id)
+/**
+ * Серверный компонент страницы профиля.
+ * Получает userId из параметров URL и передает в клиентский компонент.
+ */
+export async function ProfilePage({ params }: ProfilePageProps) {
+  const { id } = await params
+  const userId = Number(id)
 
-  const { user, isLoading: isAuthLoading } = useAuth()
-
-  const isMyProfile = user?.userId === userId
-
-  const {
-    data: postsData,
-    isLoading: isPostsLoading,
-    isFetching: isPostsFetching,
-    isFetchingNextPage: isFetchingNextPage,
-    isError: isPostsError,
-    error: postsError,
-    refetch: refetchPosts,
-    fetchNextPage,
-    hasNextPage
-  } = useUserPosts({ userId, pageSize: 8 })
-
-  // Получаем userName: если свой профиль - используем user.userName,
-  // иначе берем из первого поста (может быть undefined пока посты не загрузились)
-  const userNameFromPosts = postsData?.pages[0]?.items[0]?.userName
-  const userName = isMyProfile ? user?.userName : userNameFromPosts
-
-  const { data: profileData, isLoading: isProfileLoading } = useUserProfile(userName)
-
-  const owner: profileOwner = isMyProfile ? 'myProfile' : 'guestProfile'
-  const avatarUrl = profileData?.avatars?.[0]?.url
-  const bio = profileData?.aboutMe
-  const displayName = profileData?.userName || userNameFromPosts || user?.userName || 'User'
-
-  if (!userId || Number.isNaN(userId)) {
+  if (!id || Number.isNaN(userId) || userId <= 0) {
     return <div>Профиль не найден</div>
   }
 
-  const shouldShowSkeleton = isAuthLoading || (isMyProfile && isProfileLoading)
-
-  if (shouldShowSkeleton) {
-    return <ProfileSkeleton />
-  }
-
-  return (
-    <UserProfile
-      profileOwner={owner}
-      displayName={displayName}
-      avatarUrl={avatarUrl}
-      bio={bio}
-      profileData={profileData}
-      postsData={postsData}
-      isPostsLoading={isPostsLoading}
-      isPostsFetching={isPostsFetching}
-      isFetchingNextPage={isFetchingNextPage}
-      isPostsError={isPostsError}
-      postsError={postsError}
-      refetchPosts={refetchPosts}
-      fetchNextPage={fetchNextPage}
-      hasNextPage={hasNextPage}
-    />
-  )
+  return <ProfilePageClient userId={userId} />
 }

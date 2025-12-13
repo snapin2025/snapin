@@ -4,46 +4,34 @@ import { useMemo, useRef } from 'react'
 import Link from 'next/link'
 import s from './userProfile.module.css'
 
-import { ProfileActions, profileOwner } from './ProfileActions'
+import { ProfileActions } from './ProfileActions'
 import { PostImageSlider } from '@/shared/lib/post-image-slider'
 import { Avatar, Typography, PostSkeleton } from '@/shared/ui'
-import { UserProfileResponse } from '@/entities/user/api/user-types'
-import { InfiniteData } from '@tanstack/react-query'
-import { ResponsesPosts } from '@/entities/posts/api/types'
 import { useInfiniteScroll } from '@/shared/lib'
+import { useProfileData } from '../api/useProfileData'
 
 type Props = {
-  profileOwner: profileOwner
-  bio?: string
-  displayName?: string
-  avatarUrl?: string
-  profileData?: UserProfileResponse | null
-  postsData?: InfiniteData<ResponsesPosts>
-  isPostsLoading?: boolean
-  isPostsFetching?: boolean
-  isFetchingNextPage?: boolean
-  isPostsError?: boolean
-  postsError?: Error | null
-  refetchPosts?: () => void
-  fetchNextPage?: () => void
-  hasNextPage?: boolean
+  userId: number
+  pageSize?: number
 }
 
-export const UserProfile = ({
-  profileOwner,
-  bio,
-  displayName,
-  avatarUrl,
-  profileData,
-  postsData,
-  isPostsLoading = false,
-  isFetchingNextPage = false,
-  isPostsError = false,
-  postsError,
-  refetchPosts,
-  fetchNextPage,
-  hasNextPage = false
-}: Props) => {
+export const UserProfile = ({ userId, pageSize = 8 }: Props) => {
+  const {
+    profileData,
+    postsData,
+    isPostsLoading,
+    isFetchingNextPage,
+    isPostsError,
+    postsError,
+    refetchPosts,
+    fetchNextPage,
+    hasNextPage,
+    profileOwner,
+    displayName,
+    avatarUrl,
+    bio
+  } = useProfileData({ userId, pageSize })
+
   const name = displayName || 'User'
   const observerTarget = useRef<HTMLDivElement>(null)
 
@@ -68,8 +56,6 @@ export const UserProfile = ({
     rootMargin: '10px'
   })
 
-  // Простые вычисления - React 19 оптимизирует их автоматически
-  // Оставляем мемоизацию только для дорогих операций (allPosts) и объектов (stats)
   const profileDescription =
     bio ??
     profileData?.aboutMe ??
