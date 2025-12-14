@@ -93,10 +93,32 @@ export const useProfileData = ({ userId, pageSize = 8 }: UseProfileDataParams): 
   const bio = useMemo(() => profileData?.aboutMe, [profileData?.aboutMe])
 
   // Общее состояние загрузки
-  const isLoading = useMemo(
-    () => isAuthLoading || (isMyProfile && isProfileLoading),
-    [isAuthLoading, isMyProfile, isProfileLoading]
-  )
+  // Показываем скелетон пока:
+  // 1. Загружается авторизация ИЛИ
+  // 2. Для своего профиля: загружается профиль и еще нет данных ИЛИ
+  // 3. Для чужого профиля:
+  //    - Загружаются посты и еще нет данных (чтобы получить userName) ИЛИ
+  //    - userName еще не получен (значит посты еще загружаются) ИЛИ
+  //    - Загружается профиль и еще нет данных профиля
+  const isLoading = useMemo(() => {
+    // Загружается авторизация
+    if (isAuthLoading) return true
+
+    // Для своего профиля: загружается профиль и еще нет данных
+    if (isMyProfile && isProfileLoading && !profileData) return true
+
+    // Для чужого профиля:
+    // - Загружаются посты и еще нет данных (чтобы получить userName)
+    // - ИЛИ userName еще не получен (значит посты еще загружаются)
+    // - ИЛИ загружается профиль и еще нет данных профиля
+    if (!isMyProfile) {
+      if (isPostsLoading && !postsData) return true
+      if (!userName && !postsData) return true
+      if (isProfileLoading && !profileData) return true
+    }
+
+    return false
+  }, [isAuthLoading, isMyProfile, isProfileLoading, profileData, isPostsLoading, postsData, userName])
 
   return {
     profileData,
