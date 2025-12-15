@@ -45,7 +45,7 @@ type Props = {
 export const PostImageSlider = ({
   images,
   postId,
-  ownerId: _ownerId, // eslint-disable-line @typescript-eslint/no-unused-vars
+  ownerId: _ownerId,
   description,
   disableLink = false,
   className,
@@ -120,7 +120,7 @@ export const PostImageSlider = ({
                 />
               </div>
             ) : (
-              <Link href={`/post/${postId}`} className={s.imageLink}>
+              <Link href={`/profile/${_ownerId}/${postId}`} className={s.imageLink}>
                 <Image
                   src={image.url}
                   alt={description || `Post image ${index + 1}`}
