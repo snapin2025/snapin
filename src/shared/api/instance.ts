@@ -10,10 +10,19 @@ export const api = axios.create({
 })
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('accessToken')
-  if (token && config.headers) {
-    config.headers.Authorization = `Bearer ${token}`
+  // Проверяем, что мы на клиенте (не на сервере)
+  // На сервере localStorage недоступен, поэтому используем только cookies (refreshToken)
+  // withCredentials: true уже установлен в конфигурации axios,
+  // поэтому cookies будут отправляться автоматически на сервере
+  if (typeof window !== 'undefined') {
+    // На клиенте: используем accessToken из localStorage
+    const token = localStorage.getItem('accessToken')
+    if (token && config.headers) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
   }
+  // На сервере: Authorization header не добавляется,
+  // но cookies (refreshToken) отправляются автоматически благодаря withCredentials: true
   return config
 })
 // Response interceptor
@@ -29,8 +38,10 @@ api.interceptors.response.use(
 
       if (isRefreshRequest) {
         // Если это сам запрос на обновление токена вернул 401, значит refreshToken невалидный
-        localStorage.removeItem('accessToken')
-        window.location.href = '/sign-in'
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('accessToken')
+          window.location.href = '/sign-in'
+        }
         return Promise.reject(error)
       }
 
@@ -47,7 +58,10 @@ api.interceptors.response.use(
         )
 
         const newToken = refreshResponse.data.accessToken
-        localStorage.setItem('accessToken', newToken)
+        // Сохраняем токен только на клиенте
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('accessToken', newToken)
+        }
 
         // Повторяем оригинальный запрос с новым токеном
         if (originalRequest && originalRequest.headers) {
@@ -61,11 +75,13 @@ api.interceptors.response.use(
         }
       } catch (refreshError) {
         // Если обновление токена не удалось (нет refreshToken или он невалидный)
-        localStorage.removeItem('accessToken')
-        // Для запросов на /auth/me не редиректим сразу, чтобы избежать циклов
-        const isMeRequest = originalRequest?.url?.includes('/auth/me')
-        if (!isMeRequest) {
-          window.location.href = '/sign-in'
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('accessToken')
+          // Для запросов на /auth/me не редиректим сразу, чтобы избежать циклов
+          const isMeRequest = originalRequest?.url?.includes('/auth/me')
+          if (!isMeRequest) {
+            window.location.href = '/sign-in'
+          }
         }
         return Promise.reject(refreshError)
       }
@@ -73,10 +89,12 @@ api.interceptors.response.use(
 
     // Если это повторный 401 после попытки обновления токена, редиректим
     if (error.response?.status === 401 && originalRequest._retry) {
-      localStorage.removeItem('accessToken')
-      const isMeRequest = originalRequest?.url?.includes('/auth/me')
-      if (!isMeRequest) {
-        window.location.href = '/sign-in'
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('accessToken')
+        const isMeRequest = originalRequest?.url?.includes('/auth/me')
+        if (!isMeRequest) {
+          window.location.href = '/sign-in'
+        }
       }
       return Promise.reject(error)
     }

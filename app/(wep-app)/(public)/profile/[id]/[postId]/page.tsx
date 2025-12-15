@@ -1,5 +1,7 @@
 import { Metadata } from 'next'
+import { HydrationBoundary } from '@tanstack/react-query'
 import { PostModal } from '@/features/posts'
+import { prefetchPostWithComments } from '@/features/posts/view-post/api/prefetch-posts'
 
 export const metadata: Metadata = { title: 'Post' }
 
@@ -8,6 +10,9 @@ export const metadata: Metadata = { title: 'Post' }
  *
  * Когда пользователь открывает /post/[postId] напрямую (не через клик),
  * используется этот роут вместо intercepting route.
+ *
+ * Реализован SSR с HydrationBoundary для предзагрузки данных на сервере.
+ * Скелетон показывается автоматически через loading.tsx во время await prefetchPostWithComments()
  */
 type Props = {
   params: Promise<{ postId: string }>
@@ -26,9 +31,15 @@ const PostPage = async ({ params }: Props) => {
     )
   }
 
-  // Используем тот же компонент модального окна
-  // но в контексте обычной страницы
-  return <PostModal postId={postIdNumber} />
+  // Предзагружаем данные поста и комментариев в одном QueryClient
+  // loading.tsx автоматически показывается во время выполнения этого await
+  const dehydratedState = await prefetchPostWithComments(postIdNumber)
+
+  return (
+    <HydrationBoundary state={dehydratedState}>
+      <PostModal postId={postIdNumber} />
+    </HydrationBoundary>
+  )
 }
 
 export default PostPage
