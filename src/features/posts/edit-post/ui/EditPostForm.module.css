@@ -1,8 +1,8 @@
 .dialog {
   background-color: var(--color-dark-300);
   padding: 0;
-  z-index: 100;
-  margin-top: 250px;
+  z-index: 200; /* Выше чем PostModal (z-index: 101) для правильного отображения поверх */
+  /* margin-top удален - центрирование происходит через transform в Dialog.module.css */
 }
 
 .wrapper {

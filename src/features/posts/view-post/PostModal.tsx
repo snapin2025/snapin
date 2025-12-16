@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 import { useCallback, useState } from 'react'
 import { Dialog, DialogContent, DialogClose } from '@/shared/ui/modal'
 
-import { Avatar, Spinner, Close, Typography, Button } from '@/shared/ui'
+import { Avatar, Close, Typography, Button, PostModalSkeleton } from '@/shared/ui'
 
 import { PostImageSlider } from '@/shared/lib/post-image-slider'
 
@@ -53,7 +53,16 @@ export const PostModal = ({ postId }: PostModalProps) => {
   )
 
   if (isLoading) {
-    return <Spinner />
+    return (
+      <Dialog open={true} onOpenChange={handleOpenChange}>
+        <DialogContent showCloseButton={false} className={s.modalContent}>
+          <DialogClose className={s.closeButton} aria-label="Закрыть">
+            <Close />
+          </DialogClose>
+          <PostModalSkeleton />
+        </DialogContent>
+      </Dialog>
+    )
   }
 
   if (error) {
