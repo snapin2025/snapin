@@ -1,12 +1,10 @@
 'use client'
 
-import { useCallback } from 'react'
-import { redirect } from 'next/navigation'
-import s from './userProfile.module.css'
-
 import { Button } from '@/shared/ui'
 import { useAuth } from '@/shared/lib'
 import { ROUTES } from '@/shared/lib/routes'
+import Link from 'next/link'
+import s from './userProfile.module.css'
 
 export type profileOwner = 'myProfile' | 'friendProfile' | 'guestProfile'
 
@@ -22,16 +20,11 @@ export const ProfileActions = ({ profileOwner }: Props) => {
   const { user } = useAuth()
   const userId = user?.userId
 
-  const goToSettings = useCallback(() => {
-    if (!userId) return
-    redirect(ROUTES.APP.DASHBOARD)
-  }, [userId])
-
   return (
     <div className={s.buttonWrapper}>
       {profileOwner === 'myProfile' ? (
-        <Button variant="secondary" onClick={goToSettings}>
-          Profile settings
+        <Button asChild variant="secondary">
+          <Link href={ROUTES.APP.SETTINGS.PART()}>Profile settings</Link>
         </Button>
       ) : profileOwner === 'friendProfile' ? (
         <>
