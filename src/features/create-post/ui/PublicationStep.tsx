@@ -148,7 +148,8 @@ export const PublicationStep: React.FC<Props> = ({
               onChange={handleDescriptionChange}
               maxLength={MAX_DESCRIPTION_LENGTH}
             />
-            <CharacterCounter current={remainingChars} max={MAX_DESCRIPTION_LENGTH} />
+            {/*<CharacterCounter current={0} max={MAX_DESCRIPTION_LENGTH} />*/}
+            <CharacterCounter current={description?.length || 0} max={MAX_DESCRIPTION_LENGTH} />
           </div>
 
           {/* Локация */}
