@@ -1,7 +1,7 @@
 'use client'
 
 import * as SelectPrimitive from '@radix-ui/react-select'
-import styles from './Select.module.css'
+import s from './Select.module.css'
 import { Arrow } from '@/shared/ui'
 import { ComponentPropsWithoutRef } from 'react'
 
@@ -12,27 +12,31 @@ type SelectProps = {
   options: Option[]
   value?: string
   onValueChange?: (value: string) => void
-  label?: string // ← Лейбл сверху
+  label: string
 } & ComponentPropsWithoutRef<typeof SelectPrimitive.Root>
 
 export const Select = ({ placeholder = 'Select', options, value, onValueChange, label, ...props }: SelectProps) => {
   return (
-    <div className={styles.wrapper}>
-      {/* ← Обёртка для лейбла */}
-      {label && <label className={styles.label}>{label}</label>} {/* ← Показываем лейбл если есть */}
+    <div className={s.wrapper}>
+      <label className={s.label}>{label}</label>
       <SelectPrimitive.Root value={value} onValueChange={onValueChange} {...props}>
-        <SelectPrimitive.Trigger className={styles.trigger}>
+        <SelectPrimitive.Trigger className={s.trigger}>
           <SelectPrimitive.Value placeholder={placeholder} />
+          {/*иконка*/}
           <SelectPrimitive.Icon>
-            <Arrow className={styles.icon} />
+            <Arrow className={s.icon} />
           </SelectPrimitive.Icon>
         </SelectPrimitive.Trigger>
 
         <SelectPrimitive.Portal>
-          <SelectPrimitive.Content className={styles.content}>
+          <SelectPrimitive.Content className={s.content}>
             <SelectPrimitive.Viewport>
               {options.map((option) => (
-                <SelectPrimitive.Item key={option.value} value={option.value} className={styles.item}>
+                <SelectPrimitive.Item key={option.value} value={option.value} className={s.item}>
+                  {/*здесь тоже иконка так как внутри будит стрелочка на выбраном месте так работает силект*/}
+                  <SelectPrimitive.ItemIndicator className={s.itemIndicator}>
+                    <Arrow className={s.indicatorIcon} />
+                  </SelectPrimitive.ItemIndicator>
                   <SelectPrimitive.ItemText>{option.label}</SelectPrimitive.ItemText>
                 </SelectPrimitive.Item>
               ))}
