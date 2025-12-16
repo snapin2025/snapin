@@ -1,13 +1,14 @@
 import { SETTINGS_PART } from '@/shared/lib/routes'
 
 type Props = {
-  searchParams: {
+  searchParams: Promise<{
     part?: string
-  }
+  }>
 }
-export const SettingsPage = ({ searchParams }: Props) => {
-  const part = searchParams.part ?? 'info'
-  switch (part) {
+export const SettingsPage = async ({ searchParams }: Props) => {
+  const { part } = await searchParams
+  const currentPart = part ?? 'info'
+  switch (currentPart) {
     case SETTINGS_PART.DEVICES:
       return <div>Устройства</div>
 
