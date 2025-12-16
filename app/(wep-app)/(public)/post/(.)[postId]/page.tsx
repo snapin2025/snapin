@@ -1,4 +1,6 @@
+import { HydrationBoundary } from '@tanstack/react-query'
 import { PostModal } from '@/features/posts'
+import { prefetchPostWithComments } from '@/features/posts/view-post/api/prefetch-posts'
 
 /**
  * Intercepting Route для модального окна поста
@@ -14,6 +16,9 @@ import { PostModal } from '@/features/posts'
  * 3. Рендерится модальное окно, URL обновляется на /post/123
  * 4. При закрытии модального окна (router.back()) возвращаемся на предыдущую страницу
  * 5. При прямом переходе на /post/123 (F5, прямая ссылка) используется обычный [postId]/page.tsx
+ *
+ * Реализован SSR с HydrationBoundary для предзагрузки данных на сервере.
+ * Комментарии предзагружаются отдельно через вложенный HydrationBoundary.
  */
 type Props = {
   params: Promise<{ postId: string }>
@@ -23,9 +28,16 @@ export default async function PostModalPage({ params }: Props) {
   const { postId } = await params
   const postIdNumber = parseInt(postId, 10)
 
-  if (isNaN(postIdNumber)) {
+  if (isNaN(postIdNumber) || postIdNumber <= 0) {
     return null
   }
 
-  return <PostModal postId={postIdNumber} />
+  // Предзагружаем данные поста и комментариев в одном QueryClient
+  const dehydratedState = await prefetchPostWithComments(postIdNumber)
+
+  return (
+    <HydrationBoundary state={dehydratedState}>
+      <PostModal postId={postIdNumber} />
+    </HydrationBoundary>
+  )
 }
