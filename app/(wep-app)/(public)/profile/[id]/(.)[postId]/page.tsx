@@ -1,4 +1,6 @@
-import { PostModalWithPrefetch } from '@/features/posts/view-post/ui/PostModalWithPrefetch'
+import { HydrationBoundary } from '@tanstack/react-query'
+import { PostModal } from '@/features/posts'
+import { prefetchPostWithComments } from '@/features/posts/view-post/api/prefetch-posts'
 
 /**
  * Intercepting Route для модального окна поста
@@ -16,7 +18,7 @@ import { PostModalWithPrefetch } from '@/features/posts/view-post/ui/PostModalWi
  * 5. При прямом переходе на /post/123 (F5, прямая ссылка) используется обычный [postId]/page.tsx
  *
  * Реализован SSR с HydrationBoundary для предзагрузки данных на сервере.
- * Скелетон показывается во время предзагрузки через Suspense.
+ * Скелетон показывается автоматически через loading.tsx во время await prefetchPostWithComments()
  */
 type Props = {
   params: Promise<{ postId: string }>
@@ -30,6 +32,13 @@ export default async function PostModalPage({ params }: Props) {
     return null
   }
 
-  // Используем обертку с Suspense для показа скелетона во время предзагрузки
-  return <PostModalWithPrefetch postId={postIdNumber} />
+  // Предзагружаем данные поста и комментариев в одном QueryClient
+  // loading.tsx автоматически показывается во время выполнения этого await
+  const dehydratedState = await prefetchPostWithComments(postIdNumber)
+
+  return (
+    <HydrationBoundary state={dehydratedState}>
+      <PostModal postId={postIdNumber} />
+    </HydrationBoundary>
+  )
 }
