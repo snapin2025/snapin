@@ -20,7 +20,9 @@ export const Tabs = (props: Props) => {
 export const TabsTrigger = ({ className, ref, children, ...rest }: TabsTriggerProps) => {
   return (
     <TabsPrimitive.Trigger className={clsx(className, s.trigger)} {...rest} ref={ref}>
-      <Typography variant={'h3'}>{children}</Typography>
+      <Typography asChild variant={'h3'}>
+        <span>{children}</span>
+      </Typography>
     </TabsPrimitive.Trigger>
   )
 }
