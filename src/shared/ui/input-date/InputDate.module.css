@@ -1,0 +1,51 @@
+.card {
+  padding: 6px 24px;
+}
+
+.navBtn {
+  padding: 8px;
+  background-color: var(--color-dark-100);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chevron {
+  display: inline-block;
+  fill: var(--color-light-100);
+
+}
+
+.today {
+  color: var(--color-accent-500);
+}
+
+.outside {
+  color: var(--color-light-900)
+}
+
+.day {
+  width: 36px;
+  height: 36px;
+  text-align: center;
+  font-size: var(--font-size-m); /* 16px */
+  font-weight: var(--font-weight-regular); /* 400 */
+  line-height: var(--line-height-m); /* 24px */
+}
+
+.weekday {
+  width: 36px;
+  height: 40px;
+  padding: 6px;
+  color: var(--color-light-900);
+  font-size: var(--font-size-m); /* 16px */
+  font-weight: var(--font-weight-regular); /* 400 */
+  line-height: var(--line-height-m); /* 24px */
+}
+
+.weekend {
+  color: var(--color-danger-300)
+}
