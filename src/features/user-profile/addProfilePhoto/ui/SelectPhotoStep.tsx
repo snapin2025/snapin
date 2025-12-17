@@ -1,6 +1,6 @@
 'use client'
 
-import { Button, Typography } from '@/shared/ui'
+import { Button } from '@/shared/ui'
 import { SvgImage } from '@/shared/ui/icons/SvgImage'
 import s from './SelectPhotoStep.module.css'
 

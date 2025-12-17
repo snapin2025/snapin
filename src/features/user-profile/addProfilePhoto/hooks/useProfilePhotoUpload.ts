@@ -1,0 +1,46 @@
+import { useCallback, useId, useRef } from 'react'
+import { validateProfilePhoto } from '../model/profilePhotoValidation'
+
+type UseProfilePhotoUploadParams = {
+  onFileSelect: (file: File, previewUrl: string) => void
+  onValidationError: () => void
+}
+
+export const useProfilePhotoUpload = ({
+  onFileSelect,
+  onValidationError
+}: UseProfilePhotoUploadParams) => {
+  const inputRef = useRef<HTMLInputElement | null>(null)
+  const inputId = useId()
+
+  const handleFileChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0]
+      if (!file) return
+
+      const validation = validateProfilePhoto(file)
+      if (!validation.valid) {
+        console.error('File validation errors:', validation.errors)
+        e.target.value = ''
+        onValidationError()
+        return
+      }
+
+      const previewUrl = URL.createObjectURL(file)
+      onFileSelect(file, previewUrl)
+      e.target.value = ''
+    },
+    [onFileSelect, onValidationError]
+  )
+
+  const handleSelectFile = useCallback(() => {
+    inputRef.current?.click()
+  }, [])
+
+  return {
+    inputRef,
+    inputId,
+    handleFileChange,
+    handleSelectFile
+  }
+}
