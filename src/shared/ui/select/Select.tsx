@@ -2,7 +2,7 @@
 
 import * as SelectPrimitive from '@radix-ui/react-select'
 import s from './Select.module.css'
-import { Arrow } from '@/shared/ui'
+import { Arrow } from '@/shared/ui/icons/Arrow'
 import { ComponentPropsWithoutRef } from 'react'
 
 type Option = { value: string; label: string }

@@ -1,8 +1,9 @@
 'use client'
+
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import s from './editPersonalData.module.css'
-import { Button, Input, Textarea, Select, Card } from '@/shared/ui'
+import s from './EditPersonalData.module.css'
+import { Button, Input, Textarea, Select, Card, Calendar } from '@/shared/ui'
 import { editPersonalDataSchema, EditPersonalDataFormValues } from './model/validation'
 
 export const EditPersonalDataForm = () => {
@@ -15,6 +16,7 @@ export const EditPersonalDataForm = () => {
   } = useForm<EditPersonalDataFormValues>({
     resolver: zodResolver(editPersonalDataSchema),
     defaultValues: {
+      username: '',
       firstName: '',
       lastName: '',
       dateOfBirth: '',
@@ -41,63 +43,77 @@ export const EditPersonalDataForm = () => {
   ]
 
   return (
-    <Card as="form" className={s.form} onSubmit={handleSubmit(onSubmit)}>
-      {/* Просто квадрат для фото */}
-      <div className={s.photoBox}></div>
+    <div className={s.container}>
+      {/* Табы будут здесь */}
+      {/* <Tabs className={s.tabs} /> */}
 
-      {/* First Name */}
-      <div className={s.field}>
-        <Input id="firstName" label="First Name*" type="text" error={!!errors.firstName} {...register('firstName')} />
-        {errors.firstName && <span className={s.errorMessage}>{errors.firstName.message}</span>}
-      </div>
+      <Card as="form" className={s.form} onSubmit={handleSubmit(onSubmit)}>
+        <div className={s.formContent}>
+          {/* Левая колонка - квадрат для фото */}
+          <div className={s.photoBox}></div>
 
-      {/* Last Name */}
-      <div className={s.field}>
-        <Input id="lastName" label="Last Name*" type="text" error={!!errors.lastName} {...register('lastName')} />
-        {errors.lastName && <span className={s.errorMessage}>{errors.lastName.message}</span>}
-      </div>
+          {/* Правая колонка - все поля формы */}
+          <div className={s.formFields}>
+            {/* Usertest - поле без лейбла, текст внутри */}
+            <Input id="username" type="text" value="Usertest" readOnly {...register('username')} />
+            {errors.username && <span className={s.errorMessage}>{errors.username.message}</span>}
 
-      {/* Date of Birth - БЕЗ ВАЛИДАЦИИ, будет календарь */}
-      <div className={s.field}>
-        <Input
-          id="dateOfBirth"
-          label="Date of birth"
-          type="text"
-          placeholder="00.00.0000"
-          {...register('dateOfBirth')}
-        />
-        {/* Убираем вывод ошибок для даты */}
-      </div>
+            {/* First Name */}
+            <Input
+              id="firstName"
+              label="First Name*"
+              type="text"
+              error={!!errors.firstName}
+              {...register('firstName')}
+            />
+            {errors.firstName && <span className={s.errorMessage}>{errors.firstName.message}</span>}
 
-      {/* Country Select */}
-      <div className={s.field}>
-        <Select
-          label="Select your country"
-          options={countryOptions}
-          value={watch('country')}
-          onValueChange={(value) => setValue('country', value)}
-        />
-      </div>
+            {/* Last Name */}
+            <Input id="lastName" label="Last Name*" type="text" error={!!errors.lastName} {...register('lastName')} />
+            {errors.lastName && <span className={s.errorMessage}>{errors.lastName.message}</span>}
 
-      {/* City Select */}
-      <div className={s.field}>
-        <Select
-          label="Select your city"
-          options={cityOptions}
-          value={watch('city')}
-          onValueChange={(value) => setValue('city', value)}
-        />
-      </div>
+            {/* Date of Birth с иконкой календаря */}
+            <div className={s.dateInputWrapper}>
+              <Input
+                id="dateOfBirth"
+                label="Date of birth"
+                type="text"
+                placeholder="00.00.0000"
+                {...register('dateOfBirth')}
+              />
+              <Calendar className={s.calendarIcon} />
+            </div>
 
-      {/* About Me Textarea */}
-      <div className={s.field}>
-        <Textarea label="About Me" {...register('aboutMe')} error={errors.aboutMe?.message} maxLength={500} />
-      </div>
+            {/* Селекты Country и City РЯДОМ */}
+            <div className={s.selectsContainer}>
+              <Select
+                label="Select your country"
+                options={countryOptions}
+                value={watch('country')}
+                onValueChange={(value) => setValue('country', value)}
+              />
 
-      {/* Save Button */}
-      <Button type="submit" variant="primary" className={s.button} disabled={!isValid}>
-        Save Changes
-      </Button>
-    </Card>
+              <Select
+                label="Select your city"
+                options={cityOptions}
+                value={watch('city')}
+                onValueChange={(value) => setValue('city', value)}
+              />
+            </div>
+
+            {/* About Me Textarea */}
+            <Textarea label="About Me" {...register('aboutMe')} error={errors.aboutMe?.message} maxLength={500} />
+          </div>
+        </div>
+
+        {/* Полоска-разделитель */}
+        <hr className={s.hr} />
+
+        {/* Save Button */}
+        <Button type="submit" variant="primary" className={s.button} disabled={!isValid}>
+          Save Changes
+        </Button>
+      </Card>
+    </div>
   )
 }
