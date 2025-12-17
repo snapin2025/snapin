@@ -4,7 +4,6 @@
 
 import { useState } from 'react'
 import { Dialog } from '@/shared/ui/temp/dialog/Dialog'
-import { Button } from '@/shared/ui'
 import { CroppingStep } from './CroppingStep'
 import { PublicationStep } from './PublicationStep'
 import { usePostDialogState } from '../hooks/usePostDialogState'
@@ -12,9 +11,9 @@ import { useFileUpload } from '../hooks/useFileUpload'
 import { useImageHandlers } from '../hooks/useImageHandlers'
 import { usePostPublish } from '../hooks/usePostPublish'
 import s from './CreatePostDialog.module.css'
-import { SvgImage } from '@/shared/ui/icons/SvgImage'
 import { CloseConfirmDialog } from './CloseConfirmDialog'
 import { PhotoValidationModal } from './PhotoValidationModal'
+import { SelectPostPhotoStep } from './SelectPostPhotoStep'
 
 type Props = {
   open: boolean
@@ -77,17 +76,7 @@ export const CreatePostDialog = ({ open, onOpenChange, onFileSelect }: Props) =>
   const renderContent = () => {
     switch (state.step) {
       case 'select':
-        return (
-          <>
-            <div className={s.placeholder}>
-              <SvgImage width={48} height={48} />
-            </div>
-            <div className={s.containerBtn}>
-              <Button onClick={fileUpload.handleAddPhotos}>Select from Computer</Button>
-              <Button>Open Draft</Button>
-            </div>
-          </>
-        )
+        return <SelectPostPhotoStep onSelectFromComputer={fileUpload.handleAddPhotos} />
       case 'crop':
         return currentImage ? (
           <CroppingStep
