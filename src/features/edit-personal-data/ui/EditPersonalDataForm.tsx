@@ -1,12 +1,13 @@
 'use client'
 
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import s from './EditPersonalData.module.css'
-import { Button, Input, Textarea, Select, Card, Calendar } from '@/shared/ui'
-import { editPersonalDataSchema, EditPersonalDataFormValues } from '../model/validation'
+import { Button, Card, Input, Select, Textarea } from '@/shared/ui'
+import { EditPersonalDataFormValues, editPersonalDataSchema } from '../model/validation'
 import { useUpdatePersonalData } from '../api/use-update-personal-data'
 import { PersonalDataRequest } from '../model/types'
+import { InputDate } from '@/shared/ui/input-date/InputDate'
 
 export const EditPersonalDataForm = () => {
   const {
@@ -14,7 +15,8 @@ export const EditPersonalDataForm = () => {
     handleSubmit,
     formState: { errors, isValid },
     setValue,
-    watch
+    watch,
+    control
   } = useForm<EditPersonalDataFormValues>({
     resolver: zodResolver(editPersonalDataSchema),
     defaultValues: {
@@ -32,10 +34,11 @@ export const EditPersonalDataForm = () => {
   const { mutate: updateProfile, isPending } = useUpdatePersonalData()
 
   const onSubmit = (data: EditPersonalDataFormValues) => {
+    console.log(data)
     // Преобразуем дату из формата "dd.mm.yyyy" в ISO
     let isoDate = ''
     if (data.dateOfBirth) {
-      const [day, month, year] = data.dateOfBirth.split('.')
+      const [day, month, year] = data.dateOfBirth.split('/')
       isoDate = new Date(`${year}-${month}-${day}T00:00:00.000Z`).toISOString()
     }
 
@@ -92,17 +95,12 @@ export const EditPersonalDataForm = () => {
             <Input id="lastName" label="Last Name*" type="text" error={!!errors.lastName} {...register('lastName')} />
             {errors.lastName && <span className={s.errorMessage}>{errors.lastName.message}</span>}
 
-            <div className={s.dateInputWrapper}>
-              <Input
-                id="dateOfBirth"
-                label="Date of birth"
-                type="text"
-                placeholder="00.00.0000"
-                error={!!errors.dateOfBirth}
-                {...register('dateOfBirth')}
-              />
-              <Calendar className={s.calendarIcon} />
-            </div>
+            <Controller
+              name="dateOfBirth"
+              control={control}
+              render={({ field }) => <InputDate value={field.value} onChange={field.onChange} />}
+            />
+
             {errors.dateOfBirth && <span className={s.errorMessage}>{errors.dateOfBirth.message}</span>}
 
             <div className={s.selectsContainer}>

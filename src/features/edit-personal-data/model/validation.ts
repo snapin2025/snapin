@@ -7,7 +7,7 @@ export const editPersonalDataSchema = z.object({
   lastName: z.string().min(1, 'Last name is required'),
   dateOfBirth: z
     .string()
-    .regex(/^\d{2}\.\d{2}\.\d{4}$/, 'Date must be in format dd.mm.yyyy') // ← добавлена валидация формата
+    .regex(/^\d{2}\/\d{2}\/\d{4}$/, 'Date must be in format dd/mm/yyyy') // ← добавлена валидация формата
     .optional(),
   country: z.string().optional(),
   city: z.string().optional(),

@@ -80,23 +80,4 @@
   width: auto;
 }
 
-/* Обёртка для поля с иконкой */
-.dateInputWrapper {
-  position: relative;
-  width: 100%;
-  height: fit-content;
-}
 
-/*календарь */
-.calendarIcon {
-  position: absolute;
-  right: 12px;
-  top: calc(50% + 10px); /* +8px чтобы опустить ниже от лейбла */
-  transform: translateY(-50%);
-  width: 20px;
-  height: 20px;
-  color: var(--color-light-100);
-  pointer-events: none;
-  z-index: 1;
-
-}

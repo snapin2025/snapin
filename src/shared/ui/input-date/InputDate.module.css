@@ -1,5 +1,6 @@
 .card {
   padding: 6px 24px;
+  position:absolute;
 }
 
 .navBtn {
@@ -49,6 +50,7 @@
     background-color: var(--color-accent-700);
     border-radius: 50%;
   }
+
   & :hover {
     background-color: var(--color-accent-700);
     border-radius: 50%;
@@ -87,4 +89,20 @@
 .rangeMiddle {
   border-radius: 0;
   background-color: var(--color-accent-900);
+}
+
+/* Обёртка для поля с иконкой */
+.dateInputWrapper {
+  position: relative;
+  width: 100%;
+  height: fit-content;
+}
+
+/*календарь */
+.calendarIcon {
+  position: absolute;
+  right: 12px;
+  top: calc(50% + 10px); /* +8px чтобы опустить ниже от лейбла */
+  transform: translateY(-50%);
+  cursor: pointer;
 }
