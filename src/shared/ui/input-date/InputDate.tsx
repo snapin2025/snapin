@@ -25,7 +25,11 @@ export const InputDate = () => {
           outside: s.outside,
           day: s.day,
           weekday: s.weekday,
-          weekdays: s.weekdays
+          weekdays: s.weekdays,
+          selected: s.selected,
+          range_end: s.rangeEnd,
+          range_start: s.rangeStart,
+          range_middle: s.rangeMiddle
         }}
         ISOWeek
         showOutsideDays
@@ -33,6 +37,7 @@ export const InputDate = () => {
         modifiersClassNames={{
           weekend: s.weekend
         }}
+        mode={'range'}
       />
     </Card>
   )
