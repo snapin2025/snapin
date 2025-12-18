@@ -10,16 +10,15 @@ type Option = { value: string; label: string }
 type SelectProps = {
   placeholder?: string
   options: Option[]
-  value?: string
-  onValueChange?: (value: string) => void
+  // onValueChange?: (value: string) => void
   label: string
 } & ComponentPropsWithoutRef<typeof SelectPrimitive.Root>
 
-export const Select = ({ placeholder = 'Select', options, value, onValueChange, label, ...props }: SelectProps) => {
+export const Select = ({ placeholder = 'Select', options, label, ...props }: SelectProps) => {
   return (
     <div className={s.wrapper}>
       <label className={s.label}>{label}</label>
-      <SelectPrimitive.Root value={value} onValueChange={onValueChange} {...props}>
+      <SelectPrimitive.Root {...props}>
         <SelectPrimitive.Trigger className={s.trigger}>
           <SelectPrimitive.Value placeholder={placeholder} />
           {/*иконка*/}
@@ -27,7 +26,6 @@ export const Select = ({ placeholder = 'Select', options, value, onValueChange, 
             <Arrow className={s.icon} />
           </SelectPrimitive.Icon>
         </SelectPrimitive.Trigger>
-
         <SelectPrimitive.Portal>
           <SelectPrimitive.Content className={s.content}>
             <SelectPrimitive.Viewport>

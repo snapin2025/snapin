@@ -74,8 +74,8 @@
   width: calc(100% + 128px); /* 100% + (64px * 2) для выхода за padding */
 }
 
-/* Кнопка - центрируем */
-.button {
+/* Кнопка  */
+.buttonform {
   margin-left: auto;
   width: auto;
 }

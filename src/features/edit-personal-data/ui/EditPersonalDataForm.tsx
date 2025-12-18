@@ -8,8 +8,6 @@ import { editPersonalDataSchema, EditPersonalDataFormValues } from '../model/val
 import { useUpdatePersonalData } from '../api/use-update-personal-data'
 import { PersonalDataRequest } from '../model/types'
 
-import { COUNTRIES, getCitiesByCountry } from '@/shared/data/countries'
-
 export const EditPersonalDataForm = () => {
   const {
     register,
@@ -32,12 +30,6 @@ export const EditPersonalDataForm = () => {
   })
 
   const { mutate: updateProfile, isPending } = useUpdatePersonalData()
-
-  // === ДОБАВЛЯЕМ ЭТИ 3 СТРОКИ ===
-  const selectedCountry = watch('country')
-  const countryOptions = COUNTRIES
-  const cityOptions = selectedCountry ? getCitiesByCountry(selectedCountry) : []
-  // ===============================
 
   const onSubmit = (data: EditPersonalDataFormValues) => {
     // Преобразуем дату из формата "dd.mm.yyyy" в ISO
@@ -62,6 +54,21 @@ export const EditPersonalDataForm = () => {
     // Отправляем
     updateProfile(apiData)
   }
+
+  // ВРЕМЕННО (статический список)
+  const countryOptions = [
+    { value: 'usa', label: 'USA' },
+    { value: 'germany', label: 'Germany' },
+    { value: 'france', label: 'France' },
+    { value: 'uk', label: 'United Kingdom' }
+  ]
+
+  const cityOptions = [
+    { value: 'ny', label: 'New York' },
+    { value: 'la', label: 'Los Angeles' },
+    { value: 'berlin', label: 'Berlin' },
+    { value: 'paris', label: 'Paris' }
+  ]
 
   return (
     <div className={s.container}>
@@ -126,7 +133,7 @@ export const EditPersonalDataForm = () => {
 
         <hr className={s.hr} />
 
-        <Button type="submit" variant="primary" className={s.button} disabled={!isValid || isPending}>
+        <Button type="submit" variant="primary" className={s.buttonform} disabled={!isValid || isPending}>
           {isPending ? 'Saving' : 'Save Changes'}
         </Button>
       </Card>

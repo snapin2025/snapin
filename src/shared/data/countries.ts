@@ -1,12 +1,9 @@
 // shared/data/countries.ts
-
-// Тип для элемента списка (совпадает с тем, что ожидает Select)
 export type LocationOption = {
   value: string
   label: string
 }
 
-// Основной список стран
 export const COUNTRIES: LocationOption[] = [
   { value: 'US', label: 'United States' },
   { value: 'GB', label: 'United Kingdom' },
@@ -20,7 +17,6 @@ export const COUNTRIES: LocationOption[] = [
   { value: 'AU', label: 'Australia' }
 ]
 
-// Города, сгруппированные по коду страны
 export const CITIES_BY_COUNTRY: Record<string, LocationOption[]> = {
   US: [
     { value: 'new_york', label: 'New York' },
@@ -52,7 +48,7 @@ export const CITIES_BY_COUNTRY: Record<string, LocationOption[]> = {
   ]
 }
 
-// Вспомогательная функция: получить города по коду страны
 export const getCitiesByCountry = (countryCode: string): LocationOption[] => {
+  if (!countryCode) return []
   return CITIES_BY_COUNTRY[countryCode] || []
 }
