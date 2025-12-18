@@ -47,7 +47,7 @@ export const EditPersonalDataForm = () => {
       dateOfBirth: isoDate,
       country: data.country || '',
       city: data.city || '',
-      region: '', // не используем он не требуется уточнила
+      region: '',
       aboutMe: data.aboutMe || ''
     }
 
