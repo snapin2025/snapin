@@ -62,14 +62,14 @@ export const AddProfilePhoto = ({ open, onOpenChange, onSave }: Props) => {
     }
   }
 
-  const handleBack = () => {
-    setStep('select')
-    if (previewUrl) {
-      URL.revokeObjectURL(previewUrl)
-      setPreviewUrl(null)
-    }
-    setSelectedFile(null)
-  }
+  // const handleBack = () => {
+  //   setStep('select')
+  //   if (previewUrl) {
+  //     URL.revokeObjectURL(previewUrl)
+  //     setPreviewUrl(null)
+  //   }
+  //   setSelectedFile(null)
+  // }
 
   return (
     <>

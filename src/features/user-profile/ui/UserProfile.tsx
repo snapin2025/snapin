@@ -10,6 +10,7 @@ import { Avatar, Typography, PostSkeleton, Button } from '@/shared/ui'
 import { useInfiniteScroll } from '@/shared/lib'
 import { useProfileData } from '../api/useProfileData'
 import { AddProfilePhoto } from '@/features/user-profile/addAndDeleteAvatarPhoto/ui/AddProfilePhoto'
+import { AvatarFofSettings } from '@/widgets'
 
 type Props = {
   userId: number
@@ -75,6 +76,7 @@ export const UserProfile = ({ userId, pageSize = 8 }: Props) => {
             <span className={s.userName}>{name}</span>
             <div className={s.actions}>
               <ProfileActions profileOwner={profileOwner} />
+              <AvatarFofSettings src={finalAvatarUrl} />
             </div>
             {/*временно!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/}
             <Button onClick={() => setIsAddPhotoModalOpen(true)}>Add photo profile</Button>
