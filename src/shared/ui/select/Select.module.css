@@ -53,12 +53,13 @@
 }
 
 .content {
+  z-index: 1000; /* чтобы было поверх других элементов */
+  position: absolute;
   background-color: #2d2d2d;
   border-radius: 2px;
   overflow: auto;
   width: 100%;
   min-width: 358px;
-  z-index: 50;
   border: 1px solid #4c4c4c;
 }
 

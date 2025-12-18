@@ -39,8 +39,8 @@ export const userApi = {
   },
 
   // ✔ Исправление №1 — Swagger: /auth/password-recovery возвращает 204 без тела
-  // ❌ Было: api.posts<SendRecoveryEmailType> — Неверно, это тип запроса, а не ответа
-  // ✔ Стало: api.posts без типа → тело не ожидается, всё корректно
+  // ❌ Было:api.posts<SendRecoveryEmailType> — Неверно, это тип запроса, а не ответа
+  // ✔ Стало:api.posts без типа → тело не ожидается, всё корректно
   sendRecoveryEmail: async (payload: SendRecoveryEmailType): Promise<void> => {
     await api.post('/auth/password-recovery', {
       email: payload.email,
@@ -50,7 +50,7 @@ export const userApi = {
   },
 
   // ✔ Исправление №2 — Swagger: повторная отправка тоже возвращает 204
-  // ❌ Было: api.posts<ResendRecoveryEmailType> — Неверный тип ответа
+  // ❌ Было:api.posts<ResendRecoveryEmailType> — Неверный тип ответа
   // ✔ Стало: просто await api.posts(...)
   resendRecoveryEmail: async (payload: ResendRecoveryEmailType): Promise<void> => {
     await api.post('/auth/password-recovery-resending', {

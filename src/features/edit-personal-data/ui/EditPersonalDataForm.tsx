@@ -4,7 +4,11 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import s from './EditPersonalData.module.css'
 import { Button, Input, Textarea, Select, Card, Calendar } from '@/shared/ui'
-import { editPersonalDataSchema, EditPersonalDataFormValues } from './model/validation'
+import { editPersonalDataSchema, EditPersonalDataFormValues } from '../model/validation'
+import { useUpdatePersonalData } from '../api/use-update-personal-data'
+import { PersonalDataRequest } from '../model/types'
+
+import { COUNTRIES, getCitiesByCountry } from '@/shared/data/countries'
 
 export const EditPersonalDataForm = () => {
   const {
@@ -16,49 +20,59 @@ export const EditPersonalDataForm = () => {
   } = useForm<EditPersonalDataFormValues>({
     resolver: zodResolver(editPersonalDataSchema),
     defaultValues: {
-      username: '',
+      userName: '',
       firstName: '',
       lastName: '',
       dateOfBirth: '',
       country: '',
       city: '',
+      region: '',
       aboutMe: ''
     }
   })
 
+  const { mutate: updateProfile, isPending } = useUpdatePersonalData()
+
+  // === ДОБАВЛЯЕМ ЭТИ 3 СТРОКИ ===
+  const selectedCountry = watch('country')
+  const countryOptions = COUNTRIES
+  const cityOptions = selectedCountry ? getCitiesByCountry(selectedCountry) : []
+  // ===============================
+
   const onSubmit = (data: EditPersonalDataFormValues) => {
-    console.log('Form data:', data)
+    // Преобразуем дату из формата "dd.mm.yyyy" в ISO
+    let isoDate = ''
+    if (data.dateOfBirth) {
+      const [day, month, year] = data.dateOfBirth.split('.')
+      isoDate = new Date(`${year}-${month}-${day}T00:00:00.000Z`).toISOString()
+    }
+
+    // Данные для API
+    const apiData: PersonalDataRequest = {
+      userName: data.userName,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      dateOfBirth: isoDate,
+      country: data.country || '',
+      city: data.city || '',
+      region: '', // не используем он не требуется уточнила
+      aboutMe: data.aboutMe || ''
+    }
+
+    // Отправляем
+    updateProfile(apiData)
   }
-
-  const countryOptions = [
-    { value: 'usa', label: 'USA' },
-    { value: 'uk', label: 'UK' },
-    { value: 'germany', label: 'Germany' }
-  ]
-
-  const cityOptions = [
-    { value: 'new-york', label: 'New York' },
-    { value: 'london', label: 'London' },
-    { value: 'berlin', label: 'Berlin' }
-  ]
 
   return (
     <div className={s.container}>
-      {/* Табы будут здесь */}
-      {/* <Tabs className={s.tabs} /> */}
-
       <Card as="form" className={s.form} onSubmit={handleSubmit(onSubmit)}>
         <div className={s.formContent}>
-          {/* Левая колонка - квадрат для фото */}
           <div className={s.photoBox}></div>
 
-          {/* Правая колонка - все поля формы */}
           <div className={s.formFields}>
-            {/* Usertest - поле без лейбла, текст внутри */}
-            <Input id="username" type="text" value="Usertest" readOnly {...register('username')} />
-            {errors.username && <span className={s.errorMessage}>{errors.username.message}</span>}
+            <Input id="userName" type="text" value="Usertest" readOnly {...register('userName')} />
+            {errors.userName && <span className={s.errorMessage}>{errors.userName.message}</span>}
 
-            {/* First Name */}
             <Input
               id="firstName"
               label="First Name*"
@@ -68,23 +82,22 @@ export const EditPersonalDataForm = () => {
             />
             {errors.firstName && <span className={s.errorMessage}>{errors.firstName.message}</span>}
 
-            {/* Last Name */}
             <Input id="lastName" label="Last Name*" type="text" error={!!errors.lastName} {...register('lastName')} />
             {errors.lastName && <span className={s.errorMessage}>{errors.lastName.message}</span>}
 
-            {/* Date of Birth с иконкой календаря */}
             <div className={s.dateInputWrapper}>
               <Input
                 id="dateOfBirth"
                 label="Date of birth"
                 type="text"
                 placeholder="00.00.0000"
+                error={!!errors.dateOfBirth}
                 {...register('dateOfBirth')}
               />
               <Calendar className={s.calendarIcon} />
             </div>
+            {errors.dateOfBirth && <span className={s.errorMessage}>{errors.dateOfBirth.message}</span>}
 
-            {/* Селекты Country и City РЯДОМ */}
             <div className={s.selectsContainer}>
               <Select
                 label="Select your country"
@@ -101,17 +114,20 @@ export const EditPersonalDataForm = () => {
               />
             </div>
 
-            {/* About Me Textarea */}
-            <Textarea label="About Me" {...register('aboutMe')} error={errors.aboutMe?.message} maxLength={500} />
+            <Textarea
+              label="About Me"
+              placeholder="Text-area"
+              {...register('aboutMe')}
+              error={errors.aboutMe?.message}
+              maxLength={500}
+            />
           </div>
         </div>
 
-        {/* Полоска-разделитель */}
         <hr className={s.hr} />
 
-        {/* Save Button */}
-        <Button type="submit" variant="primary" className={s.button} disabled={!isValid}>
-          Save Changes
+        <Button type="submit" variant="primary" className={s.button} disabled={!isValid || isPending}>
+          {isPending ? 'Saving' : 'Save Changes'}
         </Button>
       </Card>
     </div>
