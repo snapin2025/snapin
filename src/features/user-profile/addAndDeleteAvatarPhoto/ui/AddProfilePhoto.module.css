@@ -1,0 +1,35 @@
+.modalContent {
+  min-width: 400px;
+  max-width: 500px;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 400px;
+}
+
+.preview {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+.image {
+  object-fit: cover;
+  aspect-ratio: 1 / 1;
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 24px;
+  border-top: 1px solid var(--color-dark-100);
+}

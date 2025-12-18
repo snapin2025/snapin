@@ -9,7 +9,7 @@ import { PostImageSlider } from '@/shared/lib/post-image-slider'
 import { Avatar, Typography, PostSkeleton, Button } from '@/shared/ui'
 import { useInfiniteScroll } from '@/shared/lib'
 import { useProfileData } from '../api/useProfileData'
-import { AddProfilePhoto } from '@/features/user-profile/addProfilePhoto/ui/AddProfilePhoto'
+import { AddProfilePhoto } from '@/features/user-profile/addAndDeleteAvatarPhoto/ui/AddProfilePhoto'
 
 type Props = {
   userId: number
@@ -46,6 +46,7 @@ export const UserProfile = ({ userId, pageSize = 8 }: Props) => {
     }),
     [profileData?.followingCount, profileData?.followersCount, profileData?.publicationsCount, postsData?.pages]
   )
+  const [isAddPhotoModalOpen, setIsAddPhotoModalOpen] = useState(false) // добавить это состояние
 
   // Обработка бесконечной прокрутки через Intersection Observer
   useInfiniteScroll({
@@ -63,7 +64,7 @@ export const UserProfile = ({ userId, pageSize = 8 }: Props) => {
     'Расскажите о себе в настройках профиля. Это поле можно обновить в разделе Profile settings — пользователи увидят его здесь.'
 
   const finalAvatarUrl = avatarUrl || profileData?.avatars?.[0]?.url
-  const [isAddPhotoModalOpen, setIsAddPhotoModalOpen] = useState(false) // добавить это состояние
+
   return (
     <section className={s.page}>
       <div className={s.header}>

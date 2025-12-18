@@ -3,10 +3,10 @@
 import * as React from 'react'
 import { useState } from 'react'
 import { Dialog, DialogContent } from '@/shared/ui/modal'
+import { Button } from '@/shared/ui'
 import { useProfilePhotoUpload } from '../hooks/useProfilePhotoUpload'
+import { useAddAvatar } from '../api/useAddAvatar'
 import { SelectPhotoStep } from './SelectPhotoStep'
-import { PreviewPhotoStep } from './PreviewPhotoStep'
-import { ProfilePhotoValidationModal } from './ProfilePhotoValidationModal'
 import s from './AddProfilePhoto.module.css'
 
 type Props = {
@@ -21,7 +21,7 @@ export const AddProfilePhoto = ({ open, onOpenChange, onSave }: Props) => {
   const [step, setStep] = useState<Step>('select')
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
-  const [showValidationModal, setShowValidationModal] = useState(false)
+  const { mutateAsync: addAvatar, isPending } = useAddAvatar()
 
   const handleClose = () => {
     onOpenChange(false)
@@ -42,14 +42,24 @@ export const AddProfilePhoto = ({ open, onOpenChange, onSave }: Props) => {
       setPreviewUrl(url)
       setStep('preview')
     },
-    onValidationError: () => setShowValidationModal(true)
+    onValidationError: () => {}
   })
 
   const handleSave = async (file: File) => {
-    if (onSave) {
-      await onSave(file)
+    try {
+      // Загружаем аватар на сервер
+      await addAvatar({ file })
+
+      // Дополнительный внешний колбэк, если он передан
+      if (onSave) {
+        await onSave(file)
+      }
+
+      handleClose()
+    } catch (e) {
+      // TODO: здесь можно показать тост/уведомление об ошибке
+      console.error('Failed to upload avatar', e)
     }
-    handleClose()
   }
 
   const handleBack = () => {
@@ -64,7 +74,7 @@ export const AddProfilePhoto = ({ open, onOpenChange, onSave }: Props) => {
   return (
     <>
       <Dialog open={open} onOpenChange={handleClose}>
-        <DialogContent title={step === 'select' ? 'Add a Profile Photo' : undefined} className={s.modalContent}>
+        <DialogContent title="Add a Profile Photo" className={s.modalContent}>
           <input
             ref={fileUpload.inputRef}
             id={fileUpload.inputId}
@@ -77,17 +87,20 @@ export const AddProfilePhoto = ({ open, onOpenChange, onSave }: Props) => {
           {step === 'select' && <SelectPhotoStep onSelectFile={fileUpload.handleSelectFile} />}
 
           {step === 'preview' && selectedFile && previewUrl && (
-            <PreviewPhotoStep
-              imageUrl={previewUrl}
-              onBack={handleBack}
-              onSave={handleSave}
-              originalFile={selectedFile}
-            />
+            <div className={s.container}>
+              <div className={s.preview}>
+                <img src={previewUrl} alt="Profile preview" className={s.image} />
+              </div>
+
+              <div className={s.footer}>
+                <Button variant="primary" onClick={() => handleSave(selectedFile)} disabled={isPending}>
+                  {isPending ? 'Saving...' : 'Save'}
+                </Button>
+              </div>
+            </div>
           )}
         </DialogContent>
       </Dialog>
-
-      <ProfilePhotoValidationModal open={showValidationModal} onOpenChange={setShowValidationModal} />
     </>
   )
 }

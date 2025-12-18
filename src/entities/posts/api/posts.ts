@@ -14,8 +14,22 @@ import {
   PostImagesResponse,
   ResponsesPosts,
   AddAvatarPayload,
-  AddAvatarResponse,
+  AddAvatarResponse
 } from '@/entities/posts/api/types'
+
+// Вспомогательная функция для добавления аватара
+const addAvatarImpl = async (payload: AddAvatarPayload): Promise<AddAvatarResponse> => {
+  const formData = new FormData()
+  formData.append('file', payload.file)
+
+  const { data } = await api.post<AddAvatarResponse>('/users/profile/avatar', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+
+  return data
+}
 
 export const postsApi = {
   deletePost: async (id: number): Promise<void> => {
@@ -82,16 +96,10 @@ export const postsApi = {
 
     return data
   },
-  addAvatar: async (payload: AddAvatarPayload): Promise<AddAvatarResponse> => {
-    const formData = new FormData()
-    formData.append('file', payload.file)
-  
-    const { data } = await api.post<AddAvatarResponse>('/users/profile/avatar', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    })
-  
-    return data
-  },
+  addPhotoAvatar: addAvatarImpl,
+  // Алиас для обратной совместимости
+  addAvatar: addAvatarImpl,
+  deletePhotoAvatar: async (): Promise<void> => {
+    await api.delete<void>('/users/profile/avatar')
+  }
 }

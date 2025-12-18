@@ -3,6 +3,7 @@
 import { Button } from '@/shared/ui'
 import { SvgImage } from '@/shared/ui/icons/SvgImage'
 import s from './SelectPhotoStep.module.css'
+import { AvatarFofSettings } from '@/widgets/avatarFofSettings/ui/AvatarFofSettings'
 
 type Props = {
   onSelectFile: () => void
