@@ -1,4 +1,5 @@
 import { SETTINGS_PART } from '@/shared/lib/routes'
+import { EditPersonalDataForm } from '@/features/edit-personal-data'
 
 type Props = {
   searchParams: Promise<{
@@ -19,6 +20,10 @@ export const SettingsPage = async ({ searchParams }: Props) => {
       return <div>Платежи</div>
 
     default:
-      return <div>Информация пользователя</div>
+      return (
+        <div>
+          <EditPersonalDataForm />
+        </div>
+      )
   }
 }
