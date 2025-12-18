@@ -1,4 +1,11 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios'
+import https from 'https'
+
+// Настройка для работы с самоподписанными сертификатами (только для SSR на сервере)
+// В браузере это не нужно, так как браузер сам обрабатывает сертификаты
+const httpsAgent = new https.Agent({
+  rejectUnauthorized: false // Отключаем проверку сертификата только для разработки
+})
 
 export const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -6,7 +13,9 @@ export const api = axios.create({
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json'
-  }
+  },
+  // Используем httpsAgent только на сервере (для SSR запросов)
+  ...(typeof window === 'undefined' && { httpsAgent })
 })
 
 api.interceptors.request.use((config) => {
