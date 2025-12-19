@@ -1,15 +1,12 @@
 import { useCallback, useId, useRef } from 'react'
-import { validateProfilePhoto } from '../model/profilePhotoValidation'
+import { validateProfilePhoto, FileValidationError } from '../model/profilePhotoValidation'
 
 type UseProfilePhotoUploadParams = {
   onFileSelect: (file: File, previewUrl: string) => void
-  onValidationError: () => void
+  onValidationError: (errors: FileValidationError[]) => void
 }
 
-export const useProfilePhotoUpload = ({
-  onFileSelect,
-  onValidationError
-}: UseProfilePhotoUploadParams) => {
+export const useProfilePhotoUpload = ({ onFileSelect, onValidationError }: UseProfilePhotoUploadParams) => {
   const inputRef = useRef<HTMLInputElement | null>(null)
   const inputId = useId()
 
@@ -22,7 +19,7 @@ export const useProfilePhotoUpload = ({
       if (!validation.valid) {
         console.error('File validation errors:', validation.errors)
         e.target.value = ''
-        onValidationError()
+        onValidationError(validation.errors)
         return
       }
 

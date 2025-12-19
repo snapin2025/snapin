@@ -14,7 +14,14 @@
     justify-content: center;
     align-items: center;
     border-radius: 2px;
-    margin: 68px 0 60px;
+    margin: 35px 0 60px;
+  }
+
+  .errorFormat{
+    padding: 5px 65px;
+    text-align: center;
+    background-color: var(--color-danger-900);
+    border: 1px solid var(--color-danger-500);
   }
 
 

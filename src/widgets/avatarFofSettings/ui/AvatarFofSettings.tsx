@@ -1,26 +1,17 @@
 'use client'
 
 import * as React from 'react'
+import { useState } from 'react'
 import { Avatar, Button } from '@/shared/ui'
 import { CloseOutline } from '@/shared/ui/icons/CloseOutline'
+import { ModalDeleteAvatar } from '@/features/user-profile/addAndDeleteAvatarPhoto/ui/ModalDeleteAvatar'
 import s from './AvatarFofSettings.module.css'
-import { useDeleteAvatar } from '@/features/user-profile/addAndDeleteAvatarPhoto/api/useDeleteAvatar'
 
 type Props = {
   src: string | undefined
 }
 export const AvatarFofSettings = ({ src }: Props) => {
-  const { mutateAsync: deleteAvatar, isPending: isDeletingAvatar } = useDeleteAvatar()
-
-  const handleDeleteAvatar = async () => {
-    try {
-      await deleteAvatar()
-      // Кэш профиля автоматически обновится благодаря invalidateQueries в хуке
-    } catch (e) {
-      // TODO: здесь можно показать тост/уведомление об ошибке
-      console.error('Failed to delete avatar', e)
-    }
-  }
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
 
   // Используем key на основе src для принудительного перерендера при изменении
   // Это помогает обойти кэш Next.js Image
@@ -28,16 +19,21 @@ export const AvatarFofSettings = ({ src }: Props) => {
     return src || 'fallback'
   }, [src])
 
+  const hasPhoto = src && src.trim().length > 0
+
   return (
     <>
       <div className={s.avatar}>
         <Avatar key={avatarKey} alt="Avatar Fof" size="large" src={src} />
       </div>
-      <Button className={s.button} variant="textButton" onClick={handleDeleteAvatar} disabled={isDeletingAvatar}>
-        <div className={s.ring}>
-          <CloseOutline />
-        </div>
-      </Button>
+      {hasPhoto && (
+        <Button className={s.button} variant="textButton" onClick={() => setIsDeleteModalOpen(true)}>
+          <div className={s.ring}>
+            <CloseOutline />
+          </div>
+        </Button>
+      )}
+      <ModalDeleteAvatar open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen} />
     </>
   )
 }

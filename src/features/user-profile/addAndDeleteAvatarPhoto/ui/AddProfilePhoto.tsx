@@ -7,6 +7,7 @@ import { Button } from '@/shared/ui'
 import { useProfilePhotoUpload } from '../hooks/useProfilePhotoUpload'
 import { useAddAvatar } from '../api/useAddAvatar'
 import { SelectPhotoStep } from './SelectPhotoStep'
+import { FileValidationError } from '../model/profilePhotoValidation'
 import s from './AddProfilePhoto.module.css'
 
 type Props = {
@@ -21,6 +22,7 @@ export const AddProfilePhoto = ({ open, onOpenChange, onSave }: Props) => {
   const [step, setStep] = useState<Step>('select')
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+  const [validationErrors, setValidationErrors] = useState<FileValidationError[]>([])
   const { mutateAsync: addAvatar, isPending } = useAddAvatar()
 
   const handleClose = () => {
@@ -29,6 +31,7 @@ export const AddProfilePhoto = ({ open, onOpenChange, onSave }: Props) => {
     setTimeout(() => {
       setStep('select')
       setSelectedFile(null)
+      setValidationErrors([])
       if (previewUrl) {
         URL.revokeObjectURL(previewUrl)
         setPreviewUrl(null)
@@ -40,9 +43,12 @@ export const AddProfilePhoto = ({ open, onOpenChange, onSave }: Props) => {
     onFileSelect: (file, url) => {
       setSelectedFile(file)
       setPreviewUrl(url)
+      setValidationErrors([])
       setStep('preview')
     },
-    onValidationError: () => {}
+    onValidationError: (errors) => {
+      setValidationErrors(errors)
+    }
   })
 
   const handleSave = async (file: File) => {
@@ -62,15 +68,6 @@ export const AddProfilePhoto = ({ open, onOpenChange, onSave }: Props) => {
     }
   }
 
-  // const handleBack = () => {
-  //   setStep('select')
-  //   if (previewUrl) {
-  //     URL.revokeObjectURL(previewUrl)
-  //     setPreviewUrl(null)
-  //   }
-  //   setSelectedFile(null)
-  // }
-
   return (
     <>
       <Dialog open={open} onOpenChange={handleClose}>
@@ -84,7 +81,9 @@ export const AddProfilePhoto = ({ open, onOpenChange, onSave }: Props) => {
             onChange={fileUpload.handleFileChange}
           />
 
-          {step === 'select' && <SelectPhotoStep onSelectFile={fileUpload.handleSelectFile} />}
+          {step === 'select' && (
+            <SelectPhotoStep onSelectFile={fileUpload.handleSelectFile} validationErrors={validationErrors} />
+          )}
 
           {step === 'preview' && selectedFile && previewUrl && (
             <div className={s.container}>
@@ -92,11 +91,14 @@ export const AddProfilePhoto = ({ open, onOpenChange, onSave }: Props) => {
                 <img src={previewUrl} alt="Profile preview" className={s.image} />
               </div>
 
-              <div className={s.footer}>
-                <Button variant="primary" onClick={() => handleSave(selectedFile)} disabled={isPending}>
-                  {isPending ? 'Saving...' : 'Save'}
-                </Button>
-              </div>
+              <Button
+                className={s.button}
+                variant="primary"
+                onClick={() => handleSave(selectedFile)}
+                disabled={isPending}
+              >
+                Save
+              </Button>
             </div>
           )}
         </DialogContent>
