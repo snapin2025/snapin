@@ -8,8 +8,11 @@ import { EditPersonalDataFormValues, editPersonalDataSchema } from '../model/val
 import { useUpdatePersonalData } from '../api/use-update-personal-data'
 import { InputDate } from '@/shared/ui/input-date/InputDate'
 import { PersonalDataRequest } from '@/entities/user/api/user-types'
+import { usePersonalData } from '@/features/edit-personal-data/api/usePersonalData'
 
 export const EditPersonalDataForm = () => {
+  const { data } = usePersonalData()
+
   const {
     register,
     handleSubmit,
@@ -20,14 +23,14 @@ export const EditPersonalDataForm = () => {
   } = useForm<EditPersonalDataFormValues>({
     resolver: zodResolver(editPersonalDataSchema),
     defaultValues: {
-      userName: ``, // ← ДОБАВЬ 'Usertest' ЗДЕСЬ  имено ошибки из за этого падает запрос ,
-      firstName: '',
-      lastName: '',
-      dateOfBirth: '',
-      country: '',
-      city: '',
-      region: '',
-      aboutMe: ''
+      userName: data.userName,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      dateOfBirth: data.dateOfBirth,
+      country: data.country,
+      city: data.city,
+      region: data.region,
+      aboutMe: data.aboutMe
     }
   })
 

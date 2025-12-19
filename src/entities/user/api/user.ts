@@ -7,6 +7,7 @@ import {
   EmailResendingErrorResponse,
   EmailResendingRequest,
   LogoutResponse,
+  PersonalData,
   PersonalDataRequest,
   ResendRecoveryEmailType,
   SendRecoveryEmailType,
@@ -80,6 +81,10 @@ export const userApi = {
   },
   userProfile: async (userName: string) => {
     const response = await api.get<UserProfileResponse>(`/users/${userName}`)
+    return response.data
+  },
+  getPersonalData: async (): Promise<PersonalData> => {
+    const response = await api.get<PersonalData>('/users/profile')
     return response.data
   }
 }
