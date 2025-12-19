@@ -9,6 +9,7 @@ import {
   CreatePostResponse,
   EditPost,
   GetCommentsParams,
+  PersonalDataRequest,
   Post,
   PostImagesPayload,
   PostImagesResponse,

@@ -6,8 +6,8 @@ import s from './EditPersonalData.module.css'
 import { Button, Card, Input, Select, Textarea } from '@/shared/ui'
 import { EditPersonalDataFormValues, editPersonalDataSchema } from '../model/validation'
 import { useUpdatePersonalData } from '../api/use-update-personal-data'
-import { PersonalDataRequest } from '../model/types'
 import { InputDate } from '@/shared/ui/input-date/InputDate'
+import { PersonalDataRequest } from '@/entities/user/api/user-types'
 
 export const EditPersonalDataForm = () => {
   const {
@@ -20,7 +20,7 @@ export const EditPersonalDataForm = () => {
   } = useForm<EditPersonalDataFormValues>({
     resolver: zodResolver(editPersonalDataSchema),
     defaultValues: {
-      userName: '',
+      userName: ``, // ← ДОБАВЬ 'Usertest' ЗДЕСЬ  имено ошибки из за этого падает запрос ,
       firstName: '',
       lastName: '',
       dateOfBirth: '',
@@ -35,7 +35,7 @@ export const EditPersonalDataForm = () => {
 
   const onSubmit = (data: EditPersonalDataFormValues) => {
     console.log(data)
-    // Преобразуем дату из формата "dd.mm.yyyy" в ISO
+    // // Преобразуем дату из формата "dd.mm.yyyy" в ISO
     let isoDate = ''
     if (data.dateOfBirth) {
       const [day, month, year] = data.dateOfBirth.split('/')
@@ -80,7 +80,7 @@ export const EditPersonalDataForm = () => {
           <div className={s.photoBox}></div>
 
           <div className={s.formFields}>
-            <Input id="userName" type="text" value="Usertest" readOnly {...register('userName')} />
+            <Input id="userName" type="text" readOnly {...register('userName')} />
             {errors.userName && <span className={s.errorMessage}>{errors.userName.message}</span>}
 
             <Input

@@ -1,7 +1,8 @@
 // хук
 
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { updatePersonalData } from '@/features/edit-personal-data/api/update-personal-data'
+import { updatePersonalData } from '@/entities/user/api/user'
+// import { updatePersonalData } from '@/features/edit-personal-data/api/update-personal-data'
 
 export const useUpdatePersonalData = () => {
   const queryClient = useQueryClient()
