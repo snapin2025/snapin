@@ -52,7 +52,11 @@ export const PostModal = ({ postId }: PostModalProps) => {
     [router, isEditOpen]
   )
 
-  if (isLoading) {
+  // Показываем скелетон только если данные загружаются и их еще нет
+  // При SSR данные уже в кэше, поэтому isLoading будет false
+  const showSkeleton = isLoading && !post
+
+  if (showSkeleton) {
     return (
       <Dialog open={true} onOpenChange={handleOpenChange}>
         <DialogContent showCloseButton={false} className={s.modalContent}>

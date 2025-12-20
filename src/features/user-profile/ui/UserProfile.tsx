@@ -6,7 +6,7 @@ import s from './userProfile.module.css'
 
 import { ProfileActions } from './ProfileActions'
 import { PostImageSlider } from '@/shared/lib/post-image-slider'
-import { Avatar, Typography, PostSkeleton } from '@/shared/ui'
+import { Avatar, Typography, PostSkeleton, ProfileSkeleton } from '@/shared/ui'
 import { useInfiniteScroll } from '@/shared/lib'
 import { useProfileData } from '../api/useProfileData'
 
@@ -29,8 +29,14 @@ export const UserProfile = ({ userId, pageSize = 8 }: Props) => {
     profileOwner,
     displayName,
     avatarUrl,
-    bio
+    bio,
+    isLoading
   } = useProfileData({ userId, pageSize })
+
+  // Показываем скелетон при начальной загрузке
+  if (isLoading && !profileData && !postsData) {
+    return <ProfileSkeleton />
+  }
 
   const name = displayName || 'User'
   const observerTarget = useRef<HTMLDivElement>(null)
