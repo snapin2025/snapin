@@ -17,7 +17,6 @@ export const useProfilePhotoUpload = ({ onFileSelect, onValidationError }: UsePr
 
       const validation = validateProfilePhoto(file)
       if (!validation.valid) {
-        console.error('File validation errors:', validation.errors)
         e.target.value = ''
         onValidationError(validation.errors)
         return

@@ -9,8 +9,8 @@ import { PostImageSlider } from '@/shared/lib/post-image-slider'
 import { Avatar, Typography, PostSkeleton, Button } from '@/shared/ui'
 import { useInfiniteScroll } from '@/shared/lib'
 import { useProfileData } from '../api/useProfileData'
-import { AddProfilePhoto } from '@/features/user-profile/addAndDeleteAvatarPhoto/ui/AddProfilePhoto'
 import { AvatarFofSettings } from '@/widgets'
+import { AddProfilePhoto } from '@/features/addAndDeleteAvatarPhoto/ui/AddProfilePhoto'
 
 type Props = {
   userId: number

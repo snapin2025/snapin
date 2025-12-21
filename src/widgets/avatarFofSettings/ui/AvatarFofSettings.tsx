@@ -4,8 +4,8 @@ import * as React from 'react'
 import { useState } from 'react'
 import { Avatar, Button } from '@/shared/ui'
 import { CloseOutline } from '@/shared/ui/icons/CloseOutline'
-import { ModalDeleteAvatar } from '@/features/user-profile/addAndDeleteAvatarPhoto/ui/ModalDeleteAvatar'
 import s from './AvatarFofSettings.module.css'
+import { ModalDeleteAvatar } from '@/features/addAndDeleteAvatarPhoto/ui/ModalDeleteAvatar'
 
 type Props = {
   src: string | undefined
