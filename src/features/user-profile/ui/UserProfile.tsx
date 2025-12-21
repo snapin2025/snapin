@@ -33,11 +33,6 @@ export const UserProfile = ({ userId, pageSize = 8 }: Props) => {
     isLoading
   } = useProfileData({ userId, pageSize })
 
-  // Показываем скелетон при начальной загрузке
-  if (isLoading && !profileData && !postsData) {
-    return <ProfileSkeleton />
-  }
-
   const name = displayName || 'User'
   const observerTarget = useRef<HTMLDivElement>(null)
 
@@ -61,6 +56,11 @@ export const UserProfile = ({ userId, pageSize = 8 }: Props) => {
     threshold: 0.1,
     rootMargin: '10px'
   })
+
+  // Показываем скелетон при начальной загрузке (ПОСЛЕ всех Hooks)
+  if (isLoading && !profileData && !postsData) {
+    return <ProfileSkeleton />
+  }
 
   const profileDescription =
     bio ??

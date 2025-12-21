@@ -4,11 +4,21 @@ import { postsApi } from '@/entities/posts/api'
 
 /**
  * Предзагрузка поста на сервере
+ *
+ * Использует ensureQueryData вместо prefetchQuery для оптимизации:
+ * - Если данные уже есть в кеше QueryClient и свежие (staleTime) - не делает запрос
+ * - Если данных нет или они устарели - делает запрос
+ *
+ * Важно для динамических данных:
+ * - На сервере QueryClient создается заново для каждого запроса
+ * - ensureQueryData защищает от дублирования запросов в рамках одного рендера
+ * - staleTime: 2 минуты означает, что данные считаются свежими в течение этого времени
+ *
  * @param queryClient - QueryClient для prefetch
  * @param postId - ID поста
  */
 export async function prefetchPost(queryClient: QueryClient, postId: number) {
-  await queryClient.prefetchQuery({
+  await queryClient.ensureQueryData({
     queryKey: ['post', postId],
     queryFn: () => postsApi.getPost(postId),
     staleTime: 2 * 60 * 1000 // 2 минуты
@@ -17,13 +27,22 @@ export async function prefetchPost(queryClient: QueryClient, postId: number) {
 
 /**
  * Предзагрузка комментариев на сервере
+ *
+ * Использует ensureQueryData вместо prefetchQuery для оптимизации:
+ * - Если данные уже есть в кеше QueryClient и свежие (staleTime) - не делает запрос
+ * - Если данных нет или они устарели - делает запрос
+ *
+ * Важно для динамических данных:
+ * - Комментарии меняются часто, но staleTime предотвращает лишние запросы
+ * - ensureQueryData защищает от дублирования в рамках одного рендера
+ *
  * @param queryClient - QueryClient для prefetch
  * @param postId - ID поста
  * @param pageSize - Размер страницы (по умолчанию 6)
  */
 export async function prefetchComments(queryClient: QueryClient, postId: number, pageSize: number = 6) {
   // queryKey должен совпадать с useComments: ['comments', postId, pageSize]
-  await queryClient.prefetchQuery({
+  await queryClient.ensureQueryData({
     queryKey: ['comments', postId, pageSize],
     queryFn: () => postsApi.getComments({ postId, pageSize }),
     staleTime: 2 * 60 * 1000 // 2 минуты
