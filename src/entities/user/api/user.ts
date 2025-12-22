@@ -83,7 +83,7 @@ export const userApi = {
     return response.data
   }
 }
-//  для пользователя  при редактирования  своего профиля
+//  для пользователя  при редактирования  своих даных в форме
 export const updatePersonalData = async (data: PersonalDataRequest): Promise<void> => {
   await api.put('/users/profile', data)
 }

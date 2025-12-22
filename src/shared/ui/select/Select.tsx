@@ -10,7 +10,6 @@ type Option = { value: string; label: string }
 type SelectProps = {
   placeholder?: string
   options: Option[]
-  // onValueChange?: (value: string) => void
   label: string
 } & ComponentPropsWithoutRef<typeof SelectPrimitive.Root>
 

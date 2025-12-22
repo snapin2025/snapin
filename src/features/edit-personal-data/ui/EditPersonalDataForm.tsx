@@ -8,6 +8,7 @@ import { EditPersonalDataFormValues, editPersonalDataSchema } from '../model/val
 import { useUpdatePersonalData } from '../api/use-update-personal-data'
 import { InputDate } from '@/shared/ui/input-date/InputDate'
 import { PersonalDataRequest } from '@/entities/user/api/user-types'
+import { COUNTRIES, getCitiesByCountry } from '@/shared/data/countries'
 
 export const EditPersonalDataForm = () => {
   const {
@@ -19,59 +20,43 @@ export const EditPersonalDataForm = () => {
     control
   } = useForm<EditPersonalDataFormValues>({
     resolver: zodResolver(editPersonalDataSchema),
+    mode: 'onChange',
     defaultValues: {
-      userName: ``, // ← ДОБАВЬ 'Usertest' ЗДЕСЬ  имено ошибки из за этого падает запрос ,
+      userName: `User${Math.floor(Math.random() * 10000)}`,
       firstName: '',
       lastName: '',
       dateOfBirth: '',
       country: '',
       city: '',
-      region: '',
       aboutMe: ''
     }
   })
 
   const { mutate: updateProfile, isPending } = useUpdatePersonalData()
 
+  const countryOptions = COUNTRIES
+  const selectedCountryCode = watch('country')
+  const cityOptions = selectedCountryCode ? getCitiesByCountry(selectedCountryCode) : []
+
   const onSubmit = (data: EditPersonalDataFormValues) => {
-    console.log(data)
-    // // Преобразуем дату из формата "dd.mm.yyyy" в ISO
     let isoDate = ''
     if (data.dateOfBirth) {
-      const [day, month, year] = data.dateOfBirth.split('/')
+      const [month, day, year] = data.dateOfBirth.split('/')
       isoDate = new Date(`${year}-${month}-${day}T00:00:00.000Z`).toISOString()
     }
 
-    // Данные для API
     const apiData: PersonalDataRequest = {
       userName: data.userName,
       firstName: data.firstName,
       lastName: data.lastName,
       dateOfBirth: isoDate,
-      country: data.country || '',
-      city: data.city || '',
-      region: '',
-      aboutMe: data.aboutMe || ''
+      country: data.country,
+      city: data.city,
+      aboutMe: data.aboutMe ?? ''
     }
 
-    // Отправляем
     updateProfile(apiData)
   }
-
-  // ВРЕМЕННО (статический список)
-  const countryOptions = [
-    { value: 'usa', label: 'USA' },
-    { value: 'germany', label: 'Germany' },
-    { value: 'france', label: 'France' },
-    { value: 'uk', label: 'United Kingdom' }
-  ]
-
-  const cityOptions = [
-    { value: 'ny', label: 'New York' },
-    { value: 'la', label: 'Los Angeles' },
-    { value: 'berlin', label: 'Berlin' },
-    { value: 'paris', label: 'Paris' }
-  ]
 
   return (
     <div className={s.container}>
@@ -80,51 +65,98 @@ export const EditPersonalDataForm = () => {
           <div className={s.photoBox}></div>
 
           <div className={s.formFields}>
-            <Input id="userName" type="text" readOnly {...register('userName')} />
+            {/* Username */}
+            <Input id="userName" label="Username*" type="text" {...register('userName')} className={s.formField} />
             {errors.userName && <span className={s.errorMessage}>{errors.userName.message}</span>}
 
+            {/* First Name */}
             <Input
               id="firstName"
               label="First Name*"
               type="text"
               error={!!errors.firstName}
               {...register('firstName')}
+              className={s.formField}
             />
             {errors.firstName && <span className={s.errorMessage}>{errors.firstName.message}</span>}
 
-            <Input id="lastName" label="Last Name*" type="text" error={!!errors.lastName} {...register('lastName')} />
+            {/* Last Name */}
+            <Input
+              id="lastName"
+              label="Last Name*"
+              type="text"
+              error={!!errors.lastName}
+              {...register('lastName')}
+              className={s.formField}
+            />
             {errors.lastName && <span className={s.errorMessage}>{errors.lastName.message}</span>}
 
-            <Controller
-              name="dateOfBirth"
-              control={control}
-              render={({ field }) => <InputDate value={field.value} onChange={field.onChange} />}
-            />
+            {/* Date of Birth */}
+            <div className={s.formField}>
+              {/*<Controller*/}
+              {/*  name="dateOfBirth"*/}
+              {/*  control={control}*/}
+              {/*  render={({ field }) => <InputDate value={field.value} onChange={field.onChange} />}*/}
+              {/*/>*/}
+              {/*{errors.dateOfBirth && <span className={s.errorMessage}>{errors.dateOfBirth.message}</span>}*/}
+              <Controller
+                name="dateOfBirth"
+                control={control}
+                render={({ field }) => (
+                  <InputDate
+                    value={field.value}
+                    onChange={field.onChange}
+                    // error={!!errors.dateOfBirth} // я добавила пока
+                  />
+                )}
+              />
+              {errors.dateOfBirth && <span className={s.errorMessage}>{errors.dateOfBirth.message}</span>}
+            </div>
 
-            {errors.dateOfBirth && <span className={s.errorMessage}>{errors.dateOfBirth.message}</span>}
-
+            {/* Country and City Selects */}
             <div className={s.selectsContainer}>
-              <Select
-                label="Select your country"
-                options={countryOptions}
-                value={watch('country')}
-                onValueChange={(value) => setValue('country', value)}
+              {/* Country Select */}
+              <Controller
+                name="country"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    label="Select your country"
+                    placeholder="Country"
+                    options={countryOptions}
+                    value={field.value}
+                    onValueChange={(val) => {
+                      field.onChange(val)
+                      setValue('city', '')
+                    }}
+                  />
+                )}
               />
 
-              <Select
-                label="Select your city"
-                options={cityOptions}
-                value={watch('city')}
-                onValueChange={(value) => setValue('city', value)}
+              {/* City Select */}
+              <Controller
+                name="city"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    label="Select your city"
+                    placeholder="City"
+                    options={cityOptions}
+                    value={field.value}
+                    onValueChange={field.onChange}
+                  />
+                )}
               />
             </div>
 
+            {/* About Me */}
             <Textarea
               label="About Me"
               placeholder="Text-area"
               {...register('aboutMe')}
               error={errors.aboutMe?.message}
               maxLength={500}
+              className={s.formField}
             />
           </div>
         </div>

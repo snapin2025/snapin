@@ -117,12 +117,12 @@ export type Avatar = {
 
 // типы для редавктирания своего профиля
 export type PersonalDataRequest = {
-  userName?: string // пока не обязательное поле
+  userName?: string
   firstName: string
   lastName: string
-  dateOfBirth: string // ISO format надо будет  изменить так как пидетв таком виде  00-00-0000
-  country: string
+  dateOfBirth: string
   city: string
-  region: string
+  country: string
+  region?: string
   aboutMe: string
 }
