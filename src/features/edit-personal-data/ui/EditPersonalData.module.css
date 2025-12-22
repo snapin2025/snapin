@@ -148,7 +148,7 @@
 }
 .formFields > *:not(.selectsContainer) {
   /*margin-bottom: 2px;*/
-  color: #990f2b;
+  /*color: #990f2b;*/
 
 }
 /* УДАЛИ ЭТИ СТАРЫЕ СТИЛИ! */
@@ -181,15 +181,3 @@
   margin-left: auto;
   width: auto;
 }
-
-
-
-/* УДАЛИ ЭТО - больше не нужно! */
-/* .formField {
-  margin-bottom: 24px;
-  display: block;
-}
-
-.formField:last-child {
-  margin-bottom: 0;
-} */

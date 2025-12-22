@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 export const editPersonalDataSchema = z.object({
-  userName: z.string().min(1, 'UserName is required'),
+  userName: z.string().min(6, 'Minimum number of characters 6').max(30, 'Maximum number of characters 30'),
   firstName: z
     .string()
     .min(4, 'First name must be at least 4 characters')
