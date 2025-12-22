@@ -1,38 +1,37 @@
-// import { z } from 'zod'
-
-// model/validation.ts
-// export const editPersonalDataSchema = z.object({
-//   userName: z.string().min(1, 'UserName is required'),
-//   firstName: z.string().min(1, 'First name is required'),
-//   lastName: z.string().min(1, 'Last name is required'),
-//   dateOfBirth: z
-//     .string()
-//     .regex(/^\d{2}\/\d{2}\/\d{4}$/, 'Date must be in format dd/mm/yyyy') // ← добавлена валидация формата
-//     .optional(),
-//   country: z.string().optional(),
-//   city: z.string().optional(),
-//   region: z.string().optional(), // есть в свагере, но не в UI
-//   aboutMe: z
-//     .string()
-//     .max(500, 'About me cannot exceed 500 characters') // ← добавлено ограничение
-//     .optional()
-// })
-//
-// export type EditPersonalDataFormValues = z.infer<typeof editPersonalDataSchema>
 import { z } from 'zod'
 
 export const editPersonalDataSchema = z.object({
   userName: z.string().min(1, 'UserName is required'),
-  firstName: z.string().min(1, 'First name is required'),
-  lastName: z.string().min(1, 'Last name is required'),
+  firstName: z
+    .string()
+    .min(4, 'First name must be at least 4 characters')
+    .regex(/^[A-Za-zА-Яа-яЁё\s]+$/, 'Only letters allowed'),
+  lastName: z
+    .string()
+    .min(4, 'Last name must be at least 4 characters')
+    .regex(/^[A-Za-zА-Яа-яЁё\s]+$/, 'Only letters allowed'), // ← добавить
   dateOfBirth: z
     .string()
     .regex(/^\d{2}\/\d{2}\/\d{4}$/, 'Date must be in format MM/dd/yyyy')
+    .refine((dateStr) => {
+      if (!dateStr) return true // если пусто - ок
+
+      const [month, day, year] = dateStr.split('/').map(Number)
+      const birthDate = new Date(year, month - 1, day)
+      const today = new Date()
+
+      let age = today.getFullYear() - birthDate.getFullYear()
+      const monthDiff = today.getMonth() - birthDate.getMonth()
+
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        age--
+      }
+
+      return age >= 13
+    }, 'A user under 13 cannot create a profile. Privacy Policy')
     .optional(),
-  country: z.string().optional(),
-  city: z.string().optional(),
-  region: z.string().optional(),
+  country: z.string().min(1, 'Country is required'),
+  city: z.string().min(1, 'City is required'),
   aboutMe: z.string().max(500, 'About me cannot exceed 500 characters').optional()
 })
-
 export type EditPersonalDataFormValues = z.infer<typeof editPersonalDataSchema>

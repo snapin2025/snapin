@@ -1,5 +1,3 @@
-// features/user-profile/edit-personal-data/EditPersonalDataForm.stories.tsx
-
 import { EditPersonalDataForm } from './EditPersonalDataForm'
 import { Meta, StoryObj } from '@storybook/nextjs'
 

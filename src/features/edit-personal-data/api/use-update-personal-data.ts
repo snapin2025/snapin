@@ -2,7 +2,6 @@
 
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { updatePersonalData } from '@/entities/user/api/user'
-// import { updatePersonalData } from '@/features/edit-personal-data/api/update-personal-data'
 
 export const useUpdatePersonalData = () => {
   const queryClient = useQueryClient()
@@ -12,7 +11,6 @@ export const useUpdatePersonalData = () => {
     onSuccess: () => {
       // Инвалидируем кэш профиля, чтобы при следующем запросе данные были актуальные
       queryClient.invalidateQueries({ queryKey: ['profile'] })
-      // Если нужно, можно показать уведомление (но это UI-логика, не здесь)
     },
     onError: (error) => {
       console.error('Failed to update profile:', error)

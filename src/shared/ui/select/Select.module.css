@@ -13,7 +13,6 @@
   line-height: 24px;
   color: #ffffff;
   cursor: pointer;
-  /*box-sizing: border-box;*/
 }
 
 .wrapper {
@@ -35,13 +34,7 @@
 
 .trigger:focus {
   outline: none;
-  border-color: #818cf8;
-}
-
-.trigger:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  background-color: #f9fafb;
+  border-color: #2f68cc;
 }
 
 .trigger[data-placeholder] {
@@ -54,10 +47,11 @@
 
 .content {
   z-index: 1000;
-  /*position: absolute;*/
+  /*position: fixed;*/
+  /*position: relative;*/
   background-color: #2d2d2d;
   border-radius: 2px;
-  overflow: auto;
+  overflow: hidden;
   width: 100%;
   /*min-width: 358px;*/
   border: 1px solid #4c4c4c;
