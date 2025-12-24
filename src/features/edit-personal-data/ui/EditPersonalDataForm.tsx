@@ -123,13 +123,7 @@ export const EditPersonalDataForm = () => {
               <Controller
                 name="dateOfBirth"
                 control={control}
-                render={({ field }) => (
-                  <InputDate
-                    value={field.value}
-                    onChange={field.onChange}
-                    error={!!errors.dateOfBirth} // я добавила пока
-                  />
-                )}
+                render={({ field }) => <InputDate value={field.value} onChange={field.onChange} />}
               />
               {errors.dateOfBirth && <span className={s.errorMessage}>{errors.dateOfBirth.message}</span>}
             </div>
