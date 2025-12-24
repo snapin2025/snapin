@@ -6,7 +6,7 @@
   width: 358px;
   padding: 6px 12px;
   font-weight: 400;
-  background-color: #171717;
+  /*background-color: #171717;*/
   border: 1px solid #4c4c4c;
   border-radius: 2px;
   font-size: 16px;
@@ -47,8 +47,6 @@
 
 .content {
   z-index: 1000;
-  /*position: fixed;*/
-  /*position: relative;*/
   background-color: #2d2d2d;
   border-radius: 2px;
   overflow: hidden;
