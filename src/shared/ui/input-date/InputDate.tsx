@@ -8,7 +8,7 @@ import s from './InputDate.module.css'
 type InputDateProps = {
   value?: string
   onChange?: (value: string) => void
-
+  error: boolean
 }
 
 export const InputDate = ({ value, onChange }: InputDateProps) => {
