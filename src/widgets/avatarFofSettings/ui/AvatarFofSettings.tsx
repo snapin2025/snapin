@@ -15,9 +15,7 @@ export const AvatarFofSettings = ({ src }: Props) => {
 
   // Используем key на основе src для принудительного перерендера при изменении
   // Это помогает обойти кэш Next.js Image
-  const avatarKey = React.useMemo(() => {
-    return src || 'fallback'
-  }, [src])
+  const avatarKey = src || 'fallback'
 
   const hasPhoto = src && src.trim().length > 0
 
