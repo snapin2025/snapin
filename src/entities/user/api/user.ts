@@ -7,6 +7,8 @@ import {
   EmailResendingErrorResponse,
   EmailResendingRequest,
   LogoutResponse,
+  PersonalData,
+  PersonalDataRequest,
   ResendRecoveryEmailType,
   SendRecoveryEmailType,
   SetNewPasswordType,
@@ -39,8 +41,8 @@ export const userApi = {
   },
 
   // ✔ Исправление №1 — Swagger: /auth/password-recovery возвращает 204 без тела
-  // ❌ Было: api.posts<SendRecoveryEmailType> — Неверно, это тип запроса, а не ответа
-  // ✔ Стало: api.posts без типа → тело не ожидается, всё корректно
+  // ❌ Было:api.posts<SendRecoveryEmailType> — Неверно, это тип запроса, а не ответа
+  // ✔ Стало:api.posts без типа → тело не ожидается, всё корректно
   sendRecoveryEmail: async (payload: SendRecoveryEmailType): Promise<void> => {
     await api.post('/auth/password-recovery', {
       email: payload.email,
@@ -50,7 +52,7 @@ export const userApi = {
   },
 
   // ✔ Исправление №2 — Swagger: повторная отправка тоже возвращает 204
-  // ❌ Было: api.posts<ResendRecoveryEmailType> — Неверный тип ответа
+  // ❌ Было:api.posts<ResendRecoveryEmailType> — Неверный тип ответа
   // ✔ Стало: просто await api.posts(...)
   resendRecoveryEmail: async (payload: ResendRecoveryEmailType): Promise<void> => {
     await api.post('/auth/password-recovery-resending', {
@@ -80,5 +82,13 @@ export const userApi = {
   userProfile: async (userName: string) => {
     const response = await api.get<UserProfileResponse>(`/users/${userName}`)
     return response.data
+  },
+  getPersonalData: async (): Promise<PersonalData> => {
+    const response = await api.get<PersonalData>('/users/profile')
+    return response.data
   }
+}
+//  для пользователя  при редактирования  своих даных в форме
+export const updatePersonalData = async (data: PersonalDataRequest): Promise<void> => {
+  await api.put('/users/profile', data)
 }
