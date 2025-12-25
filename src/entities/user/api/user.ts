@@ -7,6 +7,8 @@ import {
   EmailResendingErrorResponse,
   EmailResendingRequest,
   LogoutResponse,
+  PersonalData,
+  PersonalDataRequest,
   ResendRecoveryEmailType,
   SendRecoveryEmailType,
   SetNewPasswordType,
@@ -80,5 +82,13 @@ export const userApi = {
   userProfile: async (userName: string) => {
     const response = await api.get<UserProfileResponse>(`/users/${userName}`)
     return response.data
+  },
+  getPersonalData: async (): Promise<PersonalData> => {
+    const response = await api.get<PersonalData>('/users/profile')
+    return response.data
   }
+}
+//  для пользователя  при редактирования  своих даных в форме
+export const updatePersonalData = async (data: PersonalDataRequest): Promise<void> => {
+  await api.put('/users/profile', data)
 }

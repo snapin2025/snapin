@@ -8,9 +8,12 @@ import { EditPersonalDataFormValues, editPersonalDataSchema } from '../model/val
 import { useUpdatePersonalData } from '../api/use-update-personal-data'
 import { InputDate } from '@/shared/ui/input-date/InputDate'
 import { PersonalDataRequest } from '@/entities/user/api/user-types'
+import { usePersonalData } from '@/features/edit-personal-data/api/usePersonalData'
 import { COUNTRIES, getCitiesByCountry } from '@/shared/data/countries'
 
 export const EditPersonalDataForm = () => {
+  const { data } = usePersonalData()
+
   const {
     register,
     handleSubmit,
@@ -22,13 +25,13 @@ export const EditPersonalDataForm = () => {
     resolver: zodResolver(editPersonalDataSchema),
     mode: 'onChange',
     defaultValues: {
-      userName: `User${Math.floor(Math.random() * 10000)}`,
-      firstName: '',
-      lastName: '',
-      dateOfBirth: '',
-      country: '',
-      city: '',
-      aboutMe: ''
+      userName: data.userName,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      dateOfBirth: data.dateOfBirth,
+      country: data.country,
+      city: data.city,
+      aboutMe: data.aboutMe
     }
   })
 
@@ -42,7 +45,18 @@ export const EditPersonalDataForm = () => {
     let isoDate = ''
     if (data.dateOfBirth) {
       const [month, day, year] = data.dateOfBirth.split('/')
-      isoDate = new Date(`${year}-${month}-${day}T00:00:00.000Z`).toISOString()
+
+      const date = new Date(
+        Number(year),
+        Number(month) - 1, // месяцы с 0
+        Number(day),
+        0,
+        0,
+        0,
+        0
+      )
+
+      isoDate = date.toISOString()
     }
 
     const apiData: PersonalDataRequest = {
@@ -66,49 +80,50 @@ export const EditPersonalDataForm = () => {
 
           <div className={s.formFields}>
             {/* Username */}
-            <Input id="userName" label="Username*" type="text" {...register('userName')} className={s.formField} />
-            {errors.userName && <span className={s.errorMessage}>{errors.userName.message}</span>}
+            <div>
+              <Input
+                id="userName"
+                label="Username*"
+                type="text"
+                {...register('userName')}
+                className={s.formField}
+                error={!!errors.userName}
+              />
+              {errors.userName && <span className={s.errorMessage}>{errors.userName.message}</span>}
+            </div>
 
             {/* First Name */}
-            <Input
-              id="firstName"
-              label="First Name*"
-              type="text"
-              error={!!errors.firstName}
-              {...register('firstName')}
-              className={s.formField}
-            />
-            {errors.firstName && <span className={s.errorMessage}>{errors.firstName.message}</span>}
+            <div>
+              <Input
+                id="firstName"
+                label="First Name*"
+                type="text"
+                error={!!errors.firstName}
+                {...register('firstName')}
+                className={s.formField}
+              />
+              {errors.firstName && <span className={s.errorMessage}>{errors.firstName.message}</span>}
+            </div>
 
             {/* Last Name */}
-            <Input
-              id="lastName"
-              label="Last Name*"
-              type="text"
-              error={!!errors.lastName}
-              {...register('lastName')}
-              className={s.formField}
-            />
-            {errors.lastName && <span className={s.errorMessage}>{errors.lastName.message}</span>}
+            <div>
+              <Input
+                id="lastName"
+                label="Last Name*"
+                type="text"
+                error={!!errors.lastName}
+                {...register('lastName')}
+                className={s.formField}
+              />
+              {errors.lastName && <span className={s.errorMessage}>{errors.lastName.message}</span>}
+            </div>
 
             {/* Date of Birth */}
-            <div className={s.formField}>
-              {/*<Controller*/}
-              {/*  name="dateOfBirth"*/}
-              {/*  control={control}*/}
-              {/*  render={({ field }) => <InputDate value={field.value} onChange={field.onChange} />}*/}
-              {/*/>*/}
-              {/*{errors.dateOfBirth && <span className={s.errorMessage}>{errors.dateOfBirth.message}</span>}*/}
+            <div>
               <Controller
                 name="dateOfBirth"
                 control={control}
-                render={({ field }) => (
-                  <InputDate
-                    value={field.value}
-                    onChange={field.onChange}
-                    // error={!!errors.dateOfBirth} // я добавила пока
-                  />
-                )}
+                render={({ field }) => <InputDate value={field.value} onChange={field.onChange} />}
               />
               {errors.dateOfBirth && <span className={s.errorMessage}>{errors.dateOfBirth.message}</span>}
             </div>
