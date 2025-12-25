@@ -1,6 +1,11 @@
-// Обертка над всеми страницами настроек
-'use client'
+import { ReactNode } from 'react'
+import { SettingsTabs } from '@/widgets'
 
-export function SettingsLayout() {
-  return <div></div>
+export async function SettingsLayout({ children }: { children: ReactNode }) {
+  return (
+    <section>
+      <SettingsTabs />
+      <div>{children}</div>
+    </section>
+  )
 }

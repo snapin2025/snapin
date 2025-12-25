@@ -19,7 +19,9 @@ type DropMenuProps = {
 
 export const DropMenu = ({ onEdit, onDelete, onFollow, onUnfollow, ownerId, currentUserId }: DropMenuProps) => {
   const [open, setOpen] = useState(false)
+
   const { user } = useAuth()
+
   // Показываем Edit/Delete только если это пост текущего пользователя
   const canEdit = !!currentUserId && currentUserId === ownerId
   // Показываем Follow/Unfollow только если пользователь авторизован и это не его пост

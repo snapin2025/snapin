@@ -114,3 +114,21 @@ export type Avatar = {
   fileSize: number
   createdAt: string
 }
+
+export type PersonalData = PersonalDataRequest & {
+  id: number
+  avatars: Array<Avatar>
+  createdAt: string
+}
+
+// типы для редавктирания своего профиля
+export type PersonalDataRequest = {
+  userName?: string
+  firstName: string
+  lastName: string
+  dateOfBirth: string
+  city: string
+  country: string
+  region?: string
+  aboutMe: string
+}
