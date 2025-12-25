@@ -3,8 +3,9 @@
   display: flex;
   justify-content: space-between;
   padding: 12px 18px 12px 0;
-  width: 100%;
-  max-width: 480px;
+  /*width: 100%;*/
+  min-width: 480px;
+  background-color: #4c4c4c;
 }
 
 .card {
