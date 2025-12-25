@@ -142,3 +142,11 @@ export type PostImagesResponse = {
     uploadId: string
   }[]
 }
+
+export type AddAvatarPayload = {
+  file: File
+}
+
+export type AddAvatarResponse = {
+  avatars: Avatar[]
+}
