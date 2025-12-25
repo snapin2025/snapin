@@ -24,9 +24,9 @@ export const useDeleteAvatar = () => {
       // Инвалидируем кэш профиля пользователя для обновления UI
       if (user?.userName) {
         // Сначала обновляем данные в кэше напрямую для мгновенного обновления UI
-        const currentData = queryClient.getQueryData<UserProfileResponse>(['user-profile', user.userName])
+        const currentData = queryClient.getQueryData<UserProfileResponse>(['personal-data'])
         if (currentData) {
-          queryClient.setQueryData<UserProfileResponse>(['user-profile', user.userName], {
+          queryClient.setQueryData<UserProfileResponse>(['personal-data'], {
             ...currentData,
             avatars: []
           })

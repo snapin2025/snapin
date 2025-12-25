@@ -1,6 +1,6 @@
 
 .avatar {
-  position: absolute;
+position: relative;
 
 }
 
@@ -15,9 +15,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
-  top: 100%;
-  right: -145px;
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
 .ring {
