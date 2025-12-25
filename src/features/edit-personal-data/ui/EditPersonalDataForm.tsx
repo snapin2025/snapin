@@ -10,10 +10,13 @@ import { InputDate } from '@/shared/ui/input-date/InputDate'
 import { PersonalDataRequest } from '@/entities/user/api/user-types'
 import { usePersonalData } from '@/features/edit-personal-data/api/usePersonalData'
 import { COUNTRIES, getCitiesByCountry } from '@/shared/data/countries'
+import { AvatarFofSettings } from '@/widgets'
+import { useState } from 'react'
+import { AddProfilePhoto } from '@/features/addAndDeleteAvatarPhoto/ui/AddProfilePhoto'
 
 export const EditPersonalDataForm = () => {
   const { data } = usePersonalData()
-
+  const [isAddPhotoModalOpen, setIsAddPhotoModalOpen] = useState(false) // добавить это состояние
   const {
     register,
     handleSubmit,
@@ -76,7 +79,10 @@ export const EditPersonalDataForm = () => {
     <div className={s.container}>
       <Card as="form" className={s.form} onSubmit={handleSubmit(onSubmit)}>
         <div className={s.formContent}>
-          <div className={s.photoBox}></div>
+          <div>
+            <AvatarFofSettings src={data?.avatars?.[0]?.url} />
+            <Button onClick={() => setIsAddPhotoModalOpen(true)}>Add photo profile</Button>
+          </div>
 
           <div className={s.formFields}>
             {/* Username */}
@@ -182,6 +188,7 @@ export const EditPersonalDataForm = () => {
           {isPending ? 'Saving' : 'Save Changes'}
         </Button>
       </Card>
+      <AddProfilePhoto open={isAddPhotoModalOpen} onOpenChange={setIsAddPhotoModalOpen} />
     </div>
   )
 }

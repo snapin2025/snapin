@@ -1,16 +1,14 @@
 'use client'
 
-import { useMemo, useRef, useState } from 'react'
+import { useMemo, useRef } from 'react'
 import Link from 'next/link'
 import s from './userProfile.module.css'
 
 import { ProfileActions } from './ProfileActions'
 import { PostImageSlider } from '@/shared/lib/post-image-slider'
-import { Avatar, Typography, PostSkeleton, Button } from '@/shared/ui'
+import { Avatar, PostSkeleton, Typography } from '@/shared/ui'
 import { useInfiniteScroll } from '@/shared/lib'
 import { useProfileData } from '../api/useProfileData'
-import { AvatarFofSettings } from '@/widgets'
-import { AddProfilePhoto } from '@/features/addAndDeleteAvatarPhoto/ui/AddProfilePhoto'
 
 type Props = {
   userId: number
@@ -47,7 +45,6 @@ export const UserProfile = ({ userId, pageSize = 8 }: Props) => {
     }),
     [profileData?.followingCount, profileData?.followersCount, profileData?.publicationsCount, postsData?.pages]
   )
-  const [isAddPhotoModalOpen, setIsAddPhotoModalOpen] = useState(false) // добавить это состояние
 
   // Обработка бесконечной прокрутки через Intersection Observer
   useInfiniteScroll({
@@ -76,10 +73,7 @@ export const UserProfile = ({ userId, pageSize = 8 }: Props) => {
             <span className={s.userName}>{name}</span>
             <div className={s.actions}>
               <ProfileActions profileOwner={profileOwner} />
-              <AvatarFofSettings src={finalAvatarUrl} />
             </div>
-            {/*временно!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/}
-            <Button onClick={() => setIsAddPhotoModalOpen(true)}>Add photo profile</Button>
           </div>
 
           <div className={s.stats}>
@@ -154,9 +148,6 @@ export const UserProfile = ({ userId, pageSize = 8 }: Props) => {
           <div className={s.emptyState}>У пользователя пока нет публикаций</div>
         )}
       </div>
-
-      {/* Добавить модалку в конец компонента */}
-      <AddProfilePhoto open={isAddPhotoModalOpen} onOpenChange={setIsAddPhotoModalOpen} />
     </section>
   )
 }

@@ -23,14 +23,15 @@ export const AvatarFofSettings = ({ src }: Props) => {
     <>
       <div className={s.avatar}>
         <Avatar key={avatarKey} alt="Avatar Fof" size="large" src={src} />
+        {hasPhoto && (
+          <Button className={s.button} variant="textButton" onClick={() => setIsDeleteModalOpen(true)}>
+            <div className={s.ring}>
+              <CloseOutline />
+            </div>
+          </Button>
+        )}
       </div>
-      {hasPhoto && (
-        <Button className={s.button} variant="textButton" onClick={() => setIsDeleteModalOpen(true)}>
-          <div className={s.ring}>
-            <CloseOutline />
-          </div>
-        </Button>
-      )}
+
       <ModalDeleteAvatar open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen} />
     </>
   )
