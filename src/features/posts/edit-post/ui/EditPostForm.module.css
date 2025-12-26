@@ -6,19 +6,18 @@
 .wrapper {
   width: 100%;
   display: flex;
-  /*overflow: hidden;*/
   border: none;
   background-color: #333;
   box-shadow: none;
 }
 
 .imgBox {
-  display: flex;
-  flex: 0 0 490px;
+  /*display: flex;*/
+  /*flex: 0 0 490px;*/
   width: 100%;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
+  /*align-items: center;*/
+  /*justify-content: center;*/
+  /*overflow: hidden;*/
 }
 
 .img {
@@ -78,8 +77,6 @@
 
 /* Стили для confirm диалогового окна */
 .confirmDialog {
-  z-index: 1000; /* Выше overlay (999), должен быть выше основного окна */
-  position: fixed;
   background-color: var(--color-dark-300);
   max-width: 486px;
   padding: 0;
