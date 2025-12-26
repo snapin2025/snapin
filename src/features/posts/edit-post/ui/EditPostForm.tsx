@@ -87,7 +87,7 @@ export const EditPostForm = ({
       <Dialog title="Edit Post" open={isOpen} onOpenChange={handleDialogClose} className={s.dialog}>
         <Card className={s.wrapper}>
           <div className={s.imgBox}>
-            <Image src={postImage} alt="Post" width={490} height={503} className={s.img} priority/>
+            <Image src={postImage} alt="Post" width={490} height={503} className={s.img} priority />
           </div>
 
           <div className={s.form}>
