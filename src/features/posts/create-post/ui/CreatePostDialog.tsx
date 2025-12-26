@@ -141,7 +141,6 @@ export const CreatePostDialog = ({ open, onOpenChange, onFileSelect }: Props) =>
         open={open}
         onOpenChange={handleCloseAttempt}
         title={state.step === 'select' ? 'Add Photo' : undefined}
-        closeOutContent={true}
       >
         <input
           ref={fileUpload.inputRef}

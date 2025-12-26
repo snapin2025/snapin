@@ -1,51 +1,80 @@
 .dialog {
   background-color: #333;
-  /*z-index: 100;*/
+  z-index: 200; /* Выше чем PostModal (z-index: 101) для правильного отображения поверх */
 }
 
 .wrapper {
-  width: 100%;
   display: flex;
   /*overflow: hidden;*/
-  border: none;
-  background-color: #333;
+  /*border: none;*/
+  /*position: relative;*/
   box-shadow: none;
+
 }
 
 .imgBox {
-  display: flex;
-  flex: 0 0 490px;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
+  height: 100%; /* займет всю высоту wrapper */
 }
 
 .img {
-  min-height: 100%;
+  height: 100%;
   object-fit: cover;
 }
 
 /*форма */
 .form {
-  padding: 24px;
+  padding:  24px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  background-color: #333;
   min-width: 480px;
+  min-height: 562px;
 }
 
 /* PostCard - верхняя часть */
-.postContainer {
-  background-color: #333;
-  flex-shrink: 0;
-  margin-bottom: 24px;
-  box-shadow: none;
+/*.postContainer {*/
+/*  background-color: #3333;*/
+/*  flex-shrink: 0;*/
+/*  margin-bottom: 24px;*/
+/*  box-shadow: none;*/
+/*  border: none;*/
+
+/*}*/
+/*.postCard {*/
+/*  width: 100%;*/
+/*}*/
+
+/* стили колеги */
+/* Стили для аватарки с именем - ТОЧНО КАК В POSTMODAL */
+.description {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 12px 12px 12px 0;
+  margin-bottom: 30px;
 }
 
+.avatar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+}
+
+.descriptionUser {
+  font-weight: 600;
+  font-size: 14px;
+  color: #fff;
+  flex-shrink: 0;
+  margin: 0;
+}
+
+/*==============*/
 .button,
 .buttoninfo {
-  /*max-width: 100%;*/
   margin-top: 200px;
   align-self: flex-end;
 }
@@ -66,8 +95,8 @@
 }
 
 /*для мыдального окна c сообщением  */
-.confirmContent {
-  padding: 24px;
+.confirmContent{
+  padding: 20px;
 }
 
 .confirmButtons {
@@ -80,9 +109,8 @@
 .confirmDialog {
   z-index: 1000; /* Выше overlay (999), должен быть выше основного окна */
   position: fixed;
-  background-color: var(--color-dark-300);
-  max-width: 486px;
-  padding: 0;
+  background-color: #333;
+  padding: 24px ;
 }
 
 .confirmContent {
@@ -95,6 +123,7 @@
   line-height: var(--line-height-m);
   color: var(--color-light-100);
   text-align: left;
+  margin-top: 30px;
 }
 
 .confirmButtons {
@@ -102,4 +131,13 @@
   display: flex;
   gap: 24px;
   justify-content: flex-end;
+}
+
+/* ТОЛЬКО ДЛЯ STORYBOOK - эти стили применятся только в Storybook */
+:global(.sb-show-main) .dialog {
+  margin-top: 350px;
+}
+
+:global(.sb-show-main) .confirmDialog {
+  margin-top: 300px;
 }

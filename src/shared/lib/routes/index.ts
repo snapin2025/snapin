@@ -12,7 +12,9 @@ export const ROUTES = {
 
   APP: {
     USER_PROFILE: (userId: number) => `/profile/${userId}`,
-    DASHBOARD: '/settings',
+    SETTINGS: {
+      PART: (part: SettingsPart = SETTINGS_PART.INFO) => `/settings?part=${part}`
+    },
     CREATE_POST: '/create',
     MESSENGER: '/messenger',
     SEARCH: '/search',
@@ -24,3 +26,12 @@ export const ROUTES = {
     PRIVACY_POLICY: '/privacy-policy'
   }
 } as const
+
+export const SETTINGS_PART = {
+  INFO: 'info',
+  DEVICES: 'devices',
+  SUBSCRIPTIONS: 'subscriptions',
+  PAYMENTS: 'payments'
+} as const
+
+export type SettingsPart = (typeof SETTINGS_PART)[keyof typeof SETTINGS_PART]

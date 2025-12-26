@@ -6,7 +6,7 @@ import s from './userProfile.module.css'
 
 import { ProfileActions } from './ProfileActions'
 import { PostImageSlider } from '@/shared/lib/post-image-slider'
-import { Avatar, Typography, PostSkeleton } from '@/shared/ui'
+import { Avatar, PostSkeleton, Typography } from '@/shared/ui'
 import { useInfiniteScroll } from '@/shared/lib'
 import { useProfileData } from '../api/useProfileData'
 
