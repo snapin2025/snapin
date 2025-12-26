@@ -14,6 +14,11 @@ import { Dialog, DialogClose } from '@/shared/ui/temp/dialog'
 import { editPostFormSchema, EditPostFormValues } from '@/shared/ui/textarea/textarea-validation'
 import { CharacterCounter } from '@/shared/ui/character-counter'
 
+// ИМПОРТ ТЕХ ЖЕ КОМПОНЕНТОВ, ЧТО У КОЛЛЕГИ
+
+import { Typography } from '@/shared/ui/typography/Typography'
+import Avatar from '@/shared/ui/Avatar/Avatar'
+
 export type EditPostFormProps = {
   isOpen: boolean
   onClose: () => void
@@ -85,13 +90,25 @@ export const EditPostForm = ({
   return (
     <>
       <Dialog title="Edit Post" open={isOpen} onOpenChange={handleDialogClose} className={s.dialog}>
+        {/* обертка контента*/}
         <Card className={s.wrapper}>
-          <div className={s.imgBox}>
-            <Image src={postImage} alt="Post" width={490} height={503} className={s.img} priority/>
-          </div>
+          {/*<div className={s.imgBox}>*/}
+          <Image src={postImage} alt="Post" width={490} height={503} className={s.img} priority />
+          {/*</div>*/}
 
           <div className={s.form}>
-            <PostCard userName={userName} avatar={userAvatar} className={s.postContainer} />
+            {/*<PostCard userName={userName} avatar={userAvatar} className={s.postContainer} />*/}
+
+            {/* аватарка  колеги */}
+            <div className={s.description}>
+              <div className={s.avatar}>
+                <Avatar src={userAvatar} alt={userName} size="small" />
+                <Typography variant="h3" className={s.descriptionUser}>
+                  {userName}
+                </Typography>
+              </div>
+            </div>
+
             {/*текстерия*/}
             <Textarea
               label="Add publication descriptions"
