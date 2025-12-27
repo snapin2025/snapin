@@ -4,7 +4,7 @@
 }
 
 .modal :global(.Dialog-module__X669Ia__content) {
-  padding: 0 !important;
+  padding: 0;
 }
 .container {
   display: flex;
