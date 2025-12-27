@@ -1,41 +1,33 @@
 .dialog {
-  background-color: var(--color-dark-300);
-  padding: 0;
-  z-index: 200; /* Выше чем PostModal (z-index: 101) для правильного отображения поверх */
-  /* margin-top удален - центрирование происходит через transform в Dialog.module.css */
+  background-color: #333;
+  /*z-index: 100;*/
 }
 
 .wrapper {
   width: 100%;
   display: flex;
-  border-radius: 2px;
-  overflow: hidden;
   border: none;
   background-color: #333;
-  position: relative;
   box-shadow: none;
 }
 
 .imgBox {
-  display: flex;
-  flex: 0 0 490px;
+  /*display: flex;*/
+  /*flex: 0 0 490px;*/
   width: 100%;
-  height: 503px;
   /*align-items: center;*/
   /*justify-content: center;*/
-  overflow: hidden;
+  /*overflow: hidden;*/
 }
 
 .img {
-  width: 100%;
-  height: 100%;
+  min-height: 100%;
   object-fit: cover;
-
 }
+
 /*форма */
 .form {
-  flex: 1;
-  padding:  0 24px 24px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -44,15 +36,10 @@
 
 /* PostCard - верхняя часть */
 .postContainer {
-  background-color: #333333;
+  background-color: #333;
   flex-shrink: 0;
   margin-bottom: 24px;
   box-shadow: none;
-  border: none;
-}
-
-.postCard {
-  width: 100%;
 }
 
 .button,
@@ -82,13 +69,6 @@
   padding: 24px;
 }
 
-/*.confirmText {*/
-/*  !*margin-bottom: 30px;*!*/
-/*  font-size: var(--font-size-m);*/
-/*  line-height: var(--line-height-m);*/
-/*  color: var(--color-light-100);*/
-/*}*/
-
 .confirmButtons {
   display: flex;
   gap: 24px;
@@ -97,8 +77,6 @@
 
 /* Стили для confirm диалогового окна */
 .confirmDialog {
-  z-index: 1000; /* Выше overlay (999), должен быть выше основного окна */
-  position: fixed;
   background-color: var(--color-dark-300);
   max-width: 486px;
   padding: 0;
