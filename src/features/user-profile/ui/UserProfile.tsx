@@ -33,7 +33,6 @@ export const UserProfile = ({ userId, pageSize = 8 }: Props) => {
     isLoading
   } = useProfileData({ userId, pageSize })
 
-  const name = displayName || 'User'
   const observerTarget = useRef<HTMLDivElement>(null)
 
   const allPosts = useMemo(() => postsData?.pages.flatMap((page) => page.items) ?? [], [postsData?.pages])
@@ -42,9 +41,9 @@ export const UserProfile = ({ userId, pageSize = 8 }: Props) => {
     () => ({
       following: profileData?.followingCount ?? 0,
       followers: profileData?.followersCount ?? 0,
-      publications: profileData?.publicationsCount ?? postsData?.pages[0]?.totalCount ?? 0
+      publications: profileData?.publicationsCount ?? 0
     }),
-    [profileData?.followingCount, profileData?.followersCount, profileData?.publicationsCount, postsData?.pages]
+    [profileData?.followingCount, profileData?.followersCount, profileData?.publicationsCount]
   )
 
   // Обработка бесконечной прокрутки через Intersection Observer
@@ -62,21 +61,19 @@ export const UserProfile = ({ userId, pageSize = 8 }: Props) => {
     return <ProfileSkeleton />
   }
 
+  // Используем готовые значения из хука, добавляем fallback только для bio
   const profileDescription =
     bio ??
-    profileData?.aboutMe ??
     'Расскажите о себе в настройках профиля. Это поле можно обновить в разделе Profile settings — пользователи увидят его здесь.'
-
-  const finalAvatarUrl = avatarUrl || profileData?.avatars?.[0]?.url
 
   return (
     <section className={s.page}>
       <div className={s.header}>
-        <Avatar src={finalAvatarUrl} alt={`${name} avatar`} size="large" />
+        <Avatar src={avatarUrl} alt={`${displayName} avatar`} size="large" />
 
         <div className={s.summary}>
           <div className={s.titleRow}>
-            <span className={s.userName}>{name}</span>
+            <span className={s.userName}>{displayName}</span>
             <div className={s.actions}>
               <ProfileActions profileOwner={profileOwner} />
             </div>

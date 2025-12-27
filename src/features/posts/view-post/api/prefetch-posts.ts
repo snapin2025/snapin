@@ -25,21 +25,6 @@ export async function prefetchPost(queryClient: QueryClient, postId: number) {
   })
 }
 
-/**
- * Предзагрузка комментариев на сервере
- *
- * Использует ensureQueryData вместо prefetchQuery для оптимизации:
- * - Если данные уже есть в кеше QueryClient и свежие (staleTime) - не делает запрос
- * - Если данных нет или они устарели - делает запрос
- *
- * Важно для динамических данных:
- * - Комментарии меняются часто, но staleTime предотвращает лишние запросы
- * - ensureQueryData защищает от дублирования в рамках одного рендера
- *
- * @param queryClient - QueryClient для prefetch
- * @param postId - ID поста
- * @param pageSize - Размер страницы (по умолчанию 6)
- */
 export async function prefetchComments(queryClient: QueryClient, postId: number, pageSize: number = 6) {
   // queryKey должен совпадать с useComments: ['comments', postId, pageSize]
   await queryClient.ensureQueryData({
