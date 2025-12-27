@@ -1,15 +1,15 @@
-import { PostModalSkeleton } from '@/shared/ui'
+import { ProfileSkeleton } from '@/shared/ui'
 
 /**
- * Loading UI для страниц профиля
- * 
+ * Loading UI для страницы профиля
+ *
  * Автоматически показывается Next.js во время навигации:
- * - При переходе на любую страницу внутри /profile/[id]/*
- * - Во время SSR загрузки данных на сервере
- * 
- * Этот loading.tsx будет использоваться для всех дочерних роутов,
- * если у них нет своего loading.tsx
+ * - При переходе на /profile/[id] (страница профиля)
+ * - Во время навигации между страницами
+ *
+ * Этот loading.tsx используется только для страницы профиля.
+ * Для страницы поста используется [postId]/loading.tsx с PostModalSkeleton
  */
 export default function ProfileLoading() {
-  return <PostModalSkeleton />
+  return <ProfileSkeleton />
 }
