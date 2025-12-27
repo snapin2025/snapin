@@ -120,7 +120,7 @@ export const PostImageSlider = ({
                 />
               </div>
             ) : (
-              <Link href={`/profile/${_ownerId}/${postId}`} className={s.imageLink}>
+              <Link href={`/profile/${_ownerId}/${postId}`} className={s.imageLink} prefetch={true}>
                 <Image
                   src={image.url}
                   alt={description || `Post image ${index + 1}`}

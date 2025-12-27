@@ -17,9 +17,7 @@ type UseProfileDataReturn = {
   postsData: ReturnType<typeof useUserPosts>['data']
 
   // Состояния загрузки
-  isProfileLoading: boolean
   isPostsLoading: boolean
-  isPostsFetching: boolean
   isFetchingNextPage: boolean
 
   // Ошибки
@@ -31,12 +29,11 @@ type UseProfileDataReturn = {
   fetchNextPage: (() => void) | undefined
   hasNextPage: boolean
 
-  // Вычисленные значения
+  // Вычисленные значения (готовые к использованию в UI)
   profileOwner: profileOwner
   displayName: string
   avatarUrl: string | undefined
   bio: string | undefined
-  isMyProfile: boolean
 
   // Общее состояние
   isLoading: boolean
@@ -59,7 +56,6 @@ export const useProfileData = ({ userId, pageSize = 8 }: UseProfileDataParams): 
   const {
     data: postsData,
     isLoading: isPostsLoading,
-    isFetching: isPostsFetching,
     isFetchingNextPage: isFetchingNextPage,
     isError: isPostsError,
     error: postsError,
@@ -92,30 +88,21 @@ export const useProfileData = ({ userId, pageSize = 8 }: UseProfileDataParams): 
 
   const bio = useMemo(() => profileData?.aboutMe, [profileData?.aboutMe])
 
-  // Общее состояние загрузки
-  // Показываем скелетон пока:
-  // 1. Загружается авторизация ИЛИ
-  // 2. Для своего профиля: загружается профиль и еще нет данных ИЛИ
-  // 3. Для чужого профиля:
-  //    - Загружаются посты и еще нет данных (чтобы получить userName) ИЛИ
-  //    - userName еще не получен (значит посты еще загружаются) ИЛИ
-  //    - Загружается профиль и еще нет данных профиля
+  // Упрощенная логика определения состояния загрузки
   const isLoading = useMemo(() => {
     // Загружается авторизация
     if (isAuthLoading) return true
 
     // Для своего профиля: загружается профиль и еще нет данных
-    if (isMyProfile && isProfileLoading && !profileData) return true
+    if (isMyProfile) {
+      return isProfileLoading && !profileData
+    }
 
     // Для чужого профиля:
     // - Загружаются посты и еще нет данных (чтобы получить userName)
-    // - ИЛИ userName еще не получен (значит посты еще загружаются)
-    // - ИЛИ загружается профиль и еще нет данных профиля
-    if (!isMyProfile) {
-      if (isPostsLoading && !postsData) return true
-      if (!userName && !postsData) return true
-      if (isProfileLoading && !profileData) return true
-    }
+    // - ИЛИ загружается профиль и еще нет данных профиля (если userName уже получен)
+    if (isPostsLoading && !postsData) return true
+    if (isProfileLoading && !profileData && userName) return true
 
     return false
   }, [isAuthLoading, isMyProfile, isProfileLoading, profileData, isPostsLoading, postsData, userName])
@@ -123,9 +110,7 @@ export const useProfileData = ({ userId, pageSize = 8 }: UseProfileDataParams): 
   return {
     profileData,
     postsData,
-    isProfileLoading,
     isPostsLoading,
-    isPostsFetching,
     isFetchingNextPage,
     isPostsError,
     postsError,
@@ -136,7 +121,6 @@ export const useProfileData = ({ userId, pageSize = 8 }: UseProfileDataParams): 
     displayName,
     avatarUrl,
     bio,
-    isMyProfile,
     isLoading
   }
 }

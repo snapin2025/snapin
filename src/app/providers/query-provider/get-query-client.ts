@@ -1,26 +1,60 @@
 import { isServer, QueryClient, defaultShouldDehydrateQuery } from '@tanstack/react-query'
 
 /**
+ * Константы для настройки QueryClient
+ */
+const STALE_TIME = 60 * 1000 // 1 минута - время, в течение которого данные считаются свежими
+
+/**
  * Создает новый QueryClient с настройками для SSR
- * Включает поддержку pending queries в dehydration для streaming
+ *
+ * Особенности конфигурации:
+ * - Поддержка pending queries в dehydration для React Streaming SSR
+ * - Оптимизированные настройки для Next.js App Router
+ * - Правильная обработка ошибок для динамических страниц
  */
 function makeQueryClient() {
   return new QueryClient({
     defaultOptions: {
       queries: {
-        staleTime: 60 * 1000 // 1 минута
+        staleTime: STALE_TIME,
+        // Данные считаются свежими 1 минуту, что уменьшает количество запросов
+        refetchOnWindowFocus: false,
+        // Не обновляем данные при фокусе окна (можно переопределить в конкретных запросах)
+        refetchOnMount: false,
+        // Не обновляем данные при монтировании, если они еще свежие
+        retry: 1,
+        // Одна попытка повтора при ошибке по умолчанию
+        retryDelay: 1000
+        // Задержка 1 секунда перед повтором
+      },
+      mutations: {
+        retry: 1,
+        // Одна попытка повтора для мутаций
+        retryDelay: 1000
       },
       dehydrate: {
-        // include pending queries in dehydration
-        shouldDehydrateQuery: (query) => defaultShouldDehydrateQuery(query) || query.state.status === 'pending',
-        shouldRedactErrors: () => {
-          // We should not catch Next.js server errors
-          // as that's how Next.js detects dynamic pages
-          // so we cannot redact them.
-          // Next.js also automatically redacts errors for us
-          // with better digests.
-          return false
-        }
+        /**
+         * Определяет, какие запросы включать в dehydratedState
+         *
+         * Включает:
+         * - Успешные запросы (defaultShouldDehydrateQuery)
+         * - Pending запросы (для React Streaming SSR)
+         *
+         * Это позволяет отправлять частично загруженные данные на клиент
+         * и продолжать загрузку там, улучшая Time to First Byte (TTFB)
+         */
+        shouldDehydrateQuery: (query) =>
+          defaultShouldDehydrateQuery(query) || query.state.status === 'pending',
+        /**
+         * Определяет, нужно ли скрывать ошибки при дегидратации
+         *
+         * Возвращает false, потому что:
+         * 1. Next.js использует ошибки для определения динамических страниц
+         * 2. Next.js автоматически обрабатывает ошибки с лучшими digest'ами
+         * 3. Скрытие ошибок может нарушить механизм кэширования Next.js
+         */
+        shouldRedactErrors: () => false
       }
     }
   })
