@@ -12,7 +12,9 @@ import {
   Post,
   PostImagesPayload,
   PostImagesResponse,
-  ResponsesPosts
+  ResponsesPosts,
+  AddAvatarPayload,
+  AddAvatarResponse
 } from '@/entities/posts/api/types'
 
 export const postsApi = {
@@ -79,5 +81,20 @@ export const postsApi = {
     })
 
     return data
+  },
+  addPhotoAvatar: async (payload: AddAvatarPayload): Promise<AddAvatarResponse> => {
+    const formData = new FormData()
+    formData.append('file', payload.file)
+
+    const { data } = await api.post<AddAvatarResponse>('/users/profile/avatar', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+
+    return data
+  },
+  deletePhotoAvatar: async (): Promise<void> => {
+    await api.delete<void>('/users/profile/avatar')
   }
 }

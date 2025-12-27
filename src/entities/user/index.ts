@@ -8,5 +8,7 @@ export type {
   SignUpErrorResponse,
   SendRecoveryEmailType,
   ResendRecoveryEmailType,
-  SetNewPasswordType
+  SetNewPasswordType,
+  PersonalDataRequest,
+  PersonalData
 } from './api/user-types'
