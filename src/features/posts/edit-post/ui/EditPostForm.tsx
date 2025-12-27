@@ -5,7 +5,6 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Textarea } from '@/shared/ui/textarea'
-import { PostCard } from '@/shared/ui/post'
 import { Card } from '@/shared/ui'
 import s from './EditPostForm.module.css'
 import { Button } from '@/shared/ui/button/Button'
@@ -13,9 +12,6 @@ import { useEditPost } from '../api/use-edit-post'
 import { Dialog, DialogClose } from '@/shared/ui/temp/dialog'
 import { editPostFormSchema, EditPostFormValues } from '@/shared/ui/textarea/textarea-validation'
 import { CharacterCounter } from '@/shared/ui/character-counter'
-
-// ИМПОРТ ТЕХ ЖЕ КОМПОНЕНТОВ, ЧТО У КОЛЛЕГИ
-
 import { Typography } from '@/shared/ui/typography/Typography'
 import Avatar from '@/shared/ui/Avatar/Avatar'
 
@@ -92,9 +88,9 @@ export const EditPostForm = ({
       <Dialog title="Edit Post" open={isOpen} onOpenChange={handleDialogClose} className={s.dialog}>
         {/* обертка контента*/}
         <Card className={s.wrapper}>
-          {/*<div className={s.imgBox}>*/}
-          <Image src={postImage} alt="Post" width={490} height={503} className={s.img} priority />
-          {/*</div>*/}
+          <div className={s.imgBox}>
+            <Image src={postImage} alt="Post" width={490} height={503} className={s.img} priority />
+          </div>
 
           <div className={s.form}>
             {/*<PostCard userName={userName} avatar={userAvatar} className={s.postContainer} />*/}

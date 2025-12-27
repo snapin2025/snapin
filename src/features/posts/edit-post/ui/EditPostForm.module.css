@@ -1,52 +1,42 @@
 .dialog {
   background-color: #333;
-  z-index: 200; /* Выше чем PostModal (z-index: 101) для правильного отображения поверх */
+  z-index: 200;
+}
+
+.dialog :global(.Dialog-module__X669Ia__content) {
+  padding: 0 !important;
 }
 
 .wrapper {
   display: flex;
-  /*overflow: hidden;*/
-  /*border: none;*/
-  /*position: relative;*/
   box-shadow: none;
-
+  align-items: stretch;
 }
 
 .imgBox {
-  height: 100%; /* займет всю высоту wrapper */
+  display: flex;
+  flex-shrink: 0;
+  width: 490px;
 }
 
 .img {
+  width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
 /*форма */
 .form {
-  padding:  24px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   background-color: #333;
-  min-width: 480px;
-  min-height: 562px;
+  min-width: 490px;
 }
 
-/* PostCard - верхняя часть */
-/*.postContainer {*/
-/*  background-color: #3333;*/
-/*  flex-shrink: 0;*/
-/*  margin-bottom: 24px;*/
-/*  box-shadow: none;*/
-/*  border: none;*/
 
-/*}*/
-/*.postCard {*/
-/*  width: 100%;*/
-/*}*/
-
-/* стили колеги */
-/* Стили для аватарки с именем - ТОЧНО КАК В POSTMODAL */
+/* Стили для аватарки с именем -у калеги */
 .description {
   display: flex;
   flex-direction: row;
@@ -61,7 +51,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 12px;
+  gap: 6px;
 }
 
 .descriptionUser {
@@ -75,7 +65,7 @@
 /*==============*/
 .button,
 .buttoninfo {
-  margin-top: 200px;
+  margin-top: auto;
   align-self: flex-end;
 }
 
@@ -107,10 +97,10 @@
 
 /* Стили для confirm диалогового окна */
 .confirmDialog {
-  z-index: 1000; /* Выше overlay (999), должен быть выше основного окна */
+  z-index: 1000;
   position: fixed;
-  background-color: #333;
   padding: 24px ;
+  width: 486px;
 }
 
 .confirmContent {
