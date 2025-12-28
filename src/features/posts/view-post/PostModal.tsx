@@ -36,23 +36,26 @@ export const PostModal = ({ postId }: PostModalProps) => {
   const { user } = useAuth()
   const [isEditOpen, setIsEditOpen] = useState(false)
   const [isDeleteOpen, setIsDeleteOpen] = useState(false)
-  const [isDeletingPost, setIsDeletingPost] = useState(false)
   const { mutate: deletePost, isPending: isDeleting } = useDeletePost()
 
-  // Отключаем запрос поста если он удаляется
-  const { data: post, isLoading, error } = usePost(postId, { enabled: !isDeletingPost })
+  // Запрос поста всегда активен - React Query сам управляет состоянием
+  const { data: post, isLoading, error } = usePost(postId)
 
   // Закрытие модального окна с возвратом на предыдущую страницу
   const handleOpenChange = useCallback(
     (open: boolean) => {
-      if (!open && !isEditOpen) {
+      if (!open) {
         router.back()
       }
     },
-    [router, isEditOpen]
+    [router]
   )
 
-  if (isLoading) {
+  // Показываем скелетон только если данные загружаются и их еще нет
+  // При SSR данные уже в кэше, поэтому isLoading будет false
+  const showSkeleton = isLoading && !post
+
+  if (showSkeleton) {
     return (
       <Dialog open={true} onOpenChange={handleOpenChange}>
         <DialogContent showCloseButton={false} className={s.modalContent}>
@@ -88,7 +91,7 @@ export const PostModal = ({ postId }: PostModalProps) => {
   }
 
   return (
-    <Dialog open={!isEditOpen} onOpenChange={handleOpenChange}>
+    <Dialog open={true} onOpenChange={handleOpenChange}>
       <DialogContent showCloseButton={false} className={s.modalContent}>
         {/* Кнопка закрытия справа вверху */}
         <DialogClose className={s.closeButton} aria-label="Закрыть">
@@ -176,16 +179,14 @@ export const PostModal = ({ postId }: PostModalProps) => {
             <Button
               variant="primary"
               onClick={() => {
-                setIsDeletingPost(true)
                 deletePost(postId, {
                   onSuccess: () => {
+                    setIsDeleteOpen(false)
                     router.back()
-                  },
-                  onError: () => {
-                    setIsDeletingPost(false)
                   }
                 })
               }}
+              disabled={isDeleting}
             >
               {isDeleting ? 'Удаление...' : 'Удалить'}
             </Button>

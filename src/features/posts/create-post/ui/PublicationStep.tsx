@@ -98,7 +98,7 @@ export const PublicationStep: React.FC<Props> = ({
     })
   }, [description, location, onPublish])
 
-  const remainingChars = MAX_DESCRIPTION_LENGTH - description.length
+  const counter = description.length
 
   return (
     <div className={s.wrapper}>
@@ -151,7 +151,7 @@ export const PublicationStep: React.FC<Props> = ({
               onChange={handleDescriptionChange}
               maxLength={MAX_DESCRIPTION_LENGTH}
             />
-            <CharacterCounter current={remainingChars} max={MAX_DESCRIPTION_LENGTH} />
+            <CharacterCounter current={counter} max={MAX_DESCRIPTION_LENGTH} />
           </div>
 
           {/* Локация */}

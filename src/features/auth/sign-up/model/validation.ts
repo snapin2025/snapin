@@ -10,7 +10,10 @@ export const SignUpSchema = z
       .string()
       .min(6, 'Password must be at least 6 characters')
       .max(20, 'Maximum number of characters 20')
-      .regex(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).+$/, 'Password must contain 0-9, a-z, A-Z'),
+      .regex(
+        /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~])/,
+        'Password must contain 0-9, a-z, A-Z, and at least one special character'
+      ),
     confirmPassword: z.string().min(6, 'Password confirmation is required'),
     agree: z.boolean()
   })
