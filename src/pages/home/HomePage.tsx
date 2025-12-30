@@ -3,6 +3,7 @@ import { RegisteredUsers } from '@/widgets/registeredUsers/RegisteredUsers'
 import { HomePostsList } from '@/widgets'
 import { PostsCacheProvider } from '@/widgets/homePostsList/ui/PostsCacheProvider'
 import { ResponsesPosts } from '@/entities/posts/api/types'
+
 // SSG: Страница будет статически сгенерирована на этапе сборки
 // ISR: Страница будет перегенерирована каждые 60 секунд при запросах
 export const revalidate = 60
@@ -44,6 +45,7 @@ export const HomePage = async () => {
 
   return (
     <PostsCacheProvider posts={limitedPosts}>
+      
       <div className={s.container}>
         <RegisteredUsers totalCount={totalCountUsers} />
         <ul className={s.userPostsList}>

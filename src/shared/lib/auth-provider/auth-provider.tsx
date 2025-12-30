@@ -1,9 +1,7 @@
 'use client'
 
 import { User } from '@/entities/user'
-import { createContext, ReactNode, useContext, useEffect } from 'react'
-
-import { useRouter, useSearchParams } from 'next/navigation'
+import { createContext, ReactNode, useContext } from 'react'
 import { useMe } from '@/shared/api'
 
 type AuthContext = {
@@ -23,20 +21,12 @@ export const useAuth = () => {
   return ctx
 }
 
+/**
+ * Провайдер аутентификации
+ * Управляет состоянием текущего пользователя
+ * Использует useMe для получения данных пользователя
+ */
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const searchParams = useSearchParams()
-  const router = useRouter()
-  const token = searchParams?.get('accessToken')
-
-  useEffect(() => {
-    if (token) {
-      localStorage.setItem('accessToken', token)
-
-      // Очищаем URL через router.replace
-      router.replace(window.location.pathname)
-    }
-  }, [token, router])
-
   const { data: user, isLoading, isError } = useMe()
 
   return <Auth.Provider value={{ user: user || null, isLoading, isError }}>{children}</Auth.Provider>
