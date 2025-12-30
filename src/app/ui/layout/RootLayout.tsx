@@ -25,13 +25,11 @@ export const RootLayout = ({ children }: Readonly<{ children: ReactNode }>) => {
   return (
     <html lang="en" className={interFont.className}>
       <body>
-        <Suspense fallback={null}>
-          <QueryProvider>
-            <AuthProvider>
-              <>{children}</>
-            </AuthProvider>
-          </QueryProvider>
-        </Suspense>
+        <QueryProvider>
+          <AuthProvider>
+            <>{children}</>
+          </AuthProvider>
+        </QueryProvider>
       </body>
     </html>
   )
