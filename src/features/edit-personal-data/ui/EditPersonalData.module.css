@@ -17,12 +17,6 @@
 
 }
 
-
-.card-module__93vgVa__card .form {
-  background: transparent !important;
-  /*border: none !important;*/
-  /*box-shadow: none !important;*/
-}
 /* Контейнер для фото и полей (рядно) */
 .formContent {
   display: flex;
@@ -66,15 +60,6 @@
   /*color: #990f2b;*/
 
 }
-/* УДАЛИ ЭТИ СТАРЫЕ СТИЛИ! */
-/* .formFields > *:not(.selectsContainer) {
-  margin-top: 2px;
-  display: block;
-}
-
-.formFields > *:first-child {
-  margin-top: 0;
-} */
 
 .errorMessage {
   color: var(--color-danger-500);

@@ -5,7 +5,6 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Textarea } from '@/shared/ui/textarea'
-import { PostCard } from '@/shared/ui/post'
 import { Card } from '@/shared/ui'
 import s from './EditPostForm.module.css'
 import { Button } from '@/shared/ui/button/Button'
@@ -13,6 +12,8 @@ import { useEditPost } from '../api/use-edit-post'
 import { Dialog, DialogClose } from '@/shared/ui/temp/dialog'
 import { editPostFormSchema, EditPostFormValues } from '@/shared/ui/textarea/textarea-validation'
 import { CharacterCounter } from '@/shared/ui/character-counter'
+import { Typography } from '@/shared/ui/typography/Typography'
+import Avatar from '@/shared/ui/Avatar/Avatar'
 
 export type EditPostFormProps = {
   isOpen: boolean
@@ -85,13 +86,25 @@ export const EditPostForm = ({
   return (
     <>
       <Dialog title="Edit Post" open={isOpen} onOpenChange={handleDialogClose} className={s.dialog}>
+        {/* обертка контента*/}
         <Card className={s.wrapper}>
           <div className={s.imgBox}>
             <Image src={postImage} alt="Post" width={490} height={503} className={s.img} priority />
           </div>
 
           <div className={s.form}>
-            <PostCard userName={userName} avatar={userAvatar} className={s.postContainer} />
+            {/*<PostCard userName={userName} avatar={userAvatar} className={s.postContainer} />*/}
+
+            {/* аватарка  колеги */}
+            <div className={s.description}>
+              <div className={s.avatar}>
+                <Avatar src={userAvatar} alt={userName} size="small" />
+                <Typography variant="h3" className={s.descriptionUser}>
+                  {userName}
+                </Typography>
+              </div>
+            </div>
+
             {/*текстерия*/}
             <Textarea
               label="Add publication descriptions"

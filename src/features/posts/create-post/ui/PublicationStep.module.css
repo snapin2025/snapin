@@ -5,7 +5,7 @@
   min-width: 492px;
 }
 .wrapper :global(.PublicationStep-module__7eatEW__imageSection) {
-  padding: 0 !important;
+  padding: 0;
 }
 .header {
   display: flex;

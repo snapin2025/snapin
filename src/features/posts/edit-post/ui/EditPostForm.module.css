@@ -1,26 +1,26 @@
 .dialog {
   background-color: #333;
-  /*z-index: 100;*/
+  z-index: 200;
+}
+
+.dialog :global(.Dialog-module__X669Ia__content) {
+  padding: 0;
 }
 
 .wrapper {
-  width: 100%;
   display: flex;
-  border: none;
-  background-color: #333;
   box-shadow: none;
+  align-items: stretch;
 }
 
 .imgBox {
-  /*display: flex;*/
-  /*flex: 0 0 490px;*/
-  width: 100%;
-  /*align-items: center;*/
-  /*justify-content: center;*/
-  /*overflow: hidden;*/
+  display: flex;
+  flex-shrink: 0;
+  width: 490px;
 }
 
 .img {
+  width: 100%;
   min-height: 100%;
   object-fit: cover;
 }
@@ -31,21 +31,41 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-width: 480px;
-}
-
-/* PostCard - верхняя часть */
-.postContainer {
   background-color: #333;
-  flex-shrink: 0;
-  margin-bottom: 24px;
-  box-shadow: none;
+  min-width: 490px;
 }
 
+
+/* Стили для аватарки с именем -у калеги */
+.description {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 12px 12px 12px 0;
+  margin-bottom: 30px;
+}
+
+.avatar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+}
+
+.descriptionUser {
+  font-weight: 600;
+  font-size: 14px;
+  color: #fff;
+  flex-shrink: 0;
+  margin: 0;
+}
+
+/*==============*/
 .button,
 .buttoninfo {
-  /*max-width: 100%;*/
-  margin-top: 200px;
+  margin-top: auto;
   align-self: flex-end;
 }
 
@@ -65,8 +85,8 @@
 }
 
 /*для мыдального окна c сообщением  */
-.confirmContent {
-  padding: 24px;
+.confirmContent{
+  padding: 20px;
 }
 
 .confirmButtons {
@@ -77,9 +97,10 @@
 
 /* Стили для confirm диалогового окна */
 .confirmDialog {
-  background-color: var(--color-dark-300);
-  max-width: 486px;
-  padding: 0;
+  z-index: 1000;
+  position: fixed;
+  padding: 24px ;
+  width: 486px;
 }
 
 .confirmContent {
@@ -92,6 +113,7 @@
   line-height: var(--line-height-m);
   color: var(--color-light-100);
   text-align: left;
+  margin-top: 30px;
 }
 
 .confirmButtons {
@@ -99,4 +121,13 @@
   display: flex;
   gap: 24px;
   justify-content: flex-end;
+}
+
+/* ТОЛЬКО ДЛЯ STORYBOOK - эти стили применятся только в Storybook */
+:global(.sb-show-main) .dialog {
+  margin-top: 350px;
+}
+
+:global(.sb-show-main) .confirmDialog {
+  margin-top: 300px;
 }
