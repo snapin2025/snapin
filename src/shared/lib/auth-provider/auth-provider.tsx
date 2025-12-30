@@ -1,7 +1,7 @@
 'use client'
 
 import { User } from '@/entities/user'
-import { createContext, ReactNode, useContext } from 'react'
+import { createContext, ReactNode, useContext, useMemo } from 'react'
 import { useMe } from '@/shared/api'
 
 type AuthContext = {
@@ -21,13 +21,19 @@ export const useAuth = () => {
   return ctx
 }
 
-/**
- * Провайдер аутентификации
- * Управляет состоянием текущего пользователя
- * Использует useMe для получения данных пользователя
- */
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const { data: user, isLoading, isError } = useMe()
 
-  return <Auth.Provider value={{ user: user || null, isLoading, isError }}>{children}</Auth.Provider>
+  // Мемоизируем значение контекста для предотвращения ненужных ре-рендеров
+  // дочерних компонентов при обновлении провайдера
+  const contextValue = useMemo(
+    () => ({
+      user: user || null,
+      isLoading,
+      isError
+    }),
+    [user, isLoading, isError]
+  )
+
+  return <Auth.Provider value={contextValue}>{children}</Auth.Provider>
 }

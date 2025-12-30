@@ -24,12 +24,8 @@ export const HomePage = async () => {
   const apiUrl = 'https://inctagram.work/api/v1'
 
   const [postsResponse, usersResponse] = await Promise.all([
-    fetch(`${apiUrl}/posts/all`, {
-      next: { revalidate: 60 } // ISR: перегенерировать каждые 60 секунд
-    }).catch(() => null),
-    fetch(`${apiUrl}/public-user`, {
-      next: { revalidate: 60 } // ISR: перегенерировать каждые 60 секунд
-    }).catch(() => null)
+    fetch(`${apiUrl}/posts/all`).catch(() => null),
+    fetch(`${apiUrl}/public-user`).catch(() => null)
   ])
 
   const postsData: ResponsesPosts = postsResponse?.ok
@@ -45,7 +41,6 @@ export const HomePage = async () => {
 
   return (
     <PostsCacheProvider posts={limitedPosts}>
-      
       <div className={s.container}>
         <RegisteredUsers totalCount={totalCountUsers} />
         <ul className={s.userPostsList}>

@@ -6,7 +6,7 @@ import s from './userProfile.module.css'
 
 import { ProfileActions } from './ProfileActions'
 import { PostImageSlider } from '@/shared/lib/post-image-slider'
-import { Avatar, Typography, PostSkeleton, ProfileSkeleton } from '@/shared/ui'
+import { Avatar, Typography, PostSkeleton } from '@/shared/ui'
 import { useInfiniteScroll } from '@/shared/lib'
 import { useProfileData } from '../api/useProfileData'
 
@@ -29,8 +29,7 @@ export const UserProfile = ({ userId, pageSize = 8 }: Props) => {
     profileOwner,
     displayName,
     avatarUrl,
-    bio,
-    isLoading
+    bio
   } = useProfileData({ userId, pageSize })
 
   const observerTarget = useRef<HTMLDivElement>(null)
@@ -55,11 +54,6 @@ export const UserProfile = ({ userId, pageSize = 8 }: Props) => {
     threshold: 0.1,
     rootMargin: '10px'
   })
-
-  // Показываем скелетон при начальной загрузке (ПОСЛЕ всех Hooks)
-  if (isLoading && !profileData && !postsData) {
-    return <ProfileSkeleton />
-  }
 
   // Используем готовые значения из хука, добавляем fallback только для bio
   const profileDescription =
