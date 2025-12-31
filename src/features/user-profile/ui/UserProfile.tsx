@@ -38,11 +38,18 @@ export const UserProfile = ({ userId, pageSize = 8 }: Props) => {
 
   const stats = useMemo(
     () => ({
-      following: profileData?.followingCount ?? 0,
-      followers: profileData?.followersCount ?? 0,
-      publications: profileData?.publicationsCount ?? 0
+      following: profileData?.userMetadata?.following ?? 0,
+      followers: profileData?.userMetadata?.followers ?? 0,
+      publications: profileData?.userMetadata?.publications ?? 0
     }),
-    [profileData?.followingCount, profileData?.followersCount, profileData?.publicationsCount]
+    [profileData?.userMetadata]
+  )
+
+  const profileDescription = useMemo(
+    () =>
+      bio ??
+      'Расскажите о себе в настройках профиля. Это поле можно обновить в разделе Profile settings — пользователи увидят его здесь.',
+    [bio]
   )
 
   // Обработка бесконечной прокрутки через Intersection Observer
@@ -54,11 +61,6 @@ export const UserProfile = ({ userId, pageSize = 8 }: Props) => {
     threshold: 0.1,
     rootMargin: '10px'
   })
-
-  // Используем готовые значения из хука, добавляем fallback только для bio
-  const profileDescription =
-    bio ??
-    'Расскажите о себе в настройках профиля. Это поле можно обновить в разделе Profile settings — пользователи увидят его здесь.'
 
   return (
     <section className={s.page}>
@@ -102,11 +104,9 @@ export const UserProfile = ({ userId, pageSize = 8 }: Props) => {
           <div className={s.error}>
             Не удалось загрузить посты: {postsError?.message || 'попробуйте позже'}
             <br />
-            {refetchPosts && (
-              <button type="button" onClick={() => refetchPosts()}>
-                Повторить
-              </button>
-            )}
+            <button type="button" onClick={() => refetchPosts?.()}>
+              Повторить
+            </button>
           </div>
         )}
 
