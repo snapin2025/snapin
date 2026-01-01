@@ -2,30 +2,56 @@ import { dehydrate } from '@tanstack/react-query'
 import { getQueryClient } from '@/app/providers/query-provider/get-query-client'
 import { postsApi } from '@/entities/posts/api'
 import { userApi } from '@/entities/user/api/user'
+import type { ResponsesPosts } from '@/entities/posts/api/types'
 
+/**
+ * Префетчит данные профиля и посты пользователя на сервере
+ * Запросы запускаются параллельно и ожидаются перед возвратом
+ * Это позволяет:
+ * 1. Данные гарантированно загружены перед отправкой HTML
+ * 2. Данные доступны в HTML даже без JavaScript
+ * 3. Успешные queries включаются в dehydratedState
+ * 4. TTFB будет медленнее (~500ms), но данные точно в HTML
+ *
+ * @param userId - ID пользователя
+ * @param pageSize - Размер страницы для постов (по умолчанию 8)
+ * @returns Dehydrated state для HydrationBoundary (только успешные queries)
+ */
 export async function prefetchProfileWithPosts(userId: number, pageSize = 8) {
   const queryClient = getQueryClient()
-  try {
-    // Префетчим профиль пользователя по userId
-    await queryClient.prefetchQuery({
+
+  // Запускаем запросы параллельно и ждем завершения всех (включая ошибки)
+  // Promise.allSettled не прервется, даже если один запрос упадет с ошибкой
+  await Promise.allSettled([
+    queryClient.prefetchQuery({
       queryKey: ['user-profile', userId],
       queryFn: () => userApi.getPublicUserProfile(userId),
-      staleTime: 2 * 60 * 1000
-    })
-
-    // Префетчим посты пользователя
-    await queryClient.fetchInfiniteQuery({
+      staleTime: 2 * 60 * 1000 // 2 минуты - соответствует настройкам в useUserProfile
+    }),
+    queryClient.prefetchInfiniteQuery({
       queryKey: ['user-posts', userId, pageSize],
-      queryFn: ({ pageParam }) => {
+      queryFn: ({ pageParam }: { pageParam: number | null }) => {
         const cursor = pageParam === null ? undefined : pageParam
         return postsApi.getUserPosts(userId, pageSize, cursor)
       },
-      initialPageParam: null,
-      staleTime: 2 * 60 * 1000
+      initialPageParam: null as number | null,
+      getNextPageParam: (lastPage: ResponsesPosts): number | null => {
+        // Логика должна соответствовать useUserPosts
+        if (!lastPage.items || lastPage.items.length === 0) {
+          return null
+        }
+        if (lastPage.items.length < pageSize) {
+          return null
+        }
+        const lastPost = lastPage.items[lastPage.items.length - 1]
+        return lastPost?.id ?? null
+      },
+      staleTime: 2 * 60 * 1000 // 2 минуты
     })
-  } catch (e) {
-    console.error('Prefetch profile error', e)
-  }
+  ])
 
+  // Дегидратируем состояние после завершения всех запросов
+  // Включаются только успешные queries (через defaultShouldDehydrateQuery)
+  // Данные уже загружены и будут в HTML
   return dehydrate(queryClient)
 }

@@ -11,7 +11,7 @@ type UseProfileDataParams = {
   pageSize?: number
 }
 
-type UseProfileDataReturn = {
+export type UseProfileDataReturn = {
   // Данные
   profileData: ReturnType<typeof useUserProfile>['data']
   postsData: ReturnType<typeof useUserPosts>['data']
@@ -36,12 +36,12 @@ type UseProfileDataReturn = {
   bio: string | undefined
 
   // Общее состояние
-  isLoading: boolean
+  isLoading?: boolean
+  isProfileLoading?: boolean
 }
 
-
 export const useProfileData = ({ userId, pageSize = 8 }: UseProfileDataParams): UseProfileDataReturn => {
-  const { user, isLoading: isAuthLoading } = useAuth()
+  const { user } = useAuth()
 
   const isMyProfile = useMemo(() => user?.userId === userId, [user?.userId, userId])
 
@@ -72,25 +72,6 @@ export const useProfileData = ({ userId, pageSize = 8 }: UseProfileDataParams): 
 
   const bio = useMemo(() => profileData?.aboutMe, [profileData?.aboutMe])
 
-  // Упрощенная логика определения состояния загрузки
-  const isLoading = useMemo(() => {
-    // Загружается авторизация
-    if (isAuthLoading) return true
-
-    // Для своего профиля: загружается профиль и еще нет данных
-    if (isMyProfile) {
-      return isProfileLoading && !profileData
-    }
-
-    // Для чужого профиля:
-    // - Загружаются посты и еще нет данных
-    // - ИЛИ загружается профиль и еще нет данных профиля
-    if (isPostsLoading && !postsData) return true
-    if (isProfileLoading && !profileData) return true
-
-    return false
-  }, [isAuthLoading, isMyProfile, isProfileLoading, profileData, isPostsLoading, postsData])
-
   return {
     profileData,
     postsData,
@@ -105,6 +86,6 @@ export const useProfileData = ({ userId, pageSize = 8 }: UseProfileDataParams): 
     displayName,
     avatarUrl,
     bio,
-    isLoading
+    isProfileLoading
   }
 }

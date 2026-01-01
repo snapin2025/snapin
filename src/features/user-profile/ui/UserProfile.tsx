@@ -8,30 +8,23 @@ import { ProfileActions } from './ProfileActions'
 import { PostImageSlider } from '@/shared/lib/post-image-slider'
 import { Avatar, Typography, PostSkeleton } from '@/shared/ui'
 import { useInfiniteScroll } from '@/shared/lib'
-import { useProfileData } from '../api/useProfileData'
+import type { UseProfileDataReturn } from '../api/useProfileData'
 
-type Props = {
-  userId: number
-  pageSize?: number
-}
-
-export const UserProfile = ({ userId, pageSize = 8 }: Props) => {
-  const {
-    profileData,
-    postsData,
-    isPostsLoading,
-    isFetchingNextPage,
-    isPostsError,
-    postsError,
-    refetchPosts,
-    fetchNextPage,
-    hasNextPage,
-    profileOwner,
-    displayName,
-    avatarUrl,
-    bio
-  } = useProfileData({ userId, pageSize })
-
+export const UserProfile = ({
+  profileData,
+  postsData,
+  isPostsLoading,
+  isFetchingNextPage,
+  isPostsError,
+  postsError,
+  refetchPosts,
+  fetchNextPage,
+  hasNextPage,
+  profileOwner,
+  displayName,
+  avatarUrl,
+  bio
+}: UseProfileDataReturn) => {
   const observerTarget = useRef<HTMLDivElement>(null)
 
   const allPosts = useMemo(() => postsData?.pages.flatMap((page) => page.items) ?? [], [postsData?.pages])
@@ -61,6 +54,9 @@ export const UserProfile = ({ userId, pageSize = 8 }: Props) => {
     threshold: 0.1,
     rootMargin: '10px'
   })
+
+
+  
 
   return (
     <section className={s.page}>
