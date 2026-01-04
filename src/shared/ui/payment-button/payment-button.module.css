@@ -1,39 +1,24 @@
 .paymentButton {
-  width: 96px;
-  height: 64px;
-
-  padding: 0;
-  border-radius: 7px;
-  border: 1px solid #2a2a2a;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-
+  min-width: 150px;
+  padding: 12px 24px;
   font-weight: var(--font-weight-bold);
 }
 
-.icon {
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
-}
-
 .paypal {
-  background-color: #171717;
-  color: #333333;
+  background-color: #0070ba;
+  color: var(--color-light-100);
 }
 
 .paypal:hover {
-  background-color: #151515;
+  background-color: #005ea6;
 }
 
 .stripe {
-  background-color: #171717;
-  color: #333333;
+  background-color: #635bff;
+  color: var(--color-light-100);
 }
 
 .stripe:hover {
-  background-color: #151515;
+  background-color: #5548e5;
 }
+

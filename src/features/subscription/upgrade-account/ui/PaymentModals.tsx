@@ -63,12 +63,12 @@ export const PaymentModals = ({
       <Dialog open={errorOpen} onOpenChange={onCloseError}>
         <DialogContent title="Error" showCloseButton>
           <Typography variant="regular_14" color="light" className={s.modalText}>
-            Transaction failed. Please, write to support
+            Transaction failed, please try again
           </Typography>
 
           <div className={s.modalFooter}>
             <Button variant="primary" onClick={() => onCloseError(false)}>
-              Back to payment
+              OK
             </Button>
           </div>
         </DialogContent>

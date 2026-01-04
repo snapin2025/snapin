@@ -30,7 +30,9 @@ export const subscriptionApi = {
   },
 
   getCurrentSubscription: async (): Promise<GetCurrentSubscriptionResponse> => {
-    const { data } = await api.get<GetCurrentSubscriptionResponse>('/subscriptions/current-payment-subscriptions')
+    const { data } = await api.get<GetCurrentSubscriptionResponse>(
+      '/subscriptions/current-payment-subscriptions'
+    )
     return data
   },
 
