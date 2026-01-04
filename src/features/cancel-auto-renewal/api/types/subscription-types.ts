@@ -15,7 +15,3 @@ export type CurrentSubscriptionResponse = {
 export type CancelAutoRenewalRequest = {
   subscriptionId: string
 }
-
-export type RenewAutoRenewalRequest = {
-  subscriptionId: string
-}
