@@ -1,8 +1,8 @@
 'use client'
 import s from './CurrentSubscription.module.css'
 import { Checkbox, Typography } from '@/shared/ui'
-import { useCancelAutoRenewal, useCurrentSubscription } from '@/features/cancel-auto-renewal/api/use-auto-renewal'
-import { formatSubscriptionDate } from '../lib/format-date'
+import { useCurrentSubscription } from '../api/use-current-subscription'
+import { useCancelAutoRenewal } from '../api/use-cancel-auto-renewal'
 
 export type CurrentSubscriptionProps = {
   expireDate?: string
@@ -11,30 +11,35 @@ export type CurrentSubscriptionProps = {
   onToggleAutoRenewal?: (checked: boolean) => void
 }
 
-export const CurrentSubscription = ({
+// Форматирование прямо в компоненте
+const formatSubscriptionDate = (isoString: string): string => {
+  if (!isoString) return ''
+  const date = new Date(isoString)
+  const day = date.getDate().toString().padStart(2, '0')
+  const month = (date.getMonth() + 1).toString().padStart(2, '0')
+  const year = date.getFullYear()
+  return `${day}.${month}.${year}`
+}
+
+export const UnsubscribeAutoRenewal = ({
   expireDate,
   nextPaymentDate,
   isAutoRenewal,
   onToggleAutoRenewal
 }: CurrentSubscriptionProps) => {
-  // Получаем данные из хуков
   const { data: subscription } = useCurrentSubscription()
   const { mutate: cancelAutoRenewal } = useCancelAutoRenewal()
 
   const currentSub = subscription?.data?.[0]
 
-  // Используем либо пропсы, либо данные из хуков
   const finalExpireDate = expireDate || formatSubscriptionDate(currentSub?.endDateOfSubscription || '')
   const finalNextPaymentDate = nextPaymentDate || formatSubscriptionDate(currentSub?.dateOfPayment || '')
   const finalIsAutoRenewal = isAutoRenewal ?? currentSub?.autoRenewal ?? false
 
   const handleToggle = (checked: boolean) => {
-    // Если пришёл колбэк из пропсов - используем его
     if (onToggleAutoRenewal) {
       onToggleAutoRenewal(checked)
-    }
-    // Иначе используем нашу логику отмены
-    else if (!checked && currentSub?.subscriptionId) {
+    } else if (!checked && currentSub?.subscriptionId) {
       cancelAutoRenewal({ subscriptionId: currentSub.subscriptionId })
     }
   }
