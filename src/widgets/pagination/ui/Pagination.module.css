@@ -2,14 +2,14 @@
 .container {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 16px;
   margin-top: 24px;
+  width: fit-content;
 }
 
 .navButton {
   background: transparent;
-  border: 1px solid var(--color-dark-300);
+  border: none;
   color: var(--color-light-100);
   padding: 8px 12px;
   border-radius: 4px;
@@ -36,8 +36,6 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  flex: 1;
-  justify-content: center;
 }
 
 .pageButton {
@@ -61,9 +59,8 @@
 }
 
 .pageButton.active {
-  background-color: var(--color-accent-500);
-  border-color: var(--color-accent-500);
-  color: var(--color-light-100);
+  background-color: var(--color-light-100);
+  color: var(--color-dark-900);
 }
 
 .ellipsis {
@@ -75,9 +72,16 @@
 .itemsPerPage {
   display: flex;
   align-items: center;
+  width: 52px;
+  min-width: 52px;
   gap: 8px;
   margin-left: auto;
 }
+/*.itemsPerPage :global(.trigger) {*/
+/*  width: 52px;*/
+/*  min-width: 52px;*/
+/*  padding: 8px 12px;*/
+/*}*/
 
 .itemsPerPage :global(.wrapper) {
   margin: 0;
@@ -95,4 +99,7 @@
 .itemsPerPageText {
   color: var(--color-light-100);
   white-space: nowrap;
+}
+.widthSelect {
+  width: 52px;
 }

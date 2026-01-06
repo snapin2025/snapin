@@ -43,9 +43,9 @@
   padding-right: 24px;
 }
 
-.table tbody tr:hover {
-  background-color: var(--color-dark-500);
-}
+/*.table tbody tr:hover {*/
+/*  background-color: var(--color-dark-500);*/
+/*}*/
 
 .table tbody tr:last-child td {
   border-bottom: none;

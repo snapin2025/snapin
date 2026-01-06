@@ -1,10 +1,13 @@
 // src/widgets/pagination/ui/Pagination.tsx
 'use client'
 
-import { Button } from '@/shared/ui'
+import { ArrowLeft, Button } from '@/shared/ui'
 import { Select } from '@/shared/ui'
 import { clsx } from 'clsx'
 import s from './Pagination.module.css'
+import { Arrow } from '@/shared/ui/icons/Arrow'
+import { ArrowBack } from '@/shared/ui/icons/ArrowBack'
+import { ArrowRight } from '@/shared/ui/icons/ArrowRight'
 
 export type PaginationProps = {
   /** Текущая страница (начиная с 1) */
@@ -97,9 +100,15 @@ export const Pagination = ({
 
   return (
     <div className={clsx(s.container, className)}>
-      <button className={s.navButton} onClick={handlePrevious} disabled={currentPage === 1} aria-label="Previous page">
-        &lt;
-      </button>
+      <Button
+        variant={'textButton'}
+        className={s.navButton}
+        onClick={handlePrevious}
+        disabled={currentPage === 1}
+        aria-label="Previous page"
+      >
+        <ArrowLeft />
+      </Button>
 
       <div className={s.pageNumbers}>
         {pageNumbers.map((page, index) => {
@@ -112,7 +121,7 @@ export const Pagination = ({
           }
 
           return (
-            <button
+            <Button
               key={page}
               className={clsx(s.pageButton, currentPage === page && s.active)}
               onClick={() => onPageChange(page)}
@@ -120,14 +129,20 @@ export const Pagination = ({
               aria-current={currentPage === page ? 'page' : undefined}
             >
               {page}
-            </button>
+            </Button>
           )
         })}
       </div>
 
-      <button className={s.navButton} onClick={handleNext} disabled={currentPage === totalPages} aria-label="Next page">
-        &gt;
-      </button>
+      <Button
+        variant={'textButton'}
+        className={s.navButton}
+        onClick={handleNext}
+        disabled={currentPage === totalPages}
+        aria-label="Next page"
+      >
+        <ArrowRight width={16} height={16} />
+      </Button>
 
       <div className={s.itemsPerPage}>
         <span className={s.itemsPerPageText}>Show</span>
