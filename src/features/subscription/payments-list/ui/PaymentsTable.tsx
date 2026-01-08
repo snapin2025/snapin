@@ -1,4 +1,3 @@
-// src/features/subscription/payments-list/ui/PaymentsTable.tsx
 'use client'
 
 import { useState, useMemo } from 'react'
