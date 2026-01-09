@@ -90,7 +90,8 @@ export const UpgradeAccount = () => {
             setSuccessOpen(true)
           }
         },
-        onError: () => {
+        onError: (error) => {
+          console.error(error)
           setCreatePaymentOpen(false)
           setErrorOpen(true)
         }
