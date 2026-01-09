@@ -14,6 +14,7 @@ import { CurrentSubscriptionCard } from './CurrentSubscriptionCard'
 import { PaymentModals } from './PaymentModals'
 import { useCreateSubscription } from '../api/useCreateSubscription'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { UnsubscribeAutoRenewal } from '@/features/cancel-auto-renewal'
 
 export type AccountType = 'PERSONAL' | 'BUSINESS'
 
@@ -139,6 +140,7 @@ export const UpgradeAccount = () => {
       <div className={s.autoRenewal}>
         <Checkbox label="Auto-Renewal" checked={true} />
       </div>
+      {/*<UnsubscribeAutoRenewal />*/}
 
       {/* Account type */}
       <AccountTypeSelector value={accountType} onChange={setAccountType} disabledPersonal={hasCurrentSubscription} />
