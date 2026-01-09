@@ -1,0 +1,60 @@
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.heading {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 600;
+  margin: 0 0 18px 0;
+  color: #ffffff;
+}
+
+.infobox {
+  display: flex;
+  gap: 45px;
+  border: 1px solid #333333;
+  padding: 22px 24px;
+  width: 100%;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.label {
+  font-size: 14px;
+  line-height: 24px;
+  color: #8D9094;
+  font-weight: 400;
+}
+
+/*цифы*/
+.date {
+  font-size: 14px;
+  line-height: 24px;
+  color: #ffffff;
+  font-weight: 600;
+}
+/*текс для цифр*/
+.renewalText {
+  font-size: 14px;
+  line-height: 24px;
+  color: #ffffff;
+  font-weight: 400;
+}
+
+/*для чекбокс текс*/
+.renewal {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+
