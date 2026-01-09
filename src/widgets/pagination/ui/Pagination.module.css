@@ -99,7 +99,10 @@
 .itemsPerPageText {
   color: var(--color-light-100);
   white-space: nowrap;
+  margin-left: 15px;
 }
 .widthSelect {
-  width: 52px;
+  min-width: 20px;
+  padding: 10px 5px 0 ;
 }
+

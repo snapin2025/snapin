@@ -107,7 +107,7 @@ export const Pagination = ({
         disabled={currentPage === 1}
         aria-label="Previous page"
       >
-        <ArrowLeft />
+        <ArrowLeft width={16} height={16} />
       </Button>
 
       <div className={s.pageNumbers}>
@@ -147,12 +147,14 @@ export const Pagination = ({
       <div className={s.itemsPerPage}>
         <span className={s.itemsPerPageText}>Show</span>
         <Select
+          className={s.widthSelect}
           value={String(itemsPerPage)}
           onValueChange={(value) => onItemsPerPageChange(Number(value))}
           options={selectOptions}
           label=""
           placeholder=""
         />
+
         <span className={s.itemsPerPageText}>on page</span>
       </div>
     </div>
