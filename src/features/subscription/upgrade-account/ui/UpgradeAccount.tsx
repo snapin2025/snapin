@@ -128,19 +128,19 @@ export const UpgradeAccount = () => {
 
   return (
     <div className={s.container}>
-      {/* Current subscription */}
-      {currentSub && (
-        <CurrentSubscriptionCard
-          endDate={currentSub.endDateOfSubscription}
-          autoRenewal={currentSub.autoRenewal}
-          formatDate={formatDate}
-        />
-      )}
+      {/*/!* Current subscription *!/*/}
+      {/*{currentSub && (*/}
+      {/*  <CurrentSubscriptionCard*/}
+      {/*    endDate={currentSub.endDateOfSubscription}*/}
+      {/*    autoRenewal={currentSub.autoRenewal}*/}
+      {/*    formatDate={formatDate}*/}
+      {/*  />*/}
+      {/*)}*/}
 
-      <div className={s.autoRenewal}>
-        <Checkbox label="Auto-Renewal" checked={true} />
-      </div>
-      {/*<UnsubscribeAutoRenewal />*/}
+      {/*<div className={s.autoRenewal}>*/}
+      {/*  <Checkbox label="Auto-Renewal" checked={true} />*/}
+      {/*</div>*/}
+      <UnsubscribeAutoRenewal />
 
       {/* Account type */}
       <AccountTypeSelector value={accountType} onChange={setAccountType} disabledPersonal={hasCurrentSubscription} />
