@@ -79,6 +79,13 @@ export const UpgradeAccount = () => {
   const hasCurrentSubscription = !!currentSubscription?.data?.length
   const currentSub = hasCurrentSubscription ? currentSubscription.data[0] : null
 
+  // Set account type to BUSINESS when there's a current subscription
+  useEffect(() => {
+    if (hasCurrentSubscription) {
+      setAccountType('BUSINESS')
+    }
+  }, [hasCurrentSubscription])
+
   const handlePaymentClick = (paymentType: PaymentType) => {
     if (!selectedSubscription) return
     setSelectedPaymentType(paymentType)
@@ -134,7 +141,7 @@ export const UpgradeAccount = () => {
       </div>
 
       {/* Account type */}
-      <AccountTypeSelector value={accountType} onChange={setAccountType} />
+      <AccountTypeSelector value={accountType} onChange={setAccountType} disabledPersonal={hasCurrentSubscription} />
 
       {/* Plans */}
       {accountType === 'BUSINESS' && plans.length > 0 && (
