@@ -16,14 +16,14 @@ export const CurrentSubscriptionCard = ({ endDate, autoRenewal, formatDate }: Pr
     <Card className={s.subscriptionCard}>
       <div className={s.subscriptionInfo}>
         <div>
-          <Typography variant="regular_14" color="gray">
+          <Typography variant="regular_14" style={{ color: '#8D9094' }}>
             Expire at
           </Typography>
           <Typography variant="regular_16">{formatDate(endDate)}</Typography>
         </div>
 
         <div>
-          <Typography variant="regular_14" color="light">
+          <Typography variant="regular_14" style={{ color: '#8D9094' }}>
             Next payment
           </Typography>
           <Typography variant="regular_16">{autoRenewal ? formatDate(endDate) : '-'}</Typography>

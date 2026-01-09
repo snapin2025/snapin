@@ -34,14 +34,13 @@ export const UpgradeAccount = () => {
 
   // Handle payment callback from payment system
   useEffect(() => {
-    const paymentStatus = searchParams?.get('payment')
-    if (paymentStatus === 'success') {
+    const paymentStatus = searchParams?.get('success')
+    console.log(paymentStatus)
+    if (paymentStatus === 'true') {
       setSuccessOpen(true)
-      // Clean URL
       router.replace(`/settings?part=${SETTINGS_PART.SUBSCRIPTIONS}`)
-    } else if (paymentStatus === 'error' || paymentStatus === 'cancel') {
+    } else if (paymentStatus === 'false') {
       setErrorOpen(true)
-      // Clean URL
       router.replace(`/settings?part=${SETTINGS_PART.SUBSCRIPTIONS}`)
     }
   }, [searchParams, router])
