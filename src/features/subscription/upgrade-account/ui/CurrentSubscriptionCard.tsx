@@ -16,7 +16,7 @@ export const CurrentSubscriptionCard = ({ endDate, autoRenewal, formatDate }: Pr
     <Card className={s.subscriptionCard}>
       <div className={s.subscriptionInfo}>
         <div>
-          <Typography variant="regular_14" color="light">
+          <Typography variant="regular_14" color="gray">
             Expire at
           </Typography>
           <Typography variant="regular_16">{formatDate(endDate)}</Typography>
@@ -28,10 +28,6 @@ export const CurrentSubscriptionCard = ({ endDate, autoRenewal, formatDate }: Pr
           </Typography>
           <Typography variant="regular_16">{autoRenewal ? formatDate(endDate) : '-'}</Typography>
         </div>
-      </div>
-
-      <div className={s.autoRenewal}>
-        <Checkbox label="Auto-Renewal" checked={autoRenewal} disabled />
       </div>
     </Card>
   </div>

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useMemo, useEffect } from 'react'
-import { PaymentButton, Typography } from '@/shared/ui'
+import { Checkbox, PaymentButton, Typography } from '@/shared/ui'
 import { useSubscriptionCost } from '@/entities/subscription/model/useSubscriptionCost'
 import { useCurrentSubscription } from '@/entities/subscription/model/useCurrentSubscription'
 import { PaymentType, SubscriptionType } from '@/entities/subscription/api/types'
@@ -13,11 +13,13 @@ import { SubscriptionPlans } from './SubscriptionPlans'
 import { CurrentSubscriptionCard } from './CurrentSubscriptionCard'
 import { PaymentModals } from './PaymentModals'
 import { useCreateSubscription } from '../api/useCreateSubscription'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 export type AccountType = 'PERSONAL' | 'BUSINESS'
 
 export const UpgradeAccount = () => {
-
+  const searchParams = useSearchParams()
+  const router = useRouter()
   const [accountType, setAccountType] = useState<AccountType>('PERSONAL')
   const [selectedSubscriptionId, setSelectedSubscriptionId] = useState<string | null>(null)
   const [selectedPaymentType, setSelectedPaymentType] = useState<PaymentType | null>(null)
@@ -119,9 +121,6 @@ export const UpgradeAccount = () => {
 
   return (
     <div className={s.container}>
-      {/* Account type */}
-      <AccountTypeSelector value={accountType} onChange={setAccountType} />
-
       {/* Current subscription */}
       {currentSub && (
         <CurrentSubscriptionCard
@@ -130,6 +129,13 @@ export const UpgradeAccount = () => {
           formatDate={formatDate}
         />
       )}
+
+      <div className={s.autoRenewal}>
+        <Checkbox label="Auto-Renewal" checked={true} />
+      </div>
+
+      {/* Account type */}
+      <AccountTypeSelector value={accountType} onChange={setAccountType} />
 
       {/* Plans */}
       {accountType === 'BUSINESS' && plans.length > 0 && (
