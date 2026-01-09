@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { PaymentButton, Typography } from '@/shared/ui'
 import { useSubscriptionCost } from '@/entities/subscription/model/useSubscriptionCost'
 import { useCurrentSubscription } from '@/entities/subscription/model/useCurrentSubscription'
@@ -17,6 +17,7 @@ import { useCreateSubscription } from '../api/useCreateSubscription'
 export type AccountType = 'PERSONAL' | 'BUSINESS'
 
 export const UpgradeAccount = () => {
+
   const [accountType, setAccountType] = useState<AccountType>('PERSONAL')
   const [selectedSubscriptionId, setSelectedSubscriptionId] = useState<string | null>(null)
   const [selectedPaymentType, setSelectedPaymentType] = useState<PaymentType | null>(null)
@@ -28,6 +29,20 @@ export const UpgradeAccount = () => {
   const { data: subscriptionCosts, isLoading: isLoadingCosts } = useSubscriptionCost()
   const { data: currentSubscription, isLoading: isLoadingCurrent } = useCurrentSubscription()
   const { mutate: createSubscription, isPending: isCreating } = useCreateSubscription()
+
+  // Handle payment callback from payment system
+  useEffect(() => {
+    const paymentStatus = searchParams?.get('payment')
+    if (paymentStatus === 'success') {
+      setSuccessOpen(true)
+      // Clean URL
+      router.replace(`/settings?part=${SETTINGS_PART.SUBSCRIPTIONS}`)
+    } else if (paymentStatus === 'error' || paymentStatus === 'cancel') {
+      setErrorOpen(true)
+      // Clean URL
+      router.replace(`/settings?part=${SETTINGS_PART.SUBSCRIPTIONS}`)
+    }
+  }, [searchParams, router])
 
   const plans = subscriptionCosts?.data ?? []
 
