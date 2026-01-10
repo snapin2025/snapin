@@ -3,11 +3,11 @@ import s from './CurrentSubscription.module.css'
 import { Checkbox, Typography } from '@/shared/ui'
 import { useCurrentSubscription } from '../api/use-current-subscription'
 import { useCancelAutoRenewal } from '../api/use-cancel-auto-renewal'
+import { useRenewAutoRenewal } from '../api/use-renew-auto-renewal' // ← добавить
 
 export type CurrentSubscriptionProps = {
   expireDate?: string
   nextPaymentDate?: string
-  isAutoRenewal?: boolean
   onToggleAutoRenewal?: (checked: boolean) => void
 }
 
@@ -24,23 +24,32 @@ const formatSubscriptionDate = (isoString: string): string => {
 export const UnsubscribeAutoRenewal = ({
   expireDate,
   nextPaymentDate,
-  isAutoRenewal,
   onToggleAutoRenewal
 }: CurrentSubscriptionProps) => {
   const { data: subscription } = useCurrentSubscription()
   const { mutate: cancelAutoRenewal } = useCancelAutoRenewal()
-
+  const { mutate: renewAutoRenewal } = useRenewAutoRenewal() // ← добавить
   const currentSub = subscription?.data?.[0]
 
   const finalExpireDate = expireDate || formatSubscriptionDate(currentSub?.endDateOfSubscription || '')
   const finalNextPaymentDate = nextPaymentDate || formatSubscriptionDate(currentSub?.dateOfPayment || '')
-  const finalIsAutoRenewal = isAutoRenewal ?? currentSub?.autoRenewal ?? false
+
+  // Для dev-окружения: показываем true если есть подписка, false если нет
+  const finalIsAutoRenewal = currentSub ? currentSub.autoRenewal || true : false
 
   const handleToggle = (checked: boolean) => {
+    // проверка
+    if (!currentSub?.subscriptionId) return
+
     if (onToggleAutoRenewal) {
       onToggleAutoRenewal(checked)
-    } else if (!checked && currentSub?.subscriptionId) {
-      cancelAutoRenewal({ subscriptionId: currentSub.subscriptionId })
+    } else if (currentSub?.subscriptionId) {
+      // ВКЛЮЧИТЬ или ВЫКЛЮЧИТЬ автопродление
+      if (checked) {
+        renewAutoRenewal({ subscriptionId: currentSub.subscriptionId })
+      } else {
+        cancelAutoRenewal({ subscriptionId: currentSub.subscriptionId })
+      }
     }
   }
 
