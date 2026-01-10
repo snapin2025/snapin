@@ -1,5 +1,4 @@
-// запрос GET
-
+// запросы
 import { api } from '@/shared/api'
 import {
   CancelAutoRenewalRequest,
@@ -16,5 +15,9 @@ export const subscriptionApi = {
   // POST запрос — для отмены продления подписки
   cancelAutoRenewal: async (payload: CancelAutoRenewalRequest): Promise<void> => {
     await api.post('/subscriptions/canceled-auto-renewal', payload)
+  },
+
+  renewAutoRenewal: async (payload: CancelAutoRenewalRequest): Promise<void> => {
+    await api.post('/subscriptions/renew-auto-renewal', payload)
   }
 }
