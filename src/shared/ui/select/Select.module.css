@@ -3,7 +3,8 @@
   all: unset;
   display: inline-flex;
   justify-content: space-between;
-  width: 358px;
+  min-width: 358px;
+  width: 100%;
   padding: 6px 12px;
   font-weight: 400;
   /*background-color: #171717;*/
@@ -100,3 +101,4 @@
   height: 16px;
   color: #ffffff;
 }
+
