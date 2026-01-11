@@ -1,9 +1,6 @@
 // запросы
 import { api } from '@/shared/api'
-import {
-  CancelAutoRenewalRequest,
-  CurrentSubscriptionResponse
-} from '@/features/cancel-auto-renewal/api/types/subscription-types'
+import { CurrentSubscriptionResponse } from '@/features/cancel-auto-renewal/api/types/subscription-types'
 
 export const subscriptionApi = {
   // GET
