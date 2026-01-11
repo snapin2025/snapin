@@ -12,6 +12,3 @@ export type CurrentSubscriptionResponse = {
   }>
   hasAutoRenewal: boolean // Дополнительный флаг от бекенда
 }
-export type CancelAutoRenewalRequest = {
-  subscriptionId: string // Только ID подписки, которую отменяем
-}

@@ -4,14 +4,8 @@ import { Checkbox, Typography } from '@/shared/ui'
 import { useCurrentSubscription } from '../api/use-current-subscription'
 import { useCancelAutoRenewal } from '../api/use-cancel-auto-renewal'
 import { useRenewAutoRenewal } from '../api/use-renew-auto-renewal'
-import { useState } from 'react' // ← добавить
+import { useState } from 'react'
 
-// export type CurrentSubscriptionProps = {
-//   expireDate?: string
-//   nextPaymentDate?: string
-// }
-
-// Форматирование прямо в компоненте
 const formatSubscriptionDate = (isoString: string): string => {
   if (!isoString) return ''
   const date = new Date(isoString)
@@ -24,21 +18,18 @@ const formatSubscriptionDate = (isoString: string): string => {
 export const UnsubscribeAutoRenewal = () => {
   const { data: subscription } = useCurrentSubscription()
   const { mutate: cancelAutoRenewal } = useCancelAutoRenewal()
-  const { mutate: renewAutoRenewal } = useRenewAutoRenewal() // ← добавить
+  const { mutate: renewAutoRenewal } = useRenewAutoRenewal()
   const currentSub = subscription?.data?.[0]
 
   const finalExpireDate = formatSubscriptionDate(currentSub?.endDateOfSubscription || '')
   const finalNextPaymentDate = formatSubscriptionDate(currentSub?.dateOfPayment || '')
 
-  // Локальное состояние для UI
   const [isChecked, setIsChecked] = useState(currentSub?.autoRenewal ?? false)
 
   const handleToggle = (checked: boolean) => {
-    // проверка
     if (!currentSub?.subscriptionId) return
-
-    // 1. Сразу обновляем UI
     setIsChecked(checked)
+
     if (checked) {
       renewAutoRenewal()
     } else {
