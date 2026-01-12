@@ -3,15 +3,9 @@ import s from './CurrentSubscription.module.css'
 import { Checkbox, Typography } from '@/shared/ui'
 import { useCurrentSubscription } from '../api/use-current-subscription'
 import { useCancelAutoRenewal } from '../api/use-cancel-auto-renewal'
+import { useRenewAutoRenewal } from '../api/use-renew-auto-renewal'
+import { useState } from 'react'
 
-export type CurrentSubscriptionProps = {
-  expireDate?: string
-  nextPaymentDate?: string
-  isAutoRenewal?: boolean
-  onToggleAutoRenewal?: (checked: boolean) => void
-}
-
-// Форматирование прямо в компоненте
 const formatSubscriptionDate = (isoString: string): string => {
   if (!isoString) return ''
   const date = new Date(isoString)
@@ -21,26 +15,25 @@ const formatSubscriptionDate = (isoString: string): string => {
   return `${day}.${month}.${year}`
 }
 
-export const UnsubscribeAutoRenewal = ({
-  expireDate,
-  nextPaymentDate,
-  isAutoRenewal,
-  onToggleAutoRenewal
-}: CurrentSubscriptionProps) => {
+export const UnsubscribeAutoRenewal = () => {
   const { data: subscription } = useCurrentSubscription()
   const { mutate: cancelAutoRenewal } = useCancelAutoRenewal()
-
+  const { mutate: renewAutoRenewal } = useRenewAutoRenewal()
   const currentSub = subscription?.data?.[0]
 
-  const finalExpireDate = expireDate || formatSubscriptionDate(currentSub?.endDateOfSubscription || '')
-  const finalNextPaymentDate = nextPaymentDate || formatSubscriptionDate(currentSub?.dateOfPayment || '')
-  const finalIsAutoRenewal = isAutoRenewal ?? currentSub?.autoRenewal ?? false
+  const finalExpireDate = formatSubscriptionDate(currentSub?.endDateOfSubscription || '')
+  const finalNextPaymentDate = formatSubscriptionDate(currentSub?.dateOfPayment || '')
+
+  const [isChecked, setIsChecked] = useState(currentSub?.autoRenewal ?? false)
 
   const handleToggle = (checked: boolean) => {
-    if (onToggleAutoRenewal) {
-      onToggleAutoRenewal(checked)
-    } else if (!checked && currentSub?.subscriptionId) {
-      cancelAutoRenewal({ subscriptionId: currentSub.subscriptionId })
+    if (!currentSub?.subscriptionId) return
+    setIsChecked(checked)
+
+    if (checked) {
+      renewAutoRenewal()
+    } else {
+      cancelAutoRenewal()
     }
   }
 
@@ -63,7 +56,7 @@ export const UnsubscribeAutoRenewal = ({
       </div>
 
       <div className={s.renewal}>
-        <Checkbox checked={finalIsAutoRenewal} onCheckedChange={handleToggle} />
+        <Checkbox checked={isChecked} onCheckedChange={handleToggle} />
         <span className={s.renewalText}>Auto-Renewal</span>
       </div>
     </div>
