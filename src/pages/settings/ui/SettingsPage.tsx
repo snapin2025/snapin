@@ -1,5 +1,7 @@
 import { SETTINGS_PART } from '@/shared/lib/routes'
 import { EditPersonalDataForm } from '@/features/edit-personal-data'
+import { UpgradeAccount } from '@/features/subscription/upgrade-account/ui/UpgradeAccount'
+import { PaymentsTable } from '@/features/subscription/payments-list/ui/PaymentsTable'
 
 type Props = {
   searchParams: Promise<{
@@ -14,10 +16,18 @@ export const SettingsPage = async ({ searchParams }: Props) => {
       return <div>Устройства</div>
 
     case SETTINGS_PART.SUBSCRIPTIONS:
-      return <div>Подписки</div>
+      return (
+        <div>
+          <UpgradeAccount />
+        </div>
+      )
 
     case SETTINGS_PART.PAYMENTS:
-      return <div>Платежи</div>
+      return (
+        <div>
+          <PaymentsTable />
+        </div>
+      )
 
     default:
       return (
@@ -27,3 +37,4 @@ export const SettingsPage = async ({ searchParams }: Props) => {
       )
   }
 }
+//baseUrl: `${window.location.origin}/profile/settings?part=${SETTINGS_PART.SUBSCRIPTIONS}`
