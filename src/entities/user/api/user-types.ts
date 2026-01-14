@@ -115,13 +115,30 @@ export type Avatar = {
   createdAt: string
 }
 
+export type UserMetadata = {
+  following: number
+  followers: number
+  publications: number
+}
+
+export type PublicUserProfile = {
+  id: number
+  userName: string
+  aboutMe: string
+  avatars: Avatar[]
+  userMetadata: UserMetadata
+  hasPaymentSubscription: boolean
+  isFollowing: boolean
+  isFollowedBy: boolean
+}
+
 export type PersonalData = PersonalDataRequest & {
   id: number
   avatars: Array<Avatar>
   createdAt: string
 }
 
-// типы для редавктирания своего профиля
+// типы для редавктирования своего профиля
 export type PersonalDataRequest = {
   userName?: string
   firstName: string

@@ -1,43 +1,48 @@
 'use client'
 
 import { User } from '@/entities/user'
-import { createContext, ReactNode, useContext, useEffect } from 'react'
-
-import { useRouter, useSearchParams } from 'next/navigation'
+import { createContext, ReactNode, useContext } from 'react'
 import { useMe } from '@/shared/api'
 
-type AuthContext = {
+type AuthContextValue = {
   user: User | null
   isLoading: boolean
   isError: boolean
 }
 
-const Auth = createContext<AuthContext | null>(null)
-export const AuthContext = Auth
+const AuthContext = createContext<AuthContextValue | null>(null)
 
+/**
+ * Хук для доступа к данным аутентификации
+ * @throws {Error} если используется вне AuthProvider
+ */
 export const useAuth = () => {
-  const ctx = useContext(Auth)
-  if (!ctx) {
+  const context = useContext(AuthContext)
+
+  if (!context) {
     throw new Error('useAuth must be used within AuthProvider')
   }
-  return ctx
+
+  return context
 }
 
+/**
+ * Провайдер аутентификации для всего приложения
+ * Предоставляет информацию о текущем пользователе через контекст
+ *
+ * @remarks
+ * - Использует React Query для кэширования данных пользователя
+ * - Автоматически обновляет токены через axios interceptors
+ * - Данные доступны только в Client Components
+ */
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const searchParams = useSearchParams()
-  const router = useRouter()
-  const token = searchParams?.get('accessToken')
+  const { data: user = null, isLoading, isError } = useMe()
 
-  useEffect(() => {
-    if (token) {
-      localStorage.setItem('accessToken', token)
+  const value: AuthContextValue = {
+    user,
+    isLoading,
+    isError
+  }
 
-      // Очищаем URL через router.replace
-      router.replace(window.location.pathname)
-    }
-  }, [token, router])
-
-  const { data: user, isLoading, isError } = useMe()
-
-  return <Auth.Provider value={{ user: user || null, isLoading, isError }}>{children}</Auth.Provider>
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
