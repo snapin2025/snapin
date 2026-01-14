@@ -5,14 +5,16 @@ import { useCurrentSubscription } from '../api/use-current-subscription'
 import { useCancelAutoRenewal } from '../api/use-cancel-auto-renewal'
 import { useRenewAutoRenewal } from '../api/use-renew-auto-renewal'
 import { useState } from 'react'
+import { format } from 'date-fns'
 
+// ДОБАВИТЬ новую версию , библиотеки:
 const formatSubscriptionDate = (isoString: string): string => {
   if (!isoString) return ''
-  const date = new Date(isoString)
-  const day = date.getDate().toString().padStart(2, '0')
-  const month = (date.getMonth() + 1).toString().padStart(2, '0')
-  const year = date.getFullYear()
-  return `${day}.${month}.${year}`
+  try {
+    return format(new Date(isoString), 'dd.MM.yyyy')
+  } catch {
+    return ''
+  }
 }
 
 export const UnsubscribeAutoRenewal = () => {
@@ -22,9 +24,18 @@ export const UnsubscribeAutoRenewal = () => {
   const currentSub = subscription?.data?.[0]
 
   const finalExpireDate = formatSubscriptionDate(currentSub?.endDateOfSubscription || '')
-  const finalNextPaymentDate = formatSubscriptionDate(currentSub?.dateOfPayment || '')
+  // const finalNextPaymentDate = formatSubscriptionDate(currentSub?.dateOfPayment || '') // finalExpireDate
 
-  const [isChecked, setIsChecked] = useState(currentSub?.autoRenewal ?? false)
+  // Вариант 1: Используем endDateOfSubscription и добавляем 1 день
+  const finalNextPaymentDate = currentSub?.endDateOfSubscription
+    ? (() => {
+        const date = new Date(currentSub.endDateOfSubscription)
+        date.setDate(date.getDate() + 1) // +1 день
+        return format(date, 'dd.MM.yyyy')
+      })()
+    : ''
+
+  const [isChecked, setIsChecked] = useState(subscription?.hasAutoRenewal ?? false)
 
   const handleToggle = (checked: boolean) => {
     if (!currentSub?.subscriptionId) return
@@ -56,7 +67,7 @@ export const UnsubscribeAutoRenewal = () => {
       </div>
 
       <div className={s.renewal}>
-        <Checkbox checked={isChecked} onCheckedChange={handleToggle} />
+        <Checkbox checked={subscription?.hasAutoRenewal} onCheckedChange={handleToggle} />
         <span className={s.renewalText}>Auto-Renewal</span>
       </div>
     </div>
