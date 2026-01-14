@@ -4,7 +4,11 @@ export type SignUpForm = z.infer<typeof SignUpSchema>
 
 export const SignUpSchema = z
   .object({
-    userName: z.string().min(6, 'Minimum number of characters 6').max(30, 'Maximum number of characters 30'),
+    userName: z
+      .string()
+      .min(6, 'Minimum number of characters 6')
+      .max(30, 'Maximum number of characters 30')
+      .regex(/^[a-zA-Z0-9_]+$/, 'Username can contain only Latin letters, numbers and underscore'),
     email: z.email('The email must match the format example@example.com'),
     password: z
       .string()
