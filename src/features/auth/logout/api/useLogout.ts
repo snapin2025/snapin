@@ -15,8 +15,13 @@ export const useLogout = () => {
         localStorage.removeItem('accessToken')
       }
 
-      // Очищаем все кэшированные данные
-      queryClient.clear()
+      // Устанавливаем данные пользователя в null (без нового запроса)
+      queryClient.setQueryData(['me'], null)
+
+      // Очищаем остальные кэшированные данные
+      queryClient.removeQueries({
+        predicate: (query) => query.queryKey[0] !== 'me'
+      })
 
       // Перенаправляем на страницу входа
       router.push(ROUTES.AUTH.SIGN_IN)
@@ -27,7 +32,15 @@ export const useLogout = () => {
       if (typeof window !== 'undefined') {
         localStorage.removeItem('accessToken')
       }
-      queryClient.clear()
+
+      // Устанавливаем данные пользователя в null
+      queryClient.setQueryData(['me'], null)
+
+      // Очищаем остальные данные
+      queryClient.removeQueries({
+        predicate: (query) => query.queryKey[0] !== 'me'
+      })
+
       router.push(ROUTES.AUTH.SIGN_IN)
     }
   })

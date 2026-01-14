@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useRef } from 'react'
+import { useRef } from 'react'
 import Link from 'next/link'
 import s from './userProfile.module.css'
 
@@ -35,16 +35,13 @@ export const UserProfile = ({ userId, pageSize = 8 }: Props) => {
 
   const observerTarget = useRef<HTMLDivElement>(null)
 
-  const allPosts = useMemo(() => postsData?.pages.flatMap((page) => page.items) ?? [], [postsData?.pages])
+  const allPosts = postsData?.pages.flatMap((page) => page.items) ?? []
 
-  const stats = useMemo(
-    () => ({
-      following: profileData?.followingCount ?? 0,
-      followers: profileData?.followersCount ?? 0,
-      publications: profileData?.publicationsCount ?? 0
-    }),
-    [profileData?.followingCount, profileData?.followersCount, profileData?.publicationsCount]
-  )
+  const stats = {
+    following: profileData?.followingCount ?? 0,
+    followers: profileData?.followersCount ?? 0,
+    publications: profileData?.publicationsCount ?? 0
+  }
 
   // Обработка бесконечной прокрутки через Intersection Observer
   useInfiniteScroll({
