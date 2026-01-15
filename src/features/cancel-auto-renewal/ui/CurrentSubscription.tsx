@@ -47,6 +47,7 @@ export const UnsubscribeAutoRenewal = () => {
       cancelAutoRenewal()
     }
   }
+  if (!currentSub) return null
 
   return (
     <div className={s.wrapper}>
