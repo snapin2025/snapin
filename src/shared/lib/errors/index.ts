@@ -1,2 +1,1 @@
-export { handleFormErrors, normalizeServerError, type ServerError } from './handleErrors'
-
+export { handleError, handleFormError, type ServerError } from './handleErrors'

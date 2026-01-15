@@ -1,20 +1,19 @@
 .overlay {
   position: fixed;
   inset: 0;
-  z-index: 50;
+  z-index: 49;
   background-color: var(--color-dark-900);
   opacity: 0.6;
+  pointer-events: auto;
 }
 
-
-.overlay[data-state='open'] {
+/* .overlay[data-state='open'] {
   animation: fadeIn 200ms ease-out;
 }
 
 .overlay[data-state='closed'] {
   animation: fadeOut 200ms ease-in;
-}
-
+} */
 
 .titleModal {
   margin: 0;
@@ -43,16 +42,13 @@
   width: fit-content;
   border: 1px solid var(--color-dark-100);
   border-radius: 2px;
-
   background-color: var(--color-dark-300);
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
-  &:focus{
+  pointer-events: auto;
+  &:focus {
     outline: none;
   }
-
 }
-
-
 
 .content[data-state='open'] {
   animation: zoomIn 200ms ease-out;
@@ -70,7 +66,7 @@
   cursor: pointer;
 
   color: var(--color-light-100);
-  &:focus{
+  &:focus {
     outline: none;
   }
 }

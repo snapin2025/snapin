@@ -84,7 +84,7 @@ export const SignUp = () => {
           />
         </div>
 
-        <div className={s.containerInput} style={{}}>
+        <div className={s.containerInput}>
           <Input
             label="Email"
             type="email"

@@ -1,26 +1,50 @@
-'use client'
+import s from './homePage.module.css'
+import { RegisteredUsers } from '@/widgets/registeredUsers/RegisteredUsers'
+import { HomePostsList } from '@/widgets'
+import { ResponsesPosts } from '@/entities/posts/api/types'
+// SSG: Страница будет статически сгенерирована на этапе сборки
+// ISR: Страница будет перегенерирована каждые 60 секунд при запросах
+export const revalidate = 60
 
-import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
-import { useAuth } from '@/shared/lib'
-import { Spinner } from '@/shared/ui'
+type TotalCountUsersResponse = {
+  totalCount: number
+}
 
-export const HomePage = () => {
-  const router = useRouter()
-  const { user, isLoading } = useAuth()
+const defaultPostsData: ResponsesPosts = {
+  totalCount: 0,
+  pageSize: 0,
+  items: [],
+  totalUsers: 0
+}
 
-  useEffect(() => {
-    if (isLoading) return
+export const HomePage = async () => {
+  // const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://inctagram.work/api/v1'
+  const apiUrl = 'https://inctagram.work/api/v1'
 
-    if (user) {
-      router.replace(`/profile/${user.userId}`)
-      return
-    }
+  const [postsResponse, usersResponse] = await Promise.all([
+    fetch(`${apiUrl}/posts/all`).catch(() => null),
+    fetch(`${apiUrl}/public-user`).catch(() => null)
+  ])
 
-    router.replace('/sign-in')
-  }, [user, isLoading, router])
+  const postsData: ResponsesPosts = postsResponse?.ok
+    ? await postsResponse.json().catch(() => defaultPostsData)
+    : defaultPostsData
+  const totalCountUsers =
+    (usersResponse?.ok
+      ? ((await usersResponse.json().catch(() => null)) as TotalCountUsersResponse | null)?.totalCount
+      : null) ?? 0
 
-  if (isLoading) return <Spinner />
+  // Ограничиваем количество постов на сервере (лучше для SSG)
+  const limitedPosts = postsData.items.slice(0, 4)
 
-  return null
+  return (
+    <div className={s.container}>
+      <RegisteredUsers totalCount={totalCountUsers} />
+      <ul className={s.userPostsList}>
+        {limitedPosts?.map((post) => (
+          <HomePostsList key={post.id} post={post} />
+        ))}
+      </ul>
+    </div>
+  )
 }

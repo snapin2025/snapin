@@ -4,6 +4,23 @@ export type User = {
   email: string
   isBlocked: boolean
 }
+export type UserProfileResponse = {
+  id: number
+  userName: string
+  firstName: string
+  lastName: string
+  city: string
+  country: string
+  region: string
+  dateOfBirth: string
+  aboutMe: string
+  avatars: Avatar[]
+  isFollowing: boolean
+  isFollowedBy: boolean
+  followingCount: number
+  followersCount: number
+  publicationsCount: number
+}
 
 export type SignInRequest = {
   email: string
@@ -85,4 +102,50 @@ export type EmailResendingErrorResponse = {
     field: string
   }[]
   error: string
+}
+
+export type TotalCountUsersResponse = {
+  totalCount: number
+}
+export type Avatar = {
+  url: string
+  width: number
+  height: number
+  fileSize: number
+  createdAt: string
+}
+
+export type UserMetadata = {
+  following: number
+  followers: number
+  publications: number
+}
+
+export type PublicUserProfile = {
+  id: number
+  userName: string
+  aboutMe: string
+  avatars: Avatar[]
+  userMetadata: UserMetadata
+  hasPaymentSubscription: boolean
+  isFollowing: boolean
+  isFollowedBy: boolean
+}
+
+export type PersonalData = PersonalDataRequest & {
+  id: number
+  avatars: Array<Avatar>
+  createdAt: string
+}
+
+// типы для редавктирования своего профиля
+export type PersonalDataRequest = {
+  userName?: string
+  firstName: string
+  lastName: string
+  dateOfBirth: string
+  city: string
+  country: string
+  region?: string
+  aboutMe: string
 }

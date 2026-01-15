@@ -3,12 +3,13 @@
 import { notFound, useSearchParams } from 'next/navigation'
 import { useEmailResending } from '@/features/auth/emailResending'
 import { useState } from 'react'
-import { BaseModal, Button, Input, Resending, Spinner, Typography } from '@/shared/ui'
+import { BaseModal, Button, Input, Spinner, Typography } from '@/shared/ui'
 import s from './EmailResending.module.css'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { EmailResendingForm, EmailResendingSchema } from '@/pages/auth/EmailResending/model'
 import { ROUTES } from '@/shared/lib/routes'
+import { Resending } from '@/shared/ui/icons/Resending'
 
 export function EmailResending() {
   const searchParams = useSearchParams()

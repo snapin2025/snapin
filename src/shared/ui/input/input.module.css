@@ -56,7 +56,6 @@
   border: 1px solid var(--color-accent-500);
 }
 
-
 .defaultInput:disabled {
   color: var(--color-dark-100);
   border: 1px solid var(--color-dark-100);
@@ -150,7 +149,8 @@
   color: var(--color-dark-100);
 }
 
-.eyesIcon, .crossIcon {
+.eyesIcon,
+.crossIcon {
   cursor: pointer;
   position: absolute;
   top: 50%;

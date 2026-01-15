@@ -2,7 +2,9 @@
 import s from './header.module.css'
 import Link from 'next/link'
 import { ReactNode } from 'react'
-import { Typography } from '@/shared/ui'
+import { Button, Typography } from '@/shared/ui'
+import { usePathname, useRouter } from 'next/navigation'
+import { useAuth } from '@/shared/lib'
 
 type Props = {
   children?: ReactNode

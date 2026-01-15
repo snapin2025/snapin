@@ -14,11 +14,16 @@ import { ForgotPasswordInputs, EmailSchema } from '../model/validateEmail'
 import { useForgotPassword } from '../api/useForgotPassword'
 import { useResendRecoveryEmail } from '../api/useResendRecoveryEmail'
 import { clsx } from 'clsx'
+import { Dialog, DialogClose } from '@/shared/ui/temp/dialog'
 
 export const ForgotPasswordForm = () => {
   const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null)
   const recaptchaRef = useRef<ReCAPTCHA | null>(null)
   const [isCaptchaPassed, setIsCaptchaPassed] = useState<boolean>(false)
+
+  // 👇 НОВОЕ СОСТОЯНИЕ ДЛЯ ДИАЛОГА
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [targetEmail, setTargetEmail] = useState('')
 
   const {
     register,
@@ -33,9 +38,7 @@ export const ForgotPasswordForm = () => {
   })
 
   const { mutate: sendRecoveryLink, isPending: isSending } = useForgotPassword()
-
   const { mutate: resendRecoveryLink, isPending: isResending } = useResendRecoveryEmail()
-
   const sendRecoveryLinkHandler = (data: ForgotPasswordInputs) => {
     if (!recaptchaToken) return
     // ✔ Сбрасываем предыдущую ошибку перед новым запросом
@@ -47,9 +50,11 @@ export const ForgotPasswordForm = () => {
       },
       {
         onSuccess: () => {
-          reset({ email: '' })
-          alert(`We have sent a link to confirm your email to ${data.email}`)
+          // alert(`We have sent a link to confirm your email to ${data.email}`)
+          setIsDialogOpen(true) // ✅ Открываем диалог через состояние
+          setTargetEmail(data.email) // ✅ Сохраняем email
           setIsCaptchaPassed(true)
+          reset({ email: '' })
         },
         onError: (
           err: AxiosError<{
@@ -75,7 +80,8 @@ export const ForgotPasswordForm = () => {
       },
       {
         onSuccess: () => {
-          console.log('Письмо отправлено повторно!')
+          setIsDialogOpen(true) // ✅ Открываем диалог через состояние
+          setTargetEmail(data.email) // ✅ Сохраняем email
           reset()
         },
         onError: (
@@ -100,62 +106,77 @@ export const ForgotPasswordForm = () => {
   }
 
   return (
-    <Card as="form" className={s.form} onSubmit={handleSubmit(onSubmitHandler)}>
-      <Typography variant="h1">Forgot Password</Typography>
-      <div className={s.field}>
-        <Input
-          id="email"
-          label="Email"
-          type="email"
-          placeholder="Epam@epam.com"
-          error={!!errors.email}
-          {...register('email')}
-        />
-        {errors.email && <span className={s.errorMessage}>{errors.email.message}</span>}
-      </div>
-      <p className={s.text}>Enter your email address and we will send you further instructions</p>
-      {/* ✔ Кнопка теперь дизейблится, если форма не валидна или капча не пройдена */}
-      {isCaptchaPassed ? (
-        <>
-          <p className={s.textLink}>
-            The link has been sent by email. <br /> If you don&#39;t receive an email send link again
-          </p>
-          <Button variant="primary" className={s.button} type={'submit'} disabled={!isValid || isSending}>
-            {isResending ? <Spinner inline /> : 'Send Link Again'}
+    <>
+      <Card as="form" className={s.form} onSubmit={handleSubmit(onSubmitHandler)}>
+        <Typography variant="h1">Forgot Password</Typography>
+        <div className={s.field}>
+          <Input
+            id="email"
+            label="Email"
+            type="email"
+            placeholder="Epam@epam.com"
+            error={!!errors.email}
+            {...register('email')}
+          />
+          {errors.email && <span className={s.errorMessage}>{errors.email.message}</span>}
+        </div>
+        <p className={s.text}>Enter your email address and we will send you further instructions</p>
+        {/* ✔ Кнопка теперь дизейблится, если форма не валидна или капча не пройдена */}
+        {isCaptchaPassed ? (
+          <>
+            <p className={s.textLink}>
+              The link has been sent by email. <br /> If you don&#39;t receive an email send link again
+            </p>
+            <Button variant="primary" className={s.button} type={'submit'} disabled={!isValid || isSending}>
+              {isResending ? <Spinner inline /> : 'Send Link Again'}
+            </Button>
+          </>
+        ) : (
+          <Button
+            variant="primary"
+            type={'submit'}
+            className={s.button}
+            disabled={!isValid || !recaptchaToken || isResending} // ✔ UC-3: шаг 4
+          >
+            {isSending ? <Spinner inline /> : ' Send Link'}
           </Button>
-        </>
-      ) : (
-        <Button
-          variant="primary"
-          type={'submit'}
-          className={s.button}
-          disabled={!isValid || !recaptchaToken || isResending} // ✔ UC-3: шаг 4
-        >
-          {isSending ? <Spinner inline /> : ' Send Link'}
-        </Button>
-      )}
-      <Link href={ROUTES.AUTH.SIGN_IN} className={s.backLink}>
-        Back to Sign In
-      </Link>
-      <div className={s.captchaContainer}>
-        {/*это сама капча  гугла  */}
+        )}
+        <Link href={ROUTES.AUTH.SIGN_IN} className={s.backLink}>
+          Back to Sign In
+        </Link>
+        <div className={s.captchaContainer}>
+          {/*это сама капча  гугла  */}
 
-        <ReCAPTCHA
-          className={clsx(s.captchaContainer, isCaptchaPassed && s.isVisible)}
-          ref={recaptchaRef}
-          sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
-          onChange={(token) => {
-            setRecaptchaToken(token)
-          }}
-          onExpired={() => {
-            setRecaptchaToken(null)
-            setIsCaptchaPassed(false)
-            recaptchaRef.current?.reset()
-          }}
-          theme="dark"
-          hl="en"
-        />
-      </div>
-    </Card>
+          <ReCAPTCHA
+            className={clsx(s.captchaContainer, isCaptchaPassed && s.isVisible)}
+            ref={recaptchaRef}
+            sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
+            onChange={(token) => {
+              setRecaptchaToken(token)
+            }}
+            onExpired={() => {
+              setRecaptchaToken(null)
+              setIsCaptchaPassed(false)
+              recaptchaRef.current?.reset()
+            }}
+            theme="dark"
+            hl="en"
+          />
+        </div>
+      </Card>
+      <Dialog
+        open={isDialogOpen}
+        onOpenChange={setIsDialogOpen} // Используем onOpenChange, как требует Radix/ваши типы
+        title="Email sent" // Передаем заголовок через пропс title
+      >
+        {/* Контент внутри Dialog передается через children */}
+        <div className={s.modalContent}>
+          <p className={s.textModal}>We have sent a link to confirm your email to {targetEmail}</p>
+          <DialogClose asChild>
+            <Button className={s.buttonModal}>Ok</Button>
+          </DialogClose>
+        </div>
+      </Dialog>
+    </>
   )
 }

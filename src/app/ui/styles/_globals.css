@@ -69,7 +69,7 @@ body {
   padding: 0;
   line-height: var(--line-height-m);
   color: var(--color-light-100, #fff);
-  background-color: var(--color-dark-900);
+  background-color: var(--color-dark-700);
 }
 .container {
   max-width: 1280px;

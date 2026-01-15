@@ -1,13 +1,14 @@
 export { userApi } from './api/user'
+export { useUserProfile } from './model/useUserProfile'
 export type {
   User,
   SignInRequest,
   SignInResponse,
   SignUpRequest,
-  SignUpSuccessResponse,
   SignUpErrorResponse,
-  SignUpResponse,
   SendRecoveryEmailType,
   ResendRecoveryEmailType,
-  SetNewPasswordType
+  SetNewPasswordType,
+  PersonalDataRequest,
+  PersonalData
 } from './api/user-types'

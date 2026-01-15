@@ -224,7 +224,6 @@
 }
 
 .closeButton {
-
   position: absolute;
   top: -50px;
   right: -60px;
@@ -239,8 +238,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  &:focus{
+  &:focus {
     outline: none;
   }
 }
-

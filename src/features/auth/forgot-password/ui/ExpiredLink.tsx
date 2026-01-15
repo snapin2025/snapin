@@ -5,10 +5,14 @@ import { useResendRecoveryEmail } from '../api/useResendRecoveryEmail'
 import s from './ForgotPasswordForm.module.css'
 import { useSearchParams } from 'next/navigation'
 import { ROUTES } from '@/shared/lib/routes'
+import { Dialog, DialogClose } from '@/shared/ui/temp/dialog'
+import { useState } from 'react'
 
 export default function ExpiredLink() {
   const savedEmail = useSearchParams()?.get('email')
   const { mutate: resendEmail, isPending } = useResendRecoveryEmail()
+  // 👇 НОВОЕ СОСТОЯНИЕ ДЛЯ ДИАЛОГА
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   const handleResend = () => {
     if (!savedEmail) return
@@ -20,7 +24,8 @@ export default function ExpiredLink() {
       },
       {
         onSuccess: () => {
-          alert(`We have sent a link to confirm your email to ${savedEmail}`)
+          // alert(`We have sent a link to confirm your email to ${savedEmail}`)
+          setIsDialogOpen(true) // ✅ Открываем диалог через состояние
         }
       }
     )
@@ -40,6 +45,21 @@ export default function ExpiredLink() {
           <Resend className={s.illustration} width={473} height={352} />
         </div>
       </div>
+
+      {/* 👇 ВАШ ДИАЛОГ С ПРАВИЛЬНЫМИ ПРОПСАМИ И ВНУТРЕННИМ КОНТЕНТОМ */}
+      <Dialog
+        open={isDialogOpen}
+        onOpenChange={setIsDialogOpen} // Используем onOpenChange, как требует Radix/ваши типы
+        title="Email sent" // Передаем заголовок через пропс title
+      >
+        {/* Контент внутри Dialog передается через children */}
+        <div className={s.modalContent}>
+          <p className={s.textModal}>We have sent a link to confirm your email to {savedEmail}</p>
+          <DialogClose asChild>
+            <Button className={s.buttonModal}>Ok</Button>
+          </DialogClose>
+        </div>
+      </Dialog>
     </>
   )
 }
