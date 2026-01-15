@@ -28,6 +28,13 @@ export async function prefetchProfileWithPosts(userId: number, pageSize = 8) {
         staleTime: 2 * 60 * 1000
       })
     }
+
+    // Префетчим публичный профиль по userId (закомментировано)
+    // await queryClient.prefetchQuery({
+    //   queryKey: ['public-user-profile', userId],
+    //   queryFn: () => userApi.getPublicUserProfile(userId),
+    //   staleTime: 2 * 60 * 1000
+    // })
   } catch (e) {
     console.error('Prefetch profile error', e)
   }
