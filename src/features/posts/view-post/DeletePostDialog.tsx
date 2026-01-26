@@ -10,18 +10,11 @@ type DeletePostDialogProps = {
   isDeleting: boolean
 }
 
-export const DeletePostDialog = ({
-  isOpen,
-  onOpenChange,
-  onConfirm,
-  isDeleting
-}: DeletePostDialogProps) => {
+export const DeletePostDialog = ({ isOpen, onOpenChange, onConfirm, isDeleting }: DeletePostDialogProps) => {
   return (
     <AlertDialog open={isOpen} onOpenChange={onOpenChange} title="Удалить пост">
       <AlertDescription asChild>
-        <p style={{ textAlign: 'left' }}>
-          Вы уверены, что хотите удалить этот пост? Это действие нельзя отменить.
-        </p>
+        <p style={{ textAlign: 'left' }}>Вы уверены, что хотите удалить этот пост? Это действие нельзя отменить.</p>
       </AlertDescription>
       <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 16 }}>
         <AlertCancel asChild>
