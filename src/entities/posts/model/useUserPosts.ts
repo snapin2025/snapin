@@ -47,4 +47,3 @@ export const useUserPosts = ({ userId, pageSize = 8 }: UseUserPostsParams) => {
     refetchOnReconnect: true // Обновлять при восстановлении соединения
   })
 }
-

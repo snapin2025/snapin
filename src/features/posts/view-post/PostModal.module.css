@@ -190,6 +190,29 @@
   height: 0;
 }
 
+/* Описание поста в списке комментариев */
+.postDescription {
+  display: flex;
+  gap: 12px;
+  padding: 12px 0;
+}
+
+.postDescriptionContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.postDescriptionText {
+  margin: 0;
+  font-size: 14px;
+  color: rgba(248, 249, 250, 0.9);
+  line-height: 1.5;
+  word-wrap: break-word;
+}
+
 /* Футер сайдбара */
 .sidebarFooter {
   display: flex;

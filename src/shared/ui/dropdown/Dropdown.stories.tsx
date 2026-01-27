@@ -66,4 +66,3 @@ export const OtherUserPost: Story = {
     onUnfollow: () => console.log('Unfollow clicked')
   }
 }
-
