@@ -123,8 +123,7 @@
   border-bottom: none;
 }
 
-.item:hover,
-.item[data-highlighted] {
+.item:hover {
   background-color: var(--color-dark-300);
 }
 
@@ -134,13 +133,20 @@
   outline-offset: -2px;
 }
 
+.item:active {
+  background-color: var(--color-dark-100);
+}
+
 .itemUnread {
   background-color: rgba(57, 125, 246, 0.05);
 }
 
-.itemUnread:hover,
-.itemUnread[data-highlighted] {
+.itemUnread:hover {
   background-color: rgba(57, 125, 246, 0.1);
+}
+
+.itemUnread:active {
+  background-color: rgba(57, 125, 246, 0.15);
 }
 
 .itemHeader {
@@ -180,4 +186,25 @@
   font-size: 12px;
   line-height: 1.2;
   color: var(--color-light-900);
+}
+
+.observerTarget {
+  min-height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+}
+
+.loading {
+  font-size: 14px;
+  color: var(--color-light-700);
+  text-align: center;
+}
+
+.endOfList {
+  padding: 12px;
+  font-size: 12px;
+  color: var(--color-light-900);
+  text-align: center;
 }

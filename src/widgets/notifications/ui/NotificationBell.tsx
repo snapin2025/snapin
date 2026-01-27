@@ -1,30 +1,38 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { Bell } from '@/shared/ui/icons'
-import {
-  useNotifications,
-  useUnreadNotificationsCount,
-  useMarkNotificationAsRead
-} from '@/entities/notification/model/useNotifications'
-import { useNotificationsWebSocket } from '@/shared/lib/hooks/useNotificationsWebSocket'
+import { useNotificationsList, useMarkNotificationAsRead } from '@/entities/notification/model/useNotifications'
 import { getTimeDifference } from '@/shared/lib/getTimeDifference'
 import { clsx } from 'clsx'
 import s from './NotificationBell.module.css'
 
 export const NotificationBell = () => {
   const [open, setOpen] = useState(false)
-  const { data: notifications, isLoading } = useNotifications()
-  const unreadCount = useUnreadNotificationsCount()
+  const {
+    notifications,
+    unreadCount,
+    isLoading,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage
+  } = useNotificationsList()
   const markAsRead = useMarkNotificationAsRead()
 
-  // Убеждаемся, что notifications всегда массив
-  const notificationsList = Array.isArray(notifications) ? notifications : []
+  // Отслеживаем скролл списка
+  const handleScroll = useCallback(
+    (e: React.UIEvent<HTMLDivElement>) => {
+      const target = e.currentTarget
+      const scrollBottom = target.scrollHeight - target.scrollTop - target.clientHeight
 
-  // Подключаемся к WebSocket для получения уведомлений в реальном времени
-  useNotificationsWebSocket()
-
+      // Загружаем следующую страницу когда до конца осталось менее 100px
+      if (scrollBottom < 100 && hasNextPage && !isFetchingNextPage) {
+        fetchNextPage()
+      }
+    },
+    [hasNextPage, isFetchingNextPage, fetchNextPage]
+  )
 
   const handleNotificationClick = (notificationId: number, isRead: boolean) => {
     if (!isRead) {
@@ -51,26 +59,46 @@ export const NotificationBell = () => {
             <DropdownMenu.Label className={s.title}>Уведомления</DropdownMenu.Label>
           </div>
 
-          <div className={s.list}>
+          <div className={s.list} onScroll={handleScroll}>
             {isLoading ? (
               <div className={s.empty}>Загрузка...</div>
-            ) : notificationsList.length === 0 ? (
+            ) : notifications.length === 0 ? (
               <div className={s.empty}>Нет уведомлений</div>
             ) : (
-              notificationsList.map((notification) => (
-                <DropdownMenu.Item
-                  key={notification.id}
-                  className={clsx(s.item, !notification.isRead && s.itemUnread)}
-                  onSelect={() => handleNotificationClick(notification.id, notification.isRead)}
-                >
-                  <div className={s.itemHeader}>
-                    <span className={s.itemTitle}>Новое уведомление!</span>
-                    {!notification.isRead && <span className={s.newBadge}>Новое</span>}
+              <>
+                {notifications.map((notification) => (
+                  <div
+                    key={notification.id}
+                    className={clsx(s.item, !notification.isRead && s.itemUnread)}
+                    onClick={() => handleNotificationClick(notification.id, notification.isRead)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault()
+                        handleNotificationClick(notification.id, notification.isRead)
+                      }
+                    }}
+                  >
+                    <div className={s.itemHeader}>
+                      <span className={s.itemTitle}>Новое уведомление!</span>
+                      {!notification.isRead && <span className={s.newBadge}>Новое</span>}
+                    </div>
+                    <p className={s.itemMessage}>{notification.message}</p>
+                    <span className={s.itemTime}>{getTimeDifference(notification.createdAt, 'ru')}</span>
                   </div>
-                  <p className={s.itemMessage}>{notification.message}</p>
-                  <span className={s.itemTime}>{getTimeDifference(notification.notifyAt, 'ru')}</span>
-                </DropdownMenu.Item>
-              ))
+                ))}
+                {/* Индикатор загрузки */}
+                {isFetchingNextPage && (
+                  <div className={s.observerTarget}>
+                    <div className={s.loading}>Загрузка...</div>
+                  </div>
+                )}
+                {/* Индикатор конца списка */}
+                {!hasNextPage && notifications.length > 0 && (
+                  <div className={s.endOfList}>Все уведомления загружены</div>
+                )}
+              </>
             )}
           </div>
         </DropdownMenu.Content>

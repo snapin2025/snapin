@@ -2,7 +2,6 @@ export { WithAuthGuard } from './hoc/WithAuthGuard'
 export { AuthProvider, useAuth } from './auth-provider/auth-provider'
 export { OAuthHandler } from './auth-provider/oauth-handler'
 export { useInfiniteScroll } from './hooks/useInfiniteScroll'
-export { useNotificationsWebSocket } from './hooks/useNotificationsWebSocket'
 
 // Testing utilities (для Storybook и тестов)
 export { AuthContext, MockAuthProvider } from './auth-provider/testing'

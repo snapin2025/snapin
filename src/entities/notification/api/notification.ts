@@ -1,63 +1,24 @@
-import { Notification } from './notification-types'
+import { api } from '@/shared/api'
+import type { NotificationsResponse, NotificationsQueryParams } from './notification-types'
 
-const NOTIFICATIONS_STORAGE_KEY = 'notifications'
+const PAGE_SIZE = 10
 
-/**
- * Утилиты для работы с уведомлениями в localStorage
- */
-export const notificationStorage = {
-  /**
-   * Получить все уведомления из localStorage
-   */
-  getNotifications: (): Notification[] => {
-    if (typeof window === 'undefined') {
-      return []
-    }
-
-    try {
-      const stored = localStorage.getItem(NOTIFICATIONS_STORAGE_KEY)
-      if (!stored) {
-        return []
+export const notificationApi = {
+  getNotifications: async (
+    cursor: number | undefined,
+    params: NotificationsQueryParams = {}
+  ): Promise<NotificationsResponse> => {
+    const path = cursor ? `/notifications/${cursor}` : '/notifications'
+    const { data } = await api.get<NotificationsResponse>(path, {
+      params: {
+        pageSize: params.pageSize ?? PAGE_SIZE,
+        sortDirection: params.sortDirection ?? 'desc'
       }
-      return JSON.parse(stored) as Notification[]
-    } catch (error) {
-      console.error('Error reading notifications from localStorage:', error)
-      return []
-    }
+    })
+    return data
   },
 
-  /**
-   * Сохранить уведомления в localStorage
-   */
-  saveNotifications: (notifications: Notification[]): void => {
-    if (typeof window === 'undefined') {
-      return
-    }
-
-    try {
-      // Ограничиваем количество хранимых уведомлений (например, последние 100)
-      const limitedNotifications = notifications.slice(0, 100)
-      localStorage.setItem(NOTIFICATIONS_STORAGE_KEY, JSON.stringify(limitedNotifications))
-    } catch (error) {
-      console.error('Error saving notifications to localStorage:', error)
-    }
-  },
-
-  /**
-   * Отметить уведомление как прочитанное
-   */
-  markAsRead: (notificationId: number): void => {
-    const notifications = notificationStorage.getNotifications()
-    const updated = notifications.map((n) => (n.id === notificationId ? { ...n, isRead: true } : n))
-    notificationStorage.saveNotifications(updated)
-  },
-
-  /**
-   * Отметить все уведомления как прочитанные
-   */
-  markAllAsRead: (): void => {
-    const notifications = notificationStorage.getNotifications()
-    const updated = notifications.map((n) => ({ ...n, isRead: true }))
-    notificationStorage.saveNotifications(updated)
+  markAsRead: async (ids: number[]): Promise<void> => {
+    await api.put('/notifications/mark-as-read', { ids })
   }
 }

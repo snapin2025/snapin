@@ -1,39 +1,118 @@
 'use client'
 
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { notificationStorage, Notification } from '../api'
+import { useInfiniteQuery, useMutation, useQueryClient, InfiniteData } from '@tanstack/react-query'
+import { useEffect, useMemo, useRef } from 'react'
+import { notificationApi } from '../api/notification'
+import type { NotificationsResponse, NewNotification } from '../api/notification-types'
+import { SOCKET_EVENTS } from '../api/notification-types'
+import { subscribeToEvent } from './socket/subscribeToEvent'
 
-const NOTIFICATIONS_QUERY_KEY = ['notifications'] as const
+const QUERY_KEY = ['notifications'] as const
+
+// Глобальный флаг — подписка должна быть одна на всё приложение
+let isSubscribed = false
 
 /**
- * Хук для получения списка уведомлений из localStorage через React Query
+ * Хук для WebSocket подписки (вызывается один раз)
  */
-export const useNotifications = () => {
-  return useQuery({
-    queryKey: NOTIFICATIONS_QUERY_KEY,
-    queryFn: () => {
-      return notificationStorage.getNotifications()
-    },
-    staleTime: 0, // Всегда считаем данные свежими, но не делаем лишних запросов
-    gcTime: Infinity, // Не удаляем из кэша
-    initialData: () => {
-      // Загружаем начальные данные из localStorage
-      return notificationStorage.getNotifications()
+const useNotificationsSocket = () => {
+  const queryClient = useQueryClient()
+  const isSubscribedRef = useRef(false)
+
+  useEffect(() => {
+    // Проверяем глобальный флаг и локальный ref
+    if (isSubscribed || isSubscribedRef.current) return
+
+    isSubscribed = true
+    isSubscribedRef.current = true
+
+    const unsubscribe = subscribeToEvent<NewNotification>(SOCKET_EVENTS.NOTIFICATIONS, (newNotification) => {
+      queryClient.setQueryData<InfiniteData<NotificationsResponse>>(QUERY_KEY, (old) => {
+        if (!old?.pages.length) return old
+
+        // Проверяем дубликат
+        const exists = old.pages.some((page) => page.items.some((item) => item.id === newNotification.id))
+        if (exists) return old
+
+        const firstPage = old.pages[0]
+        return {
+          ...old,
+          pages: [
+            {
+              ...firstPage,
+              items: [newNotification, ...firstPage.items],
+              totalCount: firstPage.totalCount + 1,
+              notReadCount: firstPage.notReadCount + 1
+            },
+            ...old.pages.slice(1)
+          ]
+        }
+      })
+    })
+
+    return () => {
+      unsubscribe()
+      isSubscribed = false
+      isSubscribedRef.current = false
     }
+  }, [queryClient])
+}
+
+/**
+ * Базовый хук для уведомлений с пагинацией
+ */
+const useNotificationsQuery = () => {
+  return useInfiniteQuery({
+    queryKey: QUERY_KEY,
+    queryFn: ({ pageParam }) => notificationApi.getNotifications(pageParam),
+    initialPageParam: undefined as number | undefined,
+    getNextPageParam: (lastPage, allPages) => {
+      if (!lastPage.items.length) return null
+
+      const totalLoaded = allPages.reduce((sum, page) => sum + page.items.length, 0)
+      if (totalLoaded >= lastPage.totalCount) return null
+
+      return lastPage.items.at(-1)?.id
+    },
+    staleTime: 60_000,
+    gcTime: 300_000
   })
 }
 
 /**
- * Хук для получения количества непрочитанных уведомлений
+ * Хук для списка уведомлений с бесконечным скроллом
  */
-export const useUnreadNotificationsCount = () => {
-  const { data: notifications = [] } = useNotifications()
+export const useNotificationsList = () => {
+  // WebSocket подписка — только здесь, один раз
+  useNotificationsSocket()
 
-  if (!Array.isArray(notifications)) {
-    return 0
+  const query = useNotificationsQuery()
+
+  // Собираем уведомления из всех страниц с дедупликацией
+  const notifications = useMemo(() => {
+    if (!query.data?.pages) return []
+
+    const seen = new Set<number>()
+    return query.data.pages
+      .flatMap((page) => page.items)
+      .filter((item) => {
+        if (seen.has(item.id)) return false
+        seen.add(item.id)
+        return true
+      })
+  }, [query.data?.pages])
+
+  // Количество непрочитанных — берём из первой страницы
+  const unreadCount = query.data?.pages[0]?.notReadCount ?? 0
+
+  return {
+    notifications,
+    unreadCount,
+    isLoading: query.isLoading,
+    hasNextPage: query.hasNextPage,
+    isFetchingNextPage: query.isFetchingNextPage,
+    fetchNextPage: query.fetchNextPage
   }
-
-  return notifications.filter((notification) => !notification.isRead).length
 }
 
 /**
@@ -43,57 +122,33 @@ export const useMarkNotificationAsRead = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (notificationId: number) => {
-      const notifications = notificationStorage.getNotifications()
-      const updated = notifications.map((n) => (n.id === notificationId ? { ...n, isRead: true } : n))
-      notificationStorage.saveNotifications(updated)
-      return updated
+    mutationFn: (id: number) => notificationApi.markAsRead([id]),
+    onMutate: async (id) => {
+      await queryClient.cancelQueries({ queryKey: QUERY_KEY })
+
+      // Оптимистичное обновление
+      queryClient.setQueryData<InfiniteData<NotificationsResponse>>(QUERY_KEY, (old) => {
+        if (!old) return old
+
+        let wasUnread = false
+        const pages = old.pages.map((page) => ({
+          ...page,
+          items: page.items.map((item) => {
+            if (item.id !== id) return item
+            if (!item.isRead) wasUnread = true
+            return { ...item, isRead: true }
+          })
+        }))
+
+        if (wasUnread && pages[0]) {
+          pages[0] = { ...pages[0], notReadCount: Math.max(0, pages[0].notReadCount - 1) }
+        }
+
+        return { ...old, pages }
+      })
     },
-    onSuccess: (updatedNotifications) => {
-      // Обновляем кэш React Query
-      queryClient.setQueryData<Notification[]>(NOTIFICATIONS_QUERY_KEY, updatedNotifications)
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEY })
     }
-  })
-}
-
-/**
- * Хук для отметки всех уведомлений как прочитанных
- */
-export const useMarkAllNotificationsAsRead = () => {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: () => {
-      const notifications = notificationStorage.getNotifications()
-      const updated = notifications.map((n) => ({ ...n, isRead: true }))
-      notificationStorage.saveNotifications(updated)
-      return updated
-    },
-    onSuccess: (updatedNotifications) => {
-      // Обновляем кэш React Query
-      queryClient.setQueryData<Notification[]>(NOTIFICATIONS_QUERY_KEY, updatedNotifications)
-    }
-  })
-}
-
-/**
- * Функция для добавления нового уведомления в кэш (используется WebSocket)
- * Должна вызываться из WebSocket хука с queryClient
- */
-export const addNotificationToCache = (queryClient: ReturnType<typeof useQueryClient>, notification: Notification) => {
-  // Обновляем кэш React Query
-  queryClient.setQueryData<Notification[]>(NOTIFICATIONS_QUERY_KEY, (old = []) => {
-    // Проверяем, нет ли уже такого уведомления
-    if (old.some((n) => n.id === notification.id)) {
-      return old
-    }
-
-    // Добавляем новое уведомление в начало списка
-    const updated = [notification, ...old]
-
-    // Сохраняем в localStorage
-    notificationStorage.saveNotifications(updated)
-
-    return updated
   })
 }
