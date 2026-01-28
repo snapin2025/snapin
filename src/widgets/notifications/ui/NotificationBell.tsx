@@ -11,18 +11,14 @@ import { useNotifications } from '@/entities/notification/model/useNotifications
 
 export const NotificationBell = () => {
   const [open, setOpen] = useState(false)
-  const { notifications, unreadCount, isLoading, refetch, markAsRead } = useNotifications()
+  const { notifications, unreadCount, isLoading, markAsRead } = useNotifications()
 
   const handleNotificationClick = (notificationId: number, isRead: boolean) => {
     markAsRead(notificationId, isRead)
   }
 
   return (
-    <DropdownMenu.Root
-      open={open}
-      onOpenChange={setOpen}
-      modal={false}
-    >
+    <DropdownMenu.Root open={open} onOpenChange={setOpen} modal={false}>
       <DropdownMenu.Trigger asChild>
         <button className={s.trigger} aria-label="Уведомления">
           <Bell className={s.icon} />
