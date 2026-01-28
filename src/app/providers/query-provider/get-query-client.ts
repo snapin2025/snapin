@@ -44,8 +44,7 @@ function makeQueryClient() {
          * Это позволяет отправлять частично загруженные данные на клиент
          * и продолжать загрузку там, улучшая Time to First Byte (TTFB)
          */
-        shouldDehydrateQuery: (query) =>
-          defaultShouldDehydrateQuery(query) || query.state.status === 'pending',
+        shouldDehydrateQuery: (query) => defaultShouldDehydrateQuery(query) || query.state.status === 'pending',
         /**
          * Определяет, нужно ли скрывать ошибки при дегидратации
          *
