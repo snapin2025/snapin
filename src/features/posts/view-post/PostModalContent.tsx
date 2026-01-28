@@ -5,6 +5,7 @@ import { CommentsList } from '@/features/posts/post-comments'
 import { PostModalHeader } from './PostModalHeader'
 import { PostModalFooter } from './PostModalFooter'
 import { Post } from '@/entities/posts/api/types'
+import { Avatar } from '@/shared/ui'
 import s from './PostModal.module.css'
 
 type PostModalContentProps = {
@@ -43,6 +44,16 @@ export const PostModalContent = ({ post, currentUserId, onEdit, onDelete }: Post
 
         {/* Комментарии */}
         <section className={s.comments} aria-label="Комментарии">
+          {post.description && (
+            <article className={s.postDescription}>
+              <Avatar src={post.avatarOwner ?? undefined} alt={post.userName} size="small" />
+              <div className={s.postDescriptionContent}>
+                <p className={s.postDescriptionText}>
+                  <span className={s.descriptionUser}>{post.userName}</span> {post.description}
+                </p>
+              </div>
+            </article>
+          )}
           <CommentsList postId={post.id} user={currentUserId ?? undefined} />
         </section>
 

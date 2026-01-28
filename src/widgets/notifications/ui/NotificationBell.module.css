@@ -187,24 +187,3 @@
   line-height: 1.2;
   color: var(--color-light-900);
 }
-
-.observerTarget {
-  min-height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 12px;
-}
-
-.loading {
-  font-size: 14px;
-  color: var(--color-light-700);
-  text-align: center;
-}
-
-.endOfList {
-  padding: 12px;
-  font-size: 12px;
-  color: var(--color-light-900);
-  text-align: center;
-}

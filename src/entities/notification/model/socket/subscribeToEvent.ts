@@ -1,9 +1,10 @@
-import { getSocket } from '@/entities/notification/model/socket/getSocket'
-import { SocketEvent } from '@/entities/notification/api/notification-types'
+import { getSocket } from './getSocket'
 
-export const subscribeToEvent = <T>(event: SocketEvent, callback: (data: T) => void) => {
+export const subscribeToEvent = <T>(event: string, callback: (data: T) => void): (() => void) => {
   const socket = getSocket()
+
   socket.on(event, callback)
+
   return () => {
     socket.off(event, callback)
   }

@@ -1,20 +1,28 @@
 import { api } from '@/shared/api'
-import type { NotificationsResponse, NotificationsQueryParams } from './notification-types'
+import type { NotificationsResponse } from './notification-types'
 
-const PAGE_SIZE = 10
+export type GetNotificationsParams = {
+  cursor?: number
+  sortBy?: 'notifyAt'
+  isRead?: boolean
+  pageSize?: number
+  sortDirection?: 'asc' | 'desc'
+}
 
 export const notificationApi = {
-  getNotifications: async (
-    cursor: number | undefined,
-    params: NotificationsQueryParams = {}
-  ): Promise<NotificationsResponse> => {
-    const path = cursor ? `/notifications/${cursor}` : '/notifications'
+  getAll: async (params: GetNotificationsParams = {}): Promise<NotificationsResponse> => {
+    const { cursor, sortBy = 'notifyAt', sortDirection = 'desc', isRead } = params
+
+    const path = typeof cursor === 'number' ? `/notifications/${cursor}` : '/notifications'
     const { data } = await api.get<NotificationsResponse>(path, {
       params: {
-        pageSize: params.pageSize ?? PAGE_SIZE,
-        sortDirection: params.sortDirection ?? 'desc'
+        sortBy,
+        pageSize: 100,
+        sortDirection,
+        ...(typeof isRead === 'boolean' ? { isRead } : {})
       }
     })
+    console.log(data)
     return data
   },
 
