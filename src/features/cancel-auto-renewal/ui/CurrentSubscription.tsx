@@ -105,7 +105,6 @@ export const UnsubscribeAutoRenewal = () => {
   )[0]
 
   const finalExpireDate = formatSubscriptionDate(currentSub?.endDateOfSubscription || '')
-
   // Используем addDays из date-fns вместо setDate
   const finalNextPaymentDate = currentSub?.endDateOfSubscription
     ? format(addDays(parseISO(currentSub.endDateOfSubscription), 1), 'dd.MM.yyyy')
