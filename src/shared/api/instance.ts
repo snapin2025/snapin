@@ -61,7 +61,7 @@ api.interceptors.response.use(
         // Пытаемся обновить токен через refreshToken в cookies
         // refreshToken автоматически отправится благодаря withCredentials: true
         const refreshResponse = await axios.post(
-          `https://inctagram.work/api/v1/auth/update`,
+          `${process.env.NEXT_PUBLIC_API_URL}/auth/update`,
           {},
           { withCredentials: true }
         )
