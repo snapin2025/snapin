@@ -22,8 +22,8 @@ export const HomePage = async () => {
   const apiUrl = 'https://inctagram.work/api/v1'
 
   const [postsResponse, usersResponse] = await Promise.all([
-    fetch(`${apiUrl}/posts/all`).catch(() => null),
-    fetch(`${apiUrl}/public-user`).catch(() => null)
+    fetch(`${apiUrl}/posts/all`, { next: { revalidate: 60 } }).catch(() => null),
+    fetch(`${apiUrl}/public-user`, { next: { revalidate: 60 } }).catch(() => null)
   ])
 
   const postsData: ResponsesPosts = postsResponse?.ok
