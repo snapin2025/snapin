@@ -6,6 +6,7 @@ import { PostModalHeader } from './PostModalHeader'
 import { PostModalFooter } from './PostModalFooter'
 import { Post } from '@/entities/posts/api/types'
 import { Avatar } from '@/shared/ui'
+import { formatDistanceToNowStrict } from 'date-fns'
 import s from './PostModal.module.css'
 
 type PostModalContentProps = {
@@ -16,6 +17,14 @@ type PostModalContentProps = {
 }
 
 export const PostModalContent = ({ post, currentUserId, onEdit, onDelete }: PostModalContentProps) => {
+  const formatRelativeTime = (isoString: string) => {
+    if (!isoString) return ''
+    const date = new Date(isoString)
+    if (Number.isNaN(date.getTime())) return ''
+
+    return formatDistanceToNowStrict(date, { addSuffix: true })
+  }
+
   return (
     <div className={s.postContainer}>
       {/* Левая часть - карусель изображений */}
@@ -51,6 +60,9 @@ export const PostModalContent = ({ post, currentUserId, onEdit, onDelete }: Post
                 <p className={s.postDescriptionText}>
                   <span className={s.descriptionUser}>{post.userName}</span> {post.description}
                 </p>
+                <time className={s.postDescriptionTime} dateTime={post.createdAt}>
+                  {formatRelativeTime(post.createdAt)}
+                </time>
               </div>
             </article>
           )}

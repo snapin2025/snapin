@@ -1,104 +1,117 @@
-import { useEffect } from 'react'
+'use client'
+
+import { useEffect, useRef } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { notificationApi } from '@/entities/notification/api/notification'
-import type { Notification, NotificationsResponse } from '@/entities/notification/api/notification-types'
-import { SOCKET_EVENTS } from '@/entities/notification/api/notification-types'
+import { notificationApi } from '../api/notification'
+import type { Notification, NotificationsResponse } from '../api/notification-types'
+import { SOCKET_EVENTS } from '../api/notification-types'
 import { subscribeToEvent } from './socket/subscribeToEvent'
 
-const NOTIFICATIONS_QUERY_KEY = ['notifications']
+const QUERY_KEY = ['notifications'] as const
+
+function mergeNewItems(
+  current: NotificationsResponse | undefined,
+  incoming: Notification[]
+): NotificationsResponse | undefined {
+  const items = current?.items ?? []
+  const ids = new Set(items.map((n) => n.id))
+  const newItems = incoming.filter((n) => !ids.has(n.id))
+  if (newItems.length === 0) return current ?? undefined
+
+  const nextItems = [...newItems, ...items]
+  const addedUnread = newItems.filter((n) => !n.isRead).length
+
+  return {
+    items: nextItems,
+    totalCount: (current?.totalCount ?? 0) + newItems.length,
+    notReadCount: (current?.notReadCount ?? 0) + addedUnread
+  }
+}
 
 export const useNotifications = () => {
   const queryClient = useQueryClient()
-  const { data, isLoading } = useQuery({
-    queryKey: NOTIFICATIONS_QUERY_KEY,
-    queryFn: () => notificationApi.getAll(),
+  const pendingRef = useRef<Notification[]>([])
 
-    staleTime: 30 * 1000,
+  const { data, isLoading } = useQuery({
+    queryKey: QUERY_KEY,
+    queryFn: () => notificationApi.getAll(),
+    staleTime: 30_000,
     gcTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
     retry: 1
   })
 
-  const markAsReadMutation = useMutation<void, unknown, number[], { previous?: NotificationsResponse }>({
-    mutationFn: (ids: number[]) => notificationApi.markAsRead(ids),
-    onMutate: async (ids) => {
-      await queryClient.cancelQueries({ queryKey: NOTIFICATIONS_QUERY_KEY })
-      const previous = queryClient.getQueryData<NotificationsResponse>(NOTIFICATIONS_QUERY_KEY)
-
-      queryClient.setQueryData<NotificationsResponse>(NOTIFICATIONS_QUERY_KEY, (current) => {
-        if (!current) {
-          return current
-        }
-        const idsSet = new Set(ids)
-        const updatedItems = current.items.map((item) => (idsSet.has(item.id) ? { ...item, isRead: true } : item))
-        const newlyReadCount = current.items.reduce(
-          (acc, item) => acc + (idsSet.has(item.id) && !item.isRead ? 1 : 0),
-          0
-        )
-
-        return {
-          ...current,
-          items: updatedItems,
-          notReadCount: Math.max(0, current.notReadCount - newlyReadCount)
-        }
-      })
-
-      return { previous }
-    },
-    onError: (_error, _ids, context) => {
-      if (context?.previous) {
-        queryClient.setQueryData(NOTIFICATIONS_QUERY_KEY, context.previous)
-      }
-    }
-  })
-
   useEffect(() => {
-    const unsubscribe = subscribeToEvent<Notification | Notification[]>(
-      SOCKET_EVENTS.NOTIFICATIONS,
-      (payload) => {
-        queryClient.setQueryData<NotificationsResponse>(NOTIFICATIONS_QUERY_KEY, (current) => {
-          const incomingItems = Array.isArray(payload) ? payload : [payload]
-          const existingItems = current?.items ?? []
-          const existingIds = new Set(existingItems.map((item) => item.id))
-          const dedupedIncoming = incomingItems.filter((item) => !existingIds.has(item.id))
+    const unsubscribe = subscribeToEvent<Notification | Notification[]>(SOCKET_EVENTS.NOTIFICATIONS, (payload) => {
+      const incoming = Array.isArray(payload) ? payload : [payload]
 
-          if (dedupedIncoming.length === 0) {
-            return current
-          }
-
-          const addedUnread = dedupedIncoming.reduce((acc, item) => acc + (item.isRead ? 0 : 1), 0)
-
-          return {
-            items: [...dedupedIncoming, ...existingItems],
-            totalCount: (current?.totalCount ?? 0) + dedupedIncoming.length,
-            notReadCount: (current?.notReadCount ?? 0) + addedUnread
-          }
-        })
-      }
-    )
-
+      queryClient.setQueryData<NotificationsResponse>(QUERY_KEY, (current) => {
+        const merged = mergeNewItems(current, incoming)
+        if (!merged) return current ?? undefined
+        if (!current) {
+          pendingRef.current = [...pendingRef.current, ...incoming]
+          return undefined
+        }
+        return merged
+      })
+    })
     return () => {
       unsubscribe()
     }
   }, [queryClient])
 
-  const notifications = [...(data?.items ?? [])].sort((first, second) => {
-    if (first.isRead !== second.isRead) {
-      return first.isRead ? 1 : -1
+  useEffect(() => {
+    if (!data || pendingRef.current.length === 0) return
+    const pending = pendingRef.current
+    pendingRef.current = []
+    queryClient.setQueryData<NotificationsResponse>(
+      QUERY_KEY,
+      (current) => mergeNewItems(current ?? data, pending) ?? current
+    )
+  }, [data, queryClient])
+
+  // markAsRead с оптимистичным обновлением (как RTK mutation)
+  const markAsReadMutation = useMutation<void, Error, number[], { previous?: NotificationsResponse }>({
+    mutationFn: (ids: number[]) => notificationApi.markAsRead(ids),
+    onMutate: async (ids) => {
+      await queryClient.cancelQueries({ queryKey: QUERY_KEY })
+      const previous = queryClient.getQueryData<NotificationsResponse>(QUERY_KEY)
+
+      queryClient.setQueryData<NotificationsResponse>(QUERY_KEY, (current) => {
+        if (!current) return current
+        const idsSet = new Set(ids)
+        const items = current.items.map((n) => (idsSet.has(n.id) ? { ...n, isRead: true } : n))
+        const newlyRead = current.items.filter((n) => idsSet.has(n.id) && !n.isRead).length
+        return {
+          ...current,
+          items,
+          notReadCount: Math.max(0, current.notReadCount - newlyRead)
+        }
+      })
+      return { previous }
+    },
+    onError: (_err, _ids, context) => {
+      if (context?.previous) {
+        queryClient.setQueryData(QUERY_KEY, context.previous)
+      }
     }
-    return Date.parse(second.notifyAt ?? second.createdAt) - Date.parse(first.notifyAt ?? first.createdAt)
   })
 
-  const unreadCount = notifications.reduce((acc, notification) => acc + (notification.isRead ? 0 : 1), 0)
+  const notifications = [...(data?.items ?? [])].sort((a, b) => {
+    if (a.isRead !== b.isRead) return a.isRead ? 1 : -1
+    const timeA = Date.parse((b.notifyAt ?? b.createdAt) as string)
+    const timeB = Date.parse((a.notifyAt ?? a.createdAt) as string)
+    return timeA - timeB
+  })
+
+  const unreadCount = data?.notReadCount ?? notifications.filter((n) => !n.isRead).length
 
   return {
     isLoading,
     notifications,
     unreadCount,
     markAsRead: (id: number, isRead: boolean) => {
-      if (!isRead) {
-        markAsReadMutation.mutate([id])
-      }
+      if (!isRead) markAsReadMutation.mutate([id])
     }
   }
 }

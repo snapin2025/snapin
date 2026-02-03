@@ -22,7 +22,6 @@ export const notificationApi = {
         ...(typeof isRead === 'boolean' ? { isRead } : {})
       }
     })
-    console.log(data)
     return data
   },
 
