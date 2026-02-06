@@ -11,13 +11,13 @@ export type GetNotificationsParams = {
 
 export const notificationApi = {
   getAll: async (params: GetNotificationsParams = {}): Promise<NotificationsResponse> => {
-    const { cursor, sortBy = 'notifyAt', sortDirection = 'desc', isRead } = params
+    const { cursor, sortBy = 'notifyAt', sortDirection = 'desc', isRead, pageSize = 10 } = params
 
     const path = typeof cursor === 'number' ? `/notifications/${cursor}` : '/notifications'
     const { data } = await api.get<NotificationsResponse>(path, {
       params: {
         sortBy,
-        pageSize: 100,
+        pageSize,
         sortDirection,
         ...(typeof isRead === 'boolean' ? { isRead } : {})
       }
