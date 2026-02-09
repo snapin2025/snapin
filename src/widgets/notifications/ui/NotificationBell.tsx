@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, type UIEvent } from 'react'
+import { useState } from 'react'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { Bell } from '@/shared/ui/icons'
 
@@ -11,19 +11,10 @@ import { useNotifications } from '@/entities/notification/model/useNotifications
 
 export const NotificationBell = () => {
   const [open, setOpen] = useState(false)
-  const { notifications, unreadCount, isLoading, markAsRead, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useNotifications()
+  const { notifications, unreadCount, isLoading, markAsRead } = useNotifications()
 
   const handleNotificationClick = (notificationId: number, isRead: boolean) => {
     markAsRead(notificationId, isRead)
-  }
-
-  const handleScroll = (event: UIEvent<HTMLDivElement>) => {
-    const target = event.currentTarget
-    const nearBottom = target.scrollTop + target.clientHeight >= target.scrollHeight - 24
-    if (nearBottom && hasNextPage && !isFetchingNextPage) {
-      fetchNextPage()
-    }
   }
 
   return (
@@ -45,39 +36,36 @@ export const NotificationBell = () => {
             <DropdownMenu.Label className={s.title}>Уведомления</DropdownMenu.Label>
           </div>
 
-          <div className={s.list} onScroll={handleScroll}>
+          <div className={s.list}>
             {isLoading ? (
               <div className={s.empty}>Загрузка...</div>
             ) : notifications.length === 0 ? (
               <div className={s.empty}>Нет уведомлений</div>
             ) : (
-              <>
-                {notifications.map((notification) => (
-                  <div
-                    key={notification.id}
-                    className={clsx(s.item, !notification.isRead && s.itemUnread)}
-                    onClick={() => handleNotificationClick(notification.id, notification.isRead)}
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault()
-                        handleNotificationClick(notification.id, notification.isRead)
-                      }
-                    }}
-                  >
-                    <div className={s.itemHeader}>
-                      <span className={s.itemTitle}>Новое уведомление!</span>
-                      {!notification.isRead && <span className={s.newBadge}>Новое</span>}
-                    </div>
-                    <p className={s.itemMessage}>{notification.message}</p>
-                    <span className={s.itemTime}>
-                      {getTimeDifference(notification.notifyAt ?? notification.createdAt, 'ru')}
-                    </span>
+              notifications.map((notification) => (
+                <div
+                  key={notification.id}
+                  className={clsx(s.item, !notification.isRead && s.itemUnread)}
+                  onClick={() => handleNotificationClick(notification.id, notification.isRead)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      handleNotificationClick(notification.id, notification.isRead)
+                    }
+                  }}
+                >
+                  <div className={s.itemHeader}>
+                    <span className={s.itemTitle}>Новое уведомление!</span>
+                    {!notification.isRead && <span className={s.newBadge}>Новое</span>}
                   </div>
-                ))}
-                {isFetchingNextPage && <div className={s.empty}>Загрузка...</div>}
-              </>
+                  <p className={s.itemMessage}>{notification.message}</p>
+                  <span className={s.itemTime}>
+                    {getTimeDifference(notification.notifyAt ?? notification.createdAt, 'ru')}
+                  </span>
+                </div>
+              ))
             )}
           </div>
         </DropdownMenu.Content>
