@@ -13,6 +13,9 @@ const NOTIFICATIONS_QUERY_KEY = ['notifications', 'infinite', NOTIFICATIONS_PAGE
 
 type NotificationsInfiniteData = InfiniteData<NotificationsResponse, number | null>
 
+// Глобальный флаг для предотвращения множественных подписок
+let isSocketSubscribed = false
+
 export const useNotifications = () => {
   const queryClient = useQueryClient()
 
@@ -135,8 +138,15 @@ export const useNotifications = () => {
     [mutateMarkAsRead]
   )
 
-  // WebSocket интеграция (встроена в хук)
+  // WebSocket интеграция (глобальная подписка - только один раз)
   useEffect(() => {
+    // Если уже подписаны - пропускаем
+    if (isSocketSubscribed) {
+      return
+    }
+
+    isSocketSubscribed = true
+
     const handleNewNotification = (payload: Notification | Notification[]) => {
       const incoming = Array.isArray(payload) ? payload : [payload]
 
@@ -176,8 +186,10 @@ export const useNotifications = () => {
       handleNewNotification
     )
 
+    // Cleanup: отписываемся и сбрасываем флаг
     return () => {
       unsubscribe()
+      isSocketSubscribed = false
     }
   }, [queryClient])
 
