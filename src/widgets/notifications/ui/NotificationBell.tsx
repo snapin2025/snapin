@@ -16,7 +16,7 @@ export const NotificationBell = () => {
 
   const { notifications, unreadCount, isLoading, markAsRead, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useNotifications()
-
+  console.log(notifications)
   // Мемоизируем обработчик клика
   const handleNotificationClick = useCallback(
     (notificationId: number, isRead: boolean) => {

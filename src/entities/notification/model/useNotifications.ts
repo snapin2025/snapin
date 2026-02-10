@@ -25,9 +25,7 @@ export const useNotifications = () => {
     queryFn: ({ pageParam }) =>
       notificationApi.getAll({
         cursor: pageParam ?? undefined,
-        sortDirection: 'desc',
-        pageSize: NOTIFICATIONS_PAGE_SIZE,
-        unreadFirst: true
+        pageSize: NOTIFICATIONS_PAGE_SIZE
       }),
     initialPageParam: null as number | null,
     getNextPageParam: (lastPage) => {
