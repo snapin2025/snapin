@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { emitAccessTokenChanged } from '@/shared/lib/auth/accessTokenEvents'
 
 /**
  * Компонент для обработки OAuth токенов из URL
@@ -29,6 +30,7 @@ export const OAuthHandler = () => {
     if (accessToken) {
       // Сохраняем токен
       localStorage.setItem('accessToken', accessToken)
+      emitAccessTokenChanged(accessToken)
 
       // Очищаем URL от токена
       url.searchParams.delete('accessToken')

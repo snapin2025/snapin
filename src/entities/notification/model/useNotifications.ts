@@ -1,117 +1,203 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useEffect, useMemo, useCallback } from 'react'
+import type { InfiniteData } from '@tanstack/react-query'
+import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { notificationApi } from '../api/notification'
 import type { Notification, NotificationsResponse } from '../api/notification-types'
 import { SOCKET_EVENTS } from '../api/notification-types'
 import { subscribeToEvent } from './socket/subscribeToEvent'
 
-const QUERY_KEY = ['notifications'] as const
+const NOTIFICATIONS_PAGE_SIZE = 100
+const NOTIFICATIONS_QUERY_KEY = ['notifications', 'infinite', NOTIFICATIONS_PAGE_SIZE] as const
 
-function mergeNewItems(
-  current: NotificationsResponse | undefined,
-  incoming: Notification[]
-): NotificationsResponse | undefined {
-  const items = current?.items ?? []
-  const ids = new Set(items.map((n) => n.id))
-  const newItems = incoming.filter((n) => !ids.has(n.id))
-  if (newItems.length === 0) return current ?? undefined
+type NotificationsInfiniteData = InfiniteData<NotificationsResponse, number | null>
 
-  const nextItems = [...newItems, ...items]
-  const addedUnread = newItems.filter((n) => !n.isRead).length
-
-  return {
-    items: nextItems,
-    totalCount: (current?.totalCount ?? 0) + newItems.length,
-    notReadCount: (current?.notReadCount ?? 0) + addedUnread
-  }
-}
+// Глобальный флаг для предотвращения множественных подписок
+let isSocketSubscribed = false
 
 export const useNotifications = () => {
   const queryClient = useQueryClient()
-  const pendingRef = useRef<Notification[]>([])
 
-  const { data, isLoading } = useQuery({
-    queryKey: QUERY_KEY,
-    queryFn: () => notificationApi.getAll(),
-    staleTime: 30_000,
+  // Infinite Query для пагинации
+  const notificationsQuery = useInfiniteQuery({
+    queryKey: NOTIFICATIONS_QUERY_KEY,
+    queryFn: ({ pageParam }) =>
+      notificationApi.getAll({
+        cursor: pageParam ?? undefined,
+        pageSize: NOTIFICATIONS_PAGE_SIZE
+      }),
+    initialPageParam: null as number | null,
+    getNextPageParam: (lastPage) => {
+      // Если страница неполная или пустая - больше данных нет
+      if (!lastPage.items.length || lastPage.items.length < NOTIFICATIONS_PAGE_SIZE) {
+        return undefined
+      }
+      // Cursor = ID последнего элемента
+      return lastPage.items[lastPage.items.length - 1]?.id ?? undefined
+    },
+    staleTime: Infinity, // Данные всегда актуальны (WebSocket)
     gcTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
     retry: 1
   })
 
-  useEffect(() => {
-    const unsubscribe = subscribeToEvent<Notification | Notification[]>(SOCKET_EVENTS.NOTIFICATIONS, (payload) => {
-      const incoming = Array.isArray(payload) ? payload : [payload]
-
-      queryClient.setQueryData<NotificationsResponse>(QUERY_KEY, (current) => {
-        const merged = mergeNewItems(current, incoming)
-        if (!merged) return current ?? undefined
-        if (!current) {
-          pendingRef.current = [...pendingRef.current, ...incoming]
-          return undefined
-        }
-        return merged
-      })
-    })
-    return () => {
-      unsubscribe()
-    }
-  }, [queryClient])
-
-  useEffect(() => {
-    if (!data || pendingRef.current.length === 0) return
-    const pending = pendingRef.current
-    pendingRef.current = []
-    queryClient.setQueryData<NotificationsResponse>(
-      QUERY_KEY,
-      (current) => mergeNewItems(current ?? data, pending) ?? current
-    )
-  }, [data, queryClient])
-
-  // markAsRead с оптимистичным обновлением (как RTK mutation)
-  const markAsReadMutation = useMutation<void, Error, number[], { previous?: NotificationsResponse }>({
+  // Mutation для пометки как прочитанное
+  const markAsReadMutation = useMutation({
     mutationFn: (ids: number[]) => notificationApi.markAsRead(ids),
     onMutate: async (ids) => {
-      await queryClient.cancelQueries({ queryKey: QUERY_KEY })
-      const previous = queryClient.getQueryData<NotificationsResponse>(QUERY_KEY)
+      await queryClient.cancelQueries({ queryKey: NOTIFICATIONS_QUERY_KEY })
+      const previousData = queryClient.getQueryData<NotificationsInfiniteData>(NOTIFICATIONS_QUERY_KEY)
+      const idsSet = new Set(ids)
 
-      queryClient.setQueryData<NotificationsResponse>(QUERY_KEY, (current) => {
-        if (!current) return current
-        const idsSet = new Set(ids)
-        const items = current.items.map((n) => (idsSet.has(n.id) ? { ...n, isRead: true } : n))
-        const newlyRead = current.items.filter((n) => idsSet.has(n.id) && !n.isRead).length
+      queryClient.setQueryData<NotificationsInfiniteData>(NOTIFICATIONS_QUERY_KEY, (oldData) => {
+        if (!oldData?.pages.length) return oldData
+
+        let markedAsReadCount = 0
+
+        // Обновляем все страницы
+        const updatedPages = oldData.pages.map((page) => ({
+          ...page,
+          items: page.items.map((notification) => {
+            if (idsSet.has(notification.id) && !notification.isRead) {
+              markedAsReadCount += 1
+              return { ...notification, isRead: true }
+            }
+            return notification
+          })
+        }))
+
+        // Обновляем счетчик в первой странице
+        if (markedAsReadCount > 0 && updatedPages[0]) {
+          updatedPages[0] = {
+            ...updatedPages[0],
+            notReadCount: Math.max(0, updatedPages[0].notReadCount - markedAsReadCount)
+          }
+        }
+
         return {
-          ...current,
-          items,
-          notReadCount: Math.max(0, current.notReadCount - newlyRead)
+          ...oldData,
+          pages: updatedPages
         }
       })
-      return { previous }
+
+      return { previousData }
     },
-    onError: (_err, _ids, context) => {
-      if (context?.previous) {
-        queryClient.setQueryData(QUERY_KEY, context.previous)
+    onError: (_error, _variables, context) => {
+      if (context?.previousData) {
+        queryClient.setQueryData(NOTIFICATIONS_QUERY_KEY, context.previousData)
       }
     }
   })
 
-  const notifications = [...(data?.items ?? [])].sort((a, b) => {
-    if (a.isRead !== b.isRead) return a.isRead ? 1 : -1
-    const timeA = Date.parse((b.notifyAt ?? b.createdAt) as string)
-    const timeB = Date.parse((a.notifyAt ?? a.createdAt) as string)
-    return timeA - timeB
-  })
+  // Плоский список с сортировкой (непрочитанные вверху)
+  const notifications = useMemo(() => {
+    const pages = notificationsQuery.data?.pages ?? []
+    const uniqueById = new Map<number, Notification>()
 
-  const unreadCount = data?.notReadCount ?? notifications.filter((n) => !n.isRead).length
+    // Дедупликация по ID
+    pages.forEach((page) => {
+      page.items.forEach((item) => {
+        if (!uniqueById.has(item.id)) {
+          uniqueById.set(item.id, item)
+        }
+      })
+    })
+
+    const allNotifications = Array.from(uniqueById.values())
+
+    // Разделяем на непрочитанные и прочитанные
+    const unread: Notification[] = []
+    const read: Notification[] = []
+
+    allNotifications.forEach((notification) => {
+      if (notification.isRead) {
+        read.push(notification)
+      } else {
+        unread.push(notification)
+      }
+    })
+
+    // Непрочитанные всегда вверху
+    return [...unread, ...read]
+  }, [notificationsQuery.data])
+
+  // Счетчик непрочитанных
+  const unreadCount = notificationsQuery.data?.pages[0]?.notReadCount ?? 0
+
+  // Обработчик пометки как прочитанное
+  const { mutate: mutateMarkAsRead } = markAsReadMutation
+  const markAsRead = useCallback(
+    (notificationId: number, isRead: boolean) => {
+      if (!isRead) {
+        mutateMarkAsRead([notificationId])
+      }
+    },
+    [mutateMarkAsRead]
+  )
+
+  // WebSocket интеграция (глобальная подписка - только один раз)
+  useEffect(() => {
+    // Если уже подписаны - пропускаем
+    if (isSocketSubscribed) {
+      return
+    }
+
+    isSocketSubscribed = true
+
+    const handleNewNotification = (payload: Notification | Notification[]) => {
+      const incoming = Array.isArray(payload) ? payload : [payload]
+
+      queryClient.setQueryData<NotificationsInfiniteData>(NOTIFICATIONS_QUERY_KEY, (oldData) => {
+        if (!oldData?.pages.length) return oldData
+
+        const firstPage = oldData.pages[0]
+        if (!firstPage) return oldData
+
+        // Фильтруем дубликаты
+        const existingIds = new Set(firstPage.items.map((n) => n.id))
+        const newNotifications = incoming.filter((n) => !existingIds.has(n.id))
+
+        if (!newNotifications.length) return oldData
+
+        // Считаем новые непрочитанные
+        const newUnreadCount = newNotifications.filter((n) => !n.isRead).length
+
+        // Добавляем в начало первой страницы
+        return {
+          ...oldData,
+          pages: [
+            {
+              ...firstPage,
+              items: [...newNotifications, ...firstPage.items],
+              notReadCount: firstPage.notReadCount + newUnreadCount,
+              totalCount: firstPage.totalCount + newNotifications.length
+            },
+            ...oldData.pages.slice(1)
+          ]
+        }
+      })
+    }
+
+    const unsubscribe = subscribeToEvent<Notification | Notification[]>(
+      SOCKET_EVENTS.NOTIFICATIONS,
+      handleNewNotification
+    )
+
+    // Cleanup: отписываемся и сбрасываем флаг
+    return () => {
+      unsubscribe()
+      isSocketSubscribed = false
+    }
+  }, [queryClient])
 
   return {
-    isLoading,
     notifications,
     unreadCount,
-    markAsRead: (id: number, isRead: boolean) => {
-      if (!isRead) markAsReadMutation.mutate([id])
-    }
+    isLoading: notificationsQuery.isPending,
+    isFetchingNextPage: notificationsQuery.isFetchingNextPage,
+    hasNextPage: notificationsQuery.hasNextPage,
+    fetchNextPage: notificationsQuery.fetchNextPage,
+    markAsRead
   }
 }
