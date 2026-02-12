@@ -9,7 +9,7 @@ import { useNotifications } from '@/entities/notification'
 
 function MyComponent() {
   const { notifications, unreadCount, markAsRead } = useNotifications()
-  
+
   return (
     <div>
       <h2>Уведомления ({unreadCount})</h2>
@@ -48,8 +48,8 @@ type Notification = {
   id: number
   message: string
   isRead: boolean
-  createdAt?: string  // ISO date
-  notifyAt?: string   // ISO date
+  createdAt?: string // ISO date
+  notifyAt?: string // ISO date
 }
 ```
 
@@ -65,14 +65,14 @@ import { useInfiniteScroll } from '@/shared/lib/hooks/useInfiniteScroll'
 function NotificationList() {
   const listRef = useRef<HTMLDivElement>(null)
   const observerRef = useRef<HTMLDivElement>(null)
-  
+
   const {
     notifications,
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage
   } = useNotifications()
-  
+
   useInfiniteScroll({
     targetRef: observerRef,
     rootRef: listRef,
@@ -80,7 +80,7 @@ function NotificationList() {
     isFetchingNextPage,
     fetchNextPage: () => void fetchNextPage()
   })
-  
+
   return (
     <div ref={listRef} style={{ maxHeight: '500px', overflow: 'auto' }}>
       {notifications.map(n => <div key={n.id}>{n.message}</div>)}
@@ -99,7 +99,7 @@ import { useNotifications } from '@/entities/notification'
 
 function NotificationBell() {
   const { unreadCount } = useNotifications()
-  
+
   return (
     <button>
       🔔
@@ -118,6 +118,7 @@ function NotificationBell() {
 **Подключается автоматически!** Ничего делать не нужно.
 
 Когда вы вызываете `useNotifications()`, WebSocket:
+
 - ✅ Автоматически подключается
 - ✅ Автоматически переподключается при разрыве
 - ✅ Автоматически обновляет список при новых уведомлениях
@@ -158,14 +159,14 @@ function NotificationBell() {
 
 ```typescript
 const { notifications } = useNotifications()
-const unread = notifications.filter(n => !n.isRead)
+const unread = notifications.filter((n) => !n.isRead)
 ```
 
 ### Только прочитанные
 
 ```typescript
 const { notifications } = useNotifications()
-const read = notifications.filter(n => n.isRead)
+const read = notifications.filter((n) => n.isRead)
 ```
 
 ---
@@ -229,7 +230,7 @@ console.log(localStorage.getItem('accessToken'))
 ```typescript
 // Проверьте hasNextPage
 const { hasNextPage } = useNotifications()
-console.log('Has more?', hasNextPage)  // должно быть true
+console.log('Has more?', hasNextPage) // должно быть true
 ```
 
 ### Непрочитанные не вверху?
@@ -237,7 +238,7 @@ console.log('Has more?', hasNextPage)  // должно быть true
 ```typescript
 // Проверьте данные
 const { notifications } = useNotifications()
-console.log(notifications.map(n => ({ id: n.id, isRead: n.isRead })))
+console.log(notifications.map((n) => ({ id: n.id, isRead: n.isRead })))
 // Должны быть: [isRead:false, isRead:false, isRead:true, ...]
 ```
 
@@ -246,7 +247,7 @@ console.log(notifications.map(n => ({ id: n.id, isRead: n.isRead })))
 ## 📊 Производительность
 
 - **Первая загрузка:** ~200-300ms
-- **Infinite scroll:** ~100-150ms  
+- **Infinite scroll:** ~100-150ms
 - **Пометка как прочитанное:** ~0ms (мгновенно)
 - **WebSocket latency:** ~50-100ms
 
@@ -265,7 +266,7 @@ export function NotificationBell() {
   const [open, setOpen] = useState(false)
   const listRef = useRef<HTMLDivElement>(null)
   const observerRef = useRef<HTMLDivElement>(null)
-  
+
   const {
     notifications,
     unreadCount,
@@ -275,7 +276,7 @@ export function NotificationBell() {
     isFetchingNextPage,
     fetchNextPage
   } = useNotifications()
-  
+
   useInfiniteScroll({
     targetRef: observerRef,
     rootRef: listRef,
@@ -284,7 +285,7 @@ export function NotificationBell() {
     fetchNextPage: () => void fetchNextPage(),
     enabled: open
   })
-  
+
   return (
     <DropdownMenu.Root open={open} onOpenChange={setOpen}>
       <DropdownMenu.Trigger>
@@ -295,14 +296,14 @@ export function NotificationBell() {
           )}
         </button>
       </DropdownMenu.Trigger>
-      
+
       <DropdownMenu.Portal>
         <DropdownMenu.Content>
           <div>
             <h2>Уведомления</h2>
             {unreadCount > 0 && <span>{unreadCount} новых</span>}
           </div>
-          
+
           <div ref={listRef} style={{ maxHeight: '500px', overflow: 'auto' }}>
             {isLoading ? (
               <div>Загрузка...</div>
@@ -320,7 +321,7 @@ export function NotificationBell() {
                     <span>{new Date(n.notifyAt).toLocaleString()}</span>
                   </div>
                 ))}
-                
+
                 {hasNextPage && (
                   <div ref={observerRef}>
                     {isFetchingNextPage && 'Загрузка...'}
@@ -343,6 +344,7 @@ export function NotificationBell() {
 Полная документация: [`NOTIFICATIONS_ARCHITECTURE.md`](./NOTIFICATIONS_ARCHITECTURE.md)
 
 Включает:
+
 - Подробное описание архитектуры
 - Диаграммы потоков данных
 - API документация

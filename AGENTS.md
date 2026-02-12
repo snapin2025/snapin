@@ -1,9 +1,11 @@
 # AGENTS.md
 
 ## Краткое описание проекта
+
 Snapin — фронтенд на Next.js 15 (App Router) + React 19 + TypeScript. Архитектура FSD: `shared → entities → features → widgets → pages`, с инфраструктурным слоем `app`. Используются React Query для серверного состояния, axios для API и socket.io-client для realtime уведомлений.
 
 ## Команды
+
 - Установка зависимостей: `npm install`
 - Запуск dev-сервера: `npm run dev`
 - Линтер: `npm run lint`
@@ -11,6 +13,7 @@ Snapin — фронтенд на Next.js 15 (App Router) + React 19 + TypeScript
 - Тесты: отдельной команды нет (в `package.json` отсутствуют test‑скрипты)
 
 ## Наблюдаемые правила стиля кода
+
 - TypeScript в строгом режиме (`"strict": true`).
 - Абсолютные импорты через алиас `@/*` (см. `tsconfig.json`).
 - CSS Modules для стилей компонентов.
@@ -21,6 +24,7 @@ Snapin — фронтенд на Next.js 15 (App Router) + React 19 + TypeScript
 - Реалтайм (notifications) реализован через socket.io и синхронизацию с кешем React Query.
 
 ## Структура проекта
+
 ```
 /app                          # App Router: маршруты и layouts
 /src
@@ -34,4 +38,5 @@ Snapin — фронтенд на Next.js 15 (App Router) + React 19 + TypeScript
 ```
 
 ### Примечание по маршрутам
+
 Роутинг определяется только в `/app`. `src/pages` — это UI‑страницы, которые подключаются в `app/*/page.tsx`.

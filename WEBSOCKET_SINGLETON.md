@@ -17,10 +17,12 @@ function App() {
 ```
 
 **Результат:**
+
 - ✅ WebSocket соединение: **1** (благодаря singleton в `getSocket`)
 - ⚠️ Подписок на событие 'notifications': **3** (по одной на каждый хук)
 
 **Последствия:**
+
 - При получении одного уведомления callback вызывался 3 раза
 - React Query кеш обновлялся 3 раза
 - Лишние вычисления и потенциальные race conditions
@@ -39,33 +41,33 @@ let isSocketSubscribed = false
 
 export const useNotifications = () => {
   const queryClient = useQueryClient()
-  
+
   // ... остальной код ...
-  
+
   useEffect(() => {
     // Если уже подписаны - пропускаем
     if (isSocketSubscribed) {
       return
     }
-    
+
     isSocketSubscribed = true
-    
+
     const handleNewNotification = (payload) => {
       // Обновление кеша React Query
     }
-    
+
     const unsubscribe = subscribeToEvent(
       SOCKET_EVENTS.NOTIFICATIONS,
       handleNewNotification
     )
-    
+
     // Cleanup: отписываемся и сбрасываем флаг
     return () => {
       unsubscribe()
       isSocketSubscribed = false
     }
   }, [queryClient])
-  
+
   return { ... }
 }
 ```
@@ -83,12 +85,14 @@ function App() {
 ```
 
 **Поток:**
+
 1. `NotificationBell` монтируется
 2. `useNotifications` вызывается
 3. `isSocketSubscribed === false` → создаём подписку
 4. `isSocketSubscribed = true`
 
 **Результат:**
+
 - ✅ WebSocket соединение: **1**
 - ✅ Подписок: **1**
 
@@ -109,6 +113,7 @@ function App() {
 ```
 
 **Поток:**
+
 1. `NotificationBell` монтируется
    - `useNotifications` #1 вызывается
    - `isSocketSubscribed === false` → создаём подписку
@@ -123,6 +128,7 @@ function App() {
    - `isSocketSubscribed === true` → **пропускаем** (early return)
 
 **Результат:**
+
 - ✅ WebSocket соединение: **1**
 - ✅ Подписок: **1** (только от первого компонента)
 
@@ -149,7 +155,8 @@ function App() {
 // - Подписка НЕ создаётся
 ```
 
-**Проблема?** 
+**Проблема?**
+
 - ❌ Если первый компонент размонтируется, подписка удаляется
 - ❌ Остальные компоненты остаются без подписки
 
@@ -258,10 +265,10 @@ socket.on('connect', () => {
 
 // 3. Добавьте в subscribeToEvent.ts:
 export const subscribeToEvent = <T>(event: string, callback: (data: T) => void) => {
-  console.log('[Subscribe]', event)  // ← Должно быть ОДИН раз
+  console.log('[Subscribe]', event) // ← Должно быть ОДИН раз
   const socket = getSocket()
   socket.on(event, callback)
-  
+
   return () => {
     console.log('[Unsubscribe]', event)
     socket.off(event, callback)
@@ -281,6 +288,7 @@ export const subscribeToEvent = <T>(event: string, callback: (data: T) => void) 
 ### 1. Cleanup при unmount
 
 Когда **первый** компонент (создавший подписку) размонтируется:
+
 - Подписка удаляется
 - `isSocketSubscribed = false`
 - WebSocket соединение остаётся активным
@@ -324,7 +332,7 @@ export const subscribeToEvent = <T>(event: string, callback: (data: T) => void) 
 ✅ **Один callback** при получении уведомления  
 ✅ **Одно обновление** React Query кеша  
 ✅ **Корректная работа** при множественных компонентах  
-✅ **Правильный cleanup** при unmount  
+✅ **Правильный cleanup** при unmount
 
 ---
 

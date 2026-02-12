@@ -90,6 +90,7 @@ src/
 **Файл:** `src/entities/notification/model/useNotifications.ts`
 
 **Ответственность:**
+
 - Управление состоянием уведомлений
 - Infinite query для пагинации
 - WebSocket подключение
@@ -153,12 +154,12 @@ export const useNotifications = () => {
     const handleNewNotification = (payload) => {
       // Добавление в кеш React Query
     }
-    
+
     const unsubscribe = subscribeToEvent(
       'notifications',
       handleNewNotification
     )
-    
+
     return () => unsubscribe()
   }, [queryClient])
 
@@ -173,6 +174,7 @@ export const useNotifications = () => {
 **Файл:** `src/widgets/notifications/ui/NotificationBell.tsx`
 
 **Ответственность:**
+
 - Отображение иконки колокольчика с бейджем
 - Dropdown меню со списком уведомлений
 - Infinite scroll при прокрутке
@@ -184,11 +186,11 @@ export const useNotifications = () => {
 export const NotificationBell = () => {
   // 1. State
   const [open, setOpen] = useState(false)
-  
+
   // 2. Refs для infinite scroll
   const listRef = useRef<HTMLDivElement>(null)
   const observerTargetRef = useRef<HTMLDivElement>(null)
-  
+
   // 3. Данные из хука
   const {
     notifications,
@@ -199,7 +201,7 @@ export const NotificationBell = () => {
     isFetchingNextPage,
     fetchNextPage
   } = useNotifications()
-  
+
   // 4. Infinite scroll
   useInfiniteScroll({
     targetRef: observerTargetRef,
@@ -209,7 +211,7 @@ export const NotificationBell = () => {
     fetchNextPage: () => void fetchNextPage(),
     enabled: open
   })
-  
+
   // 5. Render
   return (
     <DropdownMenu.Root>
@@ -230,9 +232,11 @@ export const NotificationBell = () => {
 **Методы:**
 
 #### `getAll(params)`
+
 Получение списка уведомлений с пагинацией
 
 **Параметры:**
+
 ```typescript
 {
   cursor?: number           // ID последнего элемента (для пагинации)
@@ -245,6 +249,7 @@ export const NotificationBell = () => {
 ```
 
 **Возвращает:**
+
 ```typescript
 {
   items: Notification[]     // Массив уведомлений
@@ -254,6 +259,7 @@ export const NotificationBell = () => {
 ```
 
 **Примеры запросов:**
+
 ```typescript
 // Первая страница
 GET /notifications?pageSize=100&sortDirection=desc&unreadFirst=true
@@ -263,17 +269,22 @@ GET /notifications/123?pageSize=100&sortDirection=desc&unreadFirst=true
 ```
 
 #### `markAsRead(ids)`
+
 Пометка уведомлений как прочитанных
 
 **Параметры:**
+
 ```typescript
 ids: number[]  // Массив ID уведомлений
 ```
 
 **Запрос:**
+
 ```typescript
-PUT /notifications/mark-as-read
-Body: { ids: [1, 2, 3] }
+PUT / notifications / mark - as - read
+Body: {
+  ids: [1, 2, 3]
+}
 ```
 
 ---
@@ -524,9 +535,11 @@ Body: { ids: [1, 2, 3] }
 ### Endpoints
 
 #### 1. GET `/notifications`
+
 Получить первую страницу уведомлений
 
 **Query параметры:**
+
 - `sortBy` (string, default: 'notifyAt') - поле сортировки
 - `sortDirection` (string, default: 'desc') - направление сортировки
 - `pageSize` (number, default: 100) - размер страницы
@@ -534,6 +547,7 @@ Body: { ids: [1, 2, 3] }
 - `isRead` (boolean, optional) - фильтр по прочитанности
 
 **Response:**
+
 ```json
 {
   "items": [
@@ -553,9 +567,11 @@ Body: { ids: [1, 2, 3] }
 ---
 
 #### 2. GET `/notifications/:cursor`
+
 Получить следующую страницу
 
 **Path параметры:**
+
 - `cursor` (number) - ID последнего элемента с предыдущей страницы
 
 **Query параметры:** (те же, что и для первой страницы)
@@ -565,9 +581,11 @@ Body: { ids: [1, 2, 3] }
 ---
 
 #### 3. PUT `/notifications/mark-as-read`
+
 Пометить уведомления как прочитанные
 
 **Body:**
+
 ```json
 {
   "ids": [1, 2, 3]
@@ -585,6 +603,7 @@ Body: { ids: [1, 2, 3] }
 **URL:** `wss://inctagram.work`
 
 **Параметры:**
+
 ```typescript
 {
   query: { accessToken: 'user_token' },
@@ -595,9 +614,11 @@ Body: { ids: [1, 2, 3] }
 ### События
 
 #### `notifications`
+
 Получение нового уведомления
 
 **Payload (одиночное):**
+
 ```json
 {
   "id": 456,
@@ -609,6 +630,7 @@ Body: { ids: [1, 2, 3] }
 ```
 
 **Payload (массив):**
+
 ```json
 [
   { "id": 456, "message": "...", "isRead": false },
@@ -621,12 +643,14 @@ Body: { ids: [1, 2, 3] }
 **Файл:** `src/entities/notification/model/socket/getSocket.ts`
 
 **Особенности:**
+
 - Singleton паттерн (одно подключение на приложение)
 - Автоматическое переподключение при разрыве связи
 - Переподключение при смене токена авторизации
 - Синхронизация между вкладками через `localStorage`
 
 **События подключения:**
+
 ```typescript
 socket.on('connect', () => {
   console.log('[Socket] Подключен')
@@ -650,6 +674,7 @@ socket.on('connect_error', (error) => {
 Используется курсорная пагинация по `id` уведомления.
 
 **Преимущества:**
+
 - ✅ Нет проблем с пропуском элементов при добавлении новых
 - ✅ Стабильная пагинация даже при изменении данных
 - ✅ Эффективная работа с большими объемами данных
@@ -676,7 +701,7 @@ getNextPageParam: (lastPage) => {
   if (lastPage.items.length < 100) {
     return undefined // hasNextPage = false
   }
-  
+
   // Cursor = ID последнего элемента
   return lastPage.items[lastPage.items.length - 1]?.id
 }
@@ -712,26 +737,26 @@ getNextPageParam: (lastPage) => {
 const notifications = useMemo(() => {
   // 1. Дедупликация по ID
   const uniqueById = new Map<number, Notification>()
-  pages.forEach(page => {
-    page.items.forEach(item => {
+  pages.forEach((page) => {
+    page.items.forEach((item) => {
       if (!uniqueById.has(item.id)) {
         uniqueById.set(item.id, item)
       }
     })
   })
-  
+
   // 2. Разделение на непрочитанные и прочитанные
   const unread: Notification[] = []
   const read: Notification[] = []
-  
-  Array.from(uniqueById.values()).forEach(notification => {
+
+  Array.from(uniqueById.values()).forEach((notification) => {
     if (notification.isRead) {
       read.push(notification)
     } else {
       unread.push(notification)
     }
   })
-  
+
   // 3. Непрочитанные всегда вверху
   return [...unread, ...read]
 }, [notificationsQuery.data])
@@ -790,10 +815,11 @@ const markAsRead = useCallback(
 // O(1) поиск вместо O(n)
 const uniqueById = new Map<number, Notification>()
 
-pages.forEach(page => {
-  page.items.forEach(item => {
-    if (!uniqueById.has(item.id)) {  // O(1)
-      uniqueById.set(item.id, item)  // O(1)
+pages.forEach((page) => {
+  page.items.forEach((item) => {
+    if (!uniqueById.has(item.id)) {
+      // O(1)
+      uniqueById.set(item.id, item) // O(1)
     }
   })
 })
@@ -807,15 +833,15 @@ pages.forEach(page => {
 onMutate: async (ids) => {
   // 1. Отменяем активные запросы
   await queryClient.cancelQueries({ queryKey: QUERY_KEY })
-  
+
   // 2. Сохраняем текущее состояние (для отката)
   const previousData = queryClient.getQueryData(QUERY_KEY)
-  
+
   // 3. Обновляем кеш оптимистично
   queryClient.setQueryData(QUERY_KEY, (oldData) => {
     // Обновление isRead = true
   })
-  
+
   // 4. Возвращаем context для отката
   return { previousData }
 }
@@ -830,9 +856,9 @@ onError: (error, variables, context) => {
 
 ```typescript
 useInfiniteScroll({
-  threshold: 0.5,      // Загружаем при 50% видимости
-  rootMargin: '50px',  // Предзагрузка за 50px до конца
-  enabled: open        // Работает только когда dropdown открыт
+  threshold: 0.5, // Загружаем при 50% видимости
+  rootMargin: '50px', // Предзагрузка за 50px до конца
+  enabled: open // Работает только когда dropdown открыт
 })
 ```
 
@@ -852,9 +878,9 @@ function MyComponent() {
     isLoading,
     markAsRead
   } = useNotifications()
-  
+
   if (isLoading) return <div>Загрузка...</div>
-  
+
   return (
     <div>
       <h2>Уведомления ({unreadCount})</h2>
@@ -881,14 +907,14 @@ import { useInfiniteScroll } from '@/shared/lib/hooks/useInfiniteScroll'
 function NotificationList() {
   const listRef = useRef<HTMLDivElement>(null)
   const observerRef = useRef<HTMLDivElement>(null)
-  
+
   const {
     notifications,
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage
   } = useNotifications()
-  
+
   useInfiniteScroll({
     targetRef: observerRef,
     rootRef: listRef,
@@ -896,13 +922,13 @@ function NotificationList() {
     isFetchingNextPage,
     fetchNextPage: () => void fetchNextPage()
   })
-  
+
   return (
     <div ref={listRef} style={{ maxHeight: '500px', overflow: 'auto' }}>
       {notifications.map(n => (
         <div key={n.id}>{n.message}</div>
       ))}
-      
+
       {hasNextPage && (
         <div ref={observerRef}>
           {isFetchingNextPage && 'Загрузка...'}
@@ -918,9 +944,9 @@ function NotificationList() {
 ```typescript
 function UnreadNotifications() {
   const { notifications, unreadCount } = useNotifications()
-  
+
   const unreadOnly = notifications.filter(n => !n.isRead)
-  
+
   return (
     <div>
       <h2>Непрочитанные ({unreadCount})</h2>
@@ -941,6 +967,7 @@ function UnreadNotifications() {
 **Проблема:** Уведомления не приходят в real-time
 
 **Решение:**
+
 1. Проверьте наличие `accessToken` в localStorage
 2. Откройте DevTools → Network → WS
 3. Должен быть активный WebSocket на `wss://inctagram.work`
@@ -951,6 +978,7 @@ function UnreadNotifications() {
 **Проблема:** Одно уведомление показывается несколько раз
 
 **Решение:**
+
 1. Проверьте, что используется только один экземпляр `useNotifications`
 2. Убедитесь, что нет ручного добавления в кеш
 3. Дедупликация по ID должна работать автоматически
@@ -960,6 +988,7 @@ function UnreadNotifications() {
 **Проблема:** Следующая страница не загружается
 
 **Решение:**
+
 1. Проверьте, что `observerTargetRef` передан в элемент
 2. Убедитесь, что `enabled: true` в `useInfiniteScroll`
 3. Проверьте, что `rootRef` указывает на контейнер со скроллом
@@ -970,6 +999,7 @@ function UnreadNotifications() {
 **Проблема:** Прочитанные и непрочитанные перемешаны
 
 **Решение:**
+
 1. Проверьте, что `unreadFirst: true` передаётся в API
 2. Убедитесь, что клиентская сортировка работает (см. useMemo)
 3. Проверьте, что после `markAsRead` происходит пересортировка

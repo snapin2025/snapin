@@ -9,11 +9,11 @@ import { useNotifications } from '@/entities/notification'
 
 function MyComponent() {
   const { notifications, unreadCount, markAsRead } = useNotifications()
-  
+
   return (
     <div>
       <h2>Уведомления ({unreadCount})</h2>
-      {notifications.map(n => (
+      {notifications.map((n) => (
         <div key={n.id} onClick={() => markAsRead(n.id, n.isRead)}>
           {n.message}
         </div>
@@ -77,14 +77,9 @@ import { useInfiniteScroll } from '@/shared/lib/hooks/useInfiniteScroll'
 function NotificationList() {
   const listRef = useRef(null)
   const observerRef = useRef(null)
-  
-  const {
-    notifications,
-    hasNextPage,
-    isFetchingNextPage,
-    fetchNextPage
-  } = useNotifications()
-  
+
+  const { notifications, hasNextPage, isFetchingNextPage, fetchNextPage } = useNotifications()
+
   useInfiniteScroll({
     targetRef: observerRef,
     rootRef: listRef,
@@ -92,10 +87,12 @@ function NotificationList() {
     isFetchingNextPage,
     fetchNextPage: () => void fetchNextPage()
   })
-  
+
   return (
     <div ref={listRef}>
-      {notifications.map(n => <div key={n.id}>{n.message}</div>)}
+      {notifications.map((n) => (
+        <div key={n.id}>{n.message}</div>
+      ))}
       {hasNextPage && <div ref={observerRef}>Загрузка...</div>}
     </div>
   )
@@ -138,8 +135,8 @@ type Notification = {
   id: number
   message: string
   isRead: boolean
-  createdAt?: string  // ISO date
-  notifyAt?: string   // ISO date
+  createdAt?: string // ISO date
+  notifyAt?: string // ISO date
 }
 
 type NotificationsResponse = {
@@ -156,6 +153,7 @@ type NotificationsResponse = {
 WebSocket подключается автоматически при первом вызове `useNotifications()`.
 
 **Особенности:**
+
 - ✅ Singleton (одно подключение на приложение)
 - ✅ Автоматическое переподключение при разрыве
 - ✅ Переподключение при смене токена
@@ -177,13 +175,11 @@ Notification | Notification[]
 ```tsx
 function NotificationBell() {
   const { unreadCount } = useNotifications()
-  
+
   return (
     <button>
       🔔
-      {unreadCount > 0 && (
-        <span>{unreadCount > 99 ? '99+' : unreadCount}</span>
-      )}
+      {unreadCount > 0 && <span>{unreadCount > 99 ? '99+' : unreadCount}</span>}
     </button>
   )
 }
@@ -194,11 +190,13 @@ function NotificationBell() {
 ```tsx
 function UnreadNotifications() {
   const { notifications } = useNotifications()
-  const unread = notifications.filter(n => !n.isRead)
-  
+  const unread = notifications.filter((n) => !n.isRead)
+
   return (
     <div>
-      {unread.map(n => <div key={n.id}>{n.message}</div>)}
+      {unread.map((n) => (
+        <div key={n.id}>{n.message}</div>
+      ))}
     </div>
   )
 }
@@ -209,12 +207,14 @@ function UnreadNotifications() {
 ```tsx
 function NotificationList() {
   const { notifications, isLoading } = useNotifications()
-  
+
   if (isLoading) return <div>Загрузка...</div>
-  
+
   return (
     <div>
-      {notifications.map(n => <div key={n.id}>{n.message}</div>)}
+      {notifications.map((n) => (
+        <div key={n.id}>{n.message}</div>
+      ))}
     </div>
   )
 }
@@ -292,7 +292,7 @@ console.log('Has more?', hasNextPage)
 ```typescript
 // Проверьте порядок
 const { notifications } = useNotifications()
-console.log(notifications.map(n => ({ id: n.id, isRead: n.isRead })))
+console.log(notifications.map((n) => ({ id: n.id, isRead: n.isRead })))
 // Должно быть: [false, false, true, true, ...]
 ```
 
