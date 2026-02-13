@@ -12,14 +12,21 @@ type Props = {
   profileOwner: ProfileOwner
   profileId: number
   profileUserName: string | null
-  isFollowing: boolean
+  isFollowing: boolean | null
+  isProfileInfoLoading: boolean
 }
 
 /**
  * Контейнер кнопок действий профиля.
  * Здесь же лежат обработчики переходов/подписок.
  */
-export const ProfileActions = ({ profileOwner, profileId, profileUserName, isFollowing }: Props) => {
+export const ProfileActions = ({
+  profileOwner,
+  profileId,
+  profileUserName,
+  isFollowing,
+  isProfileInfoLoading
+}: Props) => {
   const { user } = useAuth()
   const userId = user?.userId
   const { toggleFollow, isPending } = useToggleFollowUser(user?.userName)
@@ -35,15 +42,16 @@ export const ProfileActions = ({ profileOwner, profileId, profileUserName, isFol
           <Button
             variant={isFollowing ? 'outlined' : 'primary'}
             onClick={() =>
+              isFollowing !== null &&
               toggleFollow({
                 profileId,
                 userName: profileUserName,
                 isFollowing
               })
             }
-            disabled={isPending}
+            disabled={isPending || isProfileInfoLoading || isFollowing === null}
           >
-            {isFollowing ? 'Unfollow' : 'Follow'}
+            {isProfileInfoLoading || isFollowing === null ? 'Loading...' : isFollowing ? 'Unfollow' : 'Follow'}
           </Button>
           <Button variant="secondary">Send message</Button>
         </>

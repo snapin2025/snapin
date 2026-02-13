@@ -1,6 +1,6 @@
 'use client'
 
-import { usePublicUserProfile, useToggleFollowUser } from '@/entities/user'
+import { useToggleFollowUser, useUserProfile } from '@/entities/user'
 import { Avatar, Typography } from '@/shared/ui'
 import { useAuth } from '@/shared/lib'
 import DropMenu from '@/shared/ui/dropdown/DropMenu'
@@ -25,11 +25,18 @@ export const PostModalHeader = ({
 }: PostModalHeaderProps) => {
   const { user } = useAuth()
   const canToggleFollow = !!currentUserId && currentUserId !== ownerId
-  const { data: publicProfile } = usePublicUserProfile(canToggleFollow ? ownerId : null)
+  const {
+    data: relationProfile,
+    isLoading: isProfileLoading,
+    isFetching: isProfileFetching
+  } = useUserProfile(canToggleFollow && user ? userName : null)
   const { toggleFollow, isPending } = useToggleFollowUser(user?.userName)
 
-  const isFollowing = publicProfile?.isFollowing ?? false
+  const isFollowing = canToggleFollow ? (relationProfile?.isFollowing ?? null) : null
+  const isFollowStatusLoading =
+    canToggleFollow && ((isProfileLoading && !relationProfile) || (isProfileFetching && isFollowing === null))
   const handleToggleFollow = () =>
+    isFollowing !== null &&
     toggleFollow({
       profileId: ownerId,
       userName,
@@ -52,7 +59,7 @@ export const PostModalHeader = ({
             onFollow={handleToggleFollow}
             onUnfollow={handleToggleFollow}
             isFollowing={isFollowing}
-            isFollowPending={isPending}
+            isFollowPending={isPending || isFollowStatusLoading}
             ownerId={ownerId}
             currentUserId={currentUserId}
           />

@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect } from 'react'
 import { useAuth } from '@/shared/lib'
 import { usePublicUserProfile, useUserProfile } from '@/entities/user'
 import { useUserPosts } from '@/entities/posts/model'
@@ -32,13 +33,15 @@ type UseProfileDataReturn = {
   // Вычисленные значения (готовые к использованию в UI)
   profileOwner: ProfileOwner
   profileUserName: string | null
-  isFollowing: boolean
+  isFollowing: boolean | null
   followingCount: number
   followersCount: number
   publicationsCount: number
   displayName: string
   avatarUrl: string | undefined
   bio: string | undefined
+  isProfileInfoLoading: boolean
+  hasProfileInfo: boolean
 
   // Общее состояние
   isLoading: boolean
@@ -70,24 +73,44 @@ export const useProfileData = ({ userId, pageSize = 8 }: UseProfileDataParams): 
   } = useUserPosts({ userId, pageSize })
 
   // Для своего профиля используем /users/{userName},
-  // для чужого профиля — публичный профиль по userId (единый источник для follow/unfollow).
+  // для чужого профиля — публичный профиль по userId.
   const userName = (isMyProfile ? user?.userName : null) ?? null
 
   // Загружаем данные своего профиля
   const { data: profileData, isLoading: isProfileLoading } = useUserProfile(userName)
 
+  // Для чужого профиля ждем, пока auth определится.
+  // Иначе первый запрос может уйти как guest (isFollowing=false) и попасть в кэш.
+  const publicProfileId = !isMyProfile && !isAuthLoading ? userId : null
+
   // Загружаем публичный профиль по userId для чужой страницы
-  const { data: publicProfileData, isLoading: isPublicProfileLoading } = usePublicUserProfile(
-    !isMyProfile ? userId : null
-  )
+  const {
+    data: publicProfileData,
+    isLoading: isPublicProfileLoading,
+    refetch: refetchPublicProfile
+  } = usePublicUserProfile(publicProfileId)
+  const relationUserName = !isMyProfile && user ? (publicProfileData?.userName ?? null) : null
+  const { data: relationProfileData, isLoading: isRelationProfileLoading } = useUserProfile(relationUserName)
+
+  useEffect(() => {
+    if (publicProfileId) {
+      void refetchPublicProfile()
+    }
+  }, [publicProfileId, refetchPublicProfile])
 
   // Вычисляем производные значения из единого источника (свои данные vs публичный профиль)
   const profileOwner: ProfileOwner = isMyProfile ? 'myProfile' : user ? 'friendProfile' : 'guestProfile'
   const source = isMyProfile ? profileData : publicProfileData
   const metadata = !isMyProfile ? publicProfileData?.userMetadata : undefined
 
-  const profileUserName = source?.userName ?? (isMyProfile ? userName : null) ?? null
-  const isFollowing = !isMyProfile ? (publicProfileData?.isFollowing ?? false) : false
+  const profileUserName = source?.userName ?? relationProfileData?.userName ?? (isMyProfile ? userName : null) ?? null
+  const isFollowing = !isMyProfile
+    ? user
+      ? relationProfileData
+        ? relationProfileData.isFollowing
+        : null
+      : null
+    : null
   const followingCount = isMyProfile ? (profileData?.followingCount ?? 0) : (metadata?.following ?? 0)
   const followersCount = isMyProfile ? (profileData?.followersCount ?? 0) : (metadata?.followers ?? 0)
   const publicationsCount = isMyProfile ? (profileData?.publicationsCount ?? 0) : (metadata?.publications ?? 0)
@@ -95,13 +118,14 @@ export const useProfileData = ({ userId, pageSize = 8 }: UseProfileDataParams): 
     source?.userName ?? (isMyProfile ? user?.userName : postsData?.pages[0]?.items[0]?.userName) ?? 'User'
   const avatarUrl = source?.avatars?.[0]?.url
   const bio = source?.aboutMe
+  const isRelationProfilePending = !!user && !!relationUserName && isRelationProfileLoading && !relationProfileData
+  const isProfileInfoLoading = isMyProfile
+    ? isProfileLoading && !profileData
+    : (isPublicProfileLoading && !publicProfileData) || isRelationProfilePending
+  const hasProfileInfo = isMyProfile ? !!profileData : !!publicProfileData && (!user || !!relationProfileData)
 
   // Определяем состояние загрузки
-  const isLoading =
-    isAuthLoading ||
-    (isMyProfile
-      ? isProfileLoading && !profileData
-      : (isPostsLoading && !postsData) || (isPublicProfileLoading && !publicProfileData))
+  const isLoading = isAuthLoading || isProfileInfoLoading || (!isMyProfile && isPostsLoading && !postsData)
 
   return {
     profileData,
@@ -122,6 +146,8 @@ export const useProfileData = ({ userId, pageSize = 8 }: UseProfileDataParams): 
     displayName,
     avatarUrl,
     bio,
+    isProfileInfoLoading,
+    hasProfileInfo,
     isLoading
   }
 }

@@ -30,7 +30,7 @@ const ProfilePage = async ({ params }: Props) => {
 
   return (
     <HydrationBoundary state={dehydratedState}>
-      <ProfilePageClient userId={userId} />
+      <ProfilePageClient key={userId} userId={userId} />
     </HydrationBoundary>
   )
 }

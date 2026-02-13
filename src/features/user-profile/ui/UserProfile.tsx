@@ -17,7 +17,6 @@ type Props = {
 
 export const UserProfile = ({ userId, pageSize = 8 }: Props) => {
   const {
-    profileData,
     postsData,
     isPostsLoading,
     isFetchingNextPage,
@@ -29,6 +28,8 @@ export const UserProfile = ({ userId, pageSize = 8 }: Props) => {
     profileOwner,
     profileUserName,
     isFollowing,
+    isProfileInfoLoading,
+    hasProfileInfo,
     followingCount,
     followersCount,
     publicationsCount,
@@ -59,7 +60,7 @@ export const UserProfile = ({ userId, pageSize = 8 }: Props) => {
   })
 
   // Показываем скелетон при начальной загрузке (ПОСЛЕ всех Hooks)
-  if (isLoading && !profileData && !postsData) {
+  if ((isLoading || isProfileInfoLoading) && !hasProfileInfo) {
     return <ProfileSkeleton />
   }
 
@@ -82,6 +83,7 @@ export const UserProfile = ({ userId, pageSize = 8 }: Props) => {
                 profileId={userId}
                 profileUserName={profileUserName}
                 isFollowing={isFollowing}
+                isProfileInfoLoading={isProfileInfoLoading}
               />
             </div>
           </div>
