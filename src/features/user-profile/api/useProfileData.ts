@@ -1,10 +1,10 @@
 'use client'
 
 import { useAuth } from '@/shared/lib'
-import { useUserProfile } from '@/entities/user'
-// import { usePublicUserProfile } from '@/entities/user/model/useUserProfile'
+import { usePublicUserProfile, useUserProfile } from '@/entities/user'
 import { useUserPosts } from '@/entities/posts/model'
-import type { profileOwner } from '../ui/ProfileActions'
+
+export type ProfileOwner = 'myProfile' | 'friendProfile' | 'guestProfile'
 
 type UseProfileDataParams = {
   userId: number
@@ -30,7 +30,12 @@ type UseProfileDataReturn = {
   hasNextPage: boolean
 
   // Вычисленные значения (готовые к использованию в UI)
-  profileOwner: profileOwner
+  profileOwner: ProfileOwner
+  profileUserName: string | null
+  isFollowing: boolean
+  followingCount: number
+  followersCount: number
+  publicationsCount: number
   displayName: string
   avatarUrl: string | undefined
   bio: string | undefined
@@ -64,27 +69,39 @@ export const useProfileData = ({ userId, pageSize = 8 }: UseProfileDataParams): 
     hasNextPage
   } = useUserPosts({ userId, pageSize })
 
-  // Определяем userName для загрузки профиля
-  const userName = (isMyProfile ? user?.userName : postsData?.pages[0]?.items[0]?.userName) ?? null
+  // Для своего профиля используем /users/{userName},
+  // для чужого профиля — публичный профиль по userId (единый источник для follow/unfollow).
+  const userName = (isMyProfile ? user?.userName : null) ?? null
 
-  // Загружаем данные профиля
+  // Загружаем данные своего профиля
   const { data: profileData, isLoading: isProfileLoading } = useUserProfile(userName)
 
-  // Загружаем публичный профиль по userId (закомментировано)
-  // const { data: publicProfileData, isLoading: isPublicProfileLoading } = usePublicUserProfile(userId)
+  // Загружаем публичный профиль по userId для чужой страницы
+  const { data: publicProfileData, isLoading: isPublicProfileLoading } = usePublicUserProfile(
+    !isMyProfile ? userId : null
+  )
 
-  // Вычисляем производные значения
-  const profileOwner: profileOwner = isMyProfile ? 'myProfile' : 'guestProfile'
-  const displayName = profileData?.userName || userName || user?.userName || 'User'
-  const avatarUrl = profileData?.avatars?.[0]?.url
-  const bio = profileData?.aboutMe
+  // Вычисляем производные значения из единого источника (свои данные vs публичный профиль)
+  const profileOwner: ProfileOwner = isMyProfile ? 'myProfile' : user ? 'friendProfile' : 'guestProfile'
+  const source = isMyProfile ? profileData : publicProfileData
+  const metadata = !isMyProfile ? publicProfileData?.userMetadata : undefined
+
+  const profileUserName = source?.userName ?? (isMyProfile ? userName : null) ?? null
+  const isFollowing = !isMyProfile ? (publicProfileData?.isFollowing ?? false) : false
+  const followingCount = isMyProfile ? (profileData?.followingCount ?? 0) : (metadata?.following ?? 0)
+  const followersCount = isMyProfile ? (profileData?.followersCount ?? 0) : (metadata?.followers ?? 0)
+  const publicationsCount = isMyProfile ? (profileData?.publicationsCount ?? 0) : (metadata?.publications ?? 0)
+  const displayName =
+    source?.userName ?? (isMyProfile ? user?.userName : postsData?.pages[0]?.items[0]?.userName) ?? 'User'
+  const avatarUrl = source?.avatars?.[0]?.url
+  const bio = source?.aboutMe
 
   // Определяем состояние загрузки
   const isLoading =
     isAuthLoading ||
     (isMyProfile
       ? isProfileLoading && !profileData
-      : (isPostsLoading && !postsData) || (isProfileLoading && !profileData && !!userName))
+      : (isPostsLoading && !postsData) || (isPublicProfileLoading && !publicProfileData))
 
   return {
     profileData,
@@ -97,6 +114,11 @@ export const useProfileData = ({ userId, pageSize = 8 }: UseProfileDataParams): 
     fetchNextPage,
     hasNextPage,
     profileOwner,
+    profileUserName,
+    isFollowing,
+    followingCount,
+    followersCount,
+    publicationsCount,
     displayName,
     avatarUrl,
     bio,

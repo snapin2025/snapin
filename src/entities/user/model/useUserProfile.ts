@@ -38,8 +38,9 @@ export const usePublicUserProfile = (profileId: number | null | undefined) => {
     queryKey: ['public-user-profile', profileId],
     queryFn: () => userApi.getPublicUserProfile(profileId!),
     enabled: !!profileId && profileId > 0,
-    staleTime: 2 * 60_000, // 2 минуты - данные профиля не меняются часто
+    staleTime: 0, // Всегда считаем данные устаревшими для актуального состояния Follow/Unfollow
     gcTime: 5 * 60_000, // 5 минут в кэше
-    retry: 1
+    retry: 1,
+    refetchOnMount: true // при монтировании рефетч (данные с staleTime: 0 всегда stale)
   })
 }

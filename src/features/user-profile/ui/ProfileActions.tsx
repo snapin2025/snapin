@@ -3,22 +3,26 @@
 import { Button } from '@/shared/ui'
 import { useAuth } from '@/shared/lib'
 import { ROUTES } from '@/shared/lib/routes'
+import { useToggleFollowUser } from '@/entities/user'
 import Link from 'next/link'
+import type { ProfileOwner } from '../api/useProfileData'
 import s from './userProfile.module.css'
 
-export type profileOwner = 'myProfile' | 'friendProfile' | 'guestProfile'
-
 type Props = {
-  profileOwner: profileOwner
+  profileOwner: ProfileOwner
+  profileId: number
+  profileUserName: string | null
+  isFollowing: boolean
 }
 
 /**
  * Контейнер кнопок действий профиля.
  * Здесь же лежат обработчики переходов/подписок.
  */
-export const ProfileActions = ({ profileOwner }: Props) => {
+export const ProfileActions = ({ profileOwner, profileId, profileUserName, isFollowing }: Props) => {
   const { user } = useAuth()
   const userId = user?.userId
+  const { toggleFollow, isPending } = useToggleFollowUser()
 
   return (
     <div className={s.buttonWrapper}>
@@ -28,7 +32,19 @@ export const ProfileActions = ({ profileOwner }: Props) => {
         </Button>
       ) : profileOwner === 'friendProfile' ? (
         <>
-          <Button variant="outlined">Unfollow</Button>
+          <Button
+            variant={isFollowing ? 'outlined' : 'primary'}
+            onClick={() =>
+              toggleFollow({
+                profileId,
+                userName: profileUserName,
+                isFollowing
+              })
+            }
+            disabled={isPending}
+          >
+            {isFollowing ? 'Unfollow' : 'Follow'}
+          </Button>
           <Button variant="secondary">Send message</Button>
         </>
       ) : (

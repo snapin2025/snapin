@@ -3,6 +3,8 @@ import { HydrationBoundary } from '@tanstack/react-query'
 import { Metadata } from 'next'
 import { prefetchProfileWithPosts } from '@/features/user-profile/api/prefetch-profile'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'Профиль',
   description: 'Страница пользователя'
