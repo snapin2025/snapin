@@ -22,7 +22,7 @@ type Props = {
 export const ProfileActions = ({ profileOwner, profileId, profileUserName, isFollowing }: Props) => {
   const { user } = useAuth()
   const userId = user?.userId
-  const { toggleFollow, isPending } = useToggleFollowUser()
+  const { toggleFollow, isPending } = useToggleFollowUser(user?.userName)
 
   return (
     <div className={s.buttonWrapper}>

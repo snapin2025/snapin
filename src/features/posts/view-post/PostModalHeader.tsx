@@ -2,6 +2,7 @@
 
 import { usePublicUserProfile, useToggleFollowUser } from '@/entities/user'
 import { Avatar, Typography } from '@/shared/ui'
+import { useAuth } from '@/shared/lib'
 import DropMenu from '@/shared/ui/dropdown/DropMenu'
 import s from './PostModal.module.css'
 
@@ -22,9 +23,10 @@ export const PostModalHeader = ({
   onEdit,
   onDelete
 }: PostModalHeaderProps) => {
+  const { user } = useAuth()
   const canToggleFollow = !!currentUserId && currentUserId !== ownerId
   const { data: publicProfile } = usePublicUserProfile(canToggleFollow ? ownerId : null)
-  const { toggleFollow, isPending } = useToggleFollowUser()
+  const { toggleFollow, isPending } = useToggleFollowUser(user?.userName)
 
   const isFollowing = publicProfile?.isFollowing ?? false
   const handleToggleFollow = () =>
