@@ -10,15 +10,16 @@ export type profileOwner = 'myProfile' | 'friendProfile' | 'guestProfile'
 
 type Props = {
   profileOwner: profileOwner
+  profileUserId?: number
 }
 
 /**
  * Контейнер кнопок действий профиля.
  * Здесь же лежат обработчики переходов/подписок.
  */
-export const ProfileActions = ({ profileOwner }: Props) => {
+export const ProfileActions = ({ profileOwner, profileUserId }: Props) => {
   const { user } = useAuth()
-  const userId = user?.userId
+  const currentUserId = user?.userId
 
   return (
     <div className={s.buttonWrapper}>
@@ -29,13 +30,20 @@ export const ProfileActions = ({ profileOwner }: Props) => {
       ) : profileOwner === 'friendProfile' ? (
         <>
           <Button variant="outlined">Unfollow</Button>
-          <Button variant="secondary">Send message</Button>
+          {profileUserId && (
+            <Button asChild variant="secondary">
+              <Link href={ROUTES.APP.MESSENGER_WITH_PARTNER(profileUserId)}>Send message</Link>
+            </Button>
+          )}
         </>
       ) : (
-        userId && (
+        currentUserId &&
+        profileUserId && (
           <>
             <Button variant="primary">Follow</Button>
-            <Button variant="secondary">Send message</Button>
+            <Button asChild variant="secondary">
+              <Link href={ROUTES.APP.MESSENGER_WITH_PARTNER(profileUserId)}>Send message</Link>
+            </Button>
           </>
         )
       )}

@@ -72,7 +72,7 @@ export const UserProfile = ({ userId, pageSize = 8 }: Props) => {
           <div className={s.titleRow}>
             <span className={s.userName}>{displayName}</span>
             <div className={s.actions}>
-              <ProfileActions profileOwner={profileOwner} />
+              <ProfileActions profileOwner={profileOwner} profileUserId={userId} />
             </div>
           </div>
 
