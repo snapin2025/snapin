@@ -29,7 +29,7 @@ export const messengerApi = {
     items: Dialog[]
   }> => {
     const { cursor, pageSize = 12, searchName } = params
-    const { data } = await api.get('/api/v1/messenger', {
+    const { data } = await api.get('/messenger', {
       params: { cursor, pageSize, searchName }
     })
     return data
@@ -45,7 +45,7 @@ export const messengerApi = {
     items: DialogMessage[]
   }> => {
     const { dialoguePartnerId, cursor, pageSize = 12, searchName } = params
-    const { data } = await api.get(`/api/v1/messenger/${dialoguePartnerId}`, {
+    const { data } = await api.get(`/messenger/${dialoguePartnerId}`, {
       params: { cursor, pageSize, searchName }
     })
     return data
@@ -53,11 +53,11 @@ export const messengerApi = {
 
   // 3️⃣ Обновить статус сообщений (например, READ)
   updateStatus: async (params: UpdateMessageStatusParams): Promise<void> => {
-    await api.put('/api/v1/messenger', { ids: params.ids })
+    await api.put('/messenger', { ids: params.ids })
   },
 
   // 4️⃣ Удалить сообщение по ID
   deleteMessage: async (id: number): Promise<void> => {
-    await api.delete(`/api/v1/messenger/${id}`)
+    await api.delete(`/messenger/${id}`)
   }
 }

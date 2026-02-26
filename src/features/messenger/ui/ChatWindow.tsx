@@ -33,7 +33,6 @@ export const ChatWindow = ({ partnerId, partnerName, partnerAvatar }: Props) => 
   const handleSend = () => {
     const text = inputValue.trim()
     if (!text || !partnerId) return
-
     sendMessage(partnerId, text)
     setInputValue('')
   }

@@ -56,8 +56,8 @@ export type Dialog = {
   messageText: string
   createdAt: string
   updatedAt: string
-  messageType: 'TEXT' | 'IMAGE' | 'FILE'
-  status: 'SENT' | 'RECEIVED' | 'READ'
+  messageType: MessageType
+  status: MessageStatus
   userName: string
   avatars: Avatar[]
   notReadCount: number

@@ -3,7 +3,7 @@
 import { useEffect } from 'react'
 import type { InfiniteData } from '@tanstack/react-query'
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
-import type { DialogMessagesResponse, DialogMessage } from '../api/messenger-types'
+import type { DialogMessagesResponse, DialogMessage } from '@/entities/messenger'
 import { subscribeToEvent } from '@/shared/socket/subscribeToEvent'
 import { subscribeToMessageSendWithAck } from '@/entities/messenger/api/messenger-socket'
 import { messengerApi } from '@/entities/messenger/api/messenger'
