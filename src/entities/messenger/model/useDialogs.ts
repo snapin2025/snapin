@@ -71,13 +71,23 @@ export const useDialogs = (searchName?: string) => {
   // ---------- FLAT (dedupe by conversation partner) ----------
   const dialogs = useMemo(() => {
     const pages = query.data?.pages ?? []
+    const globalNotReadCount = pages[0]?.notReadCount ?? 0
     const map = new Map<number, Dialog>()
     for (const page of pages) {
       for (const d of page.items) {
         const partnerId = getPartnerId(d, myId)
         const existing = map.get(partnerId)
         if (!existing || new Date(d.createdAt) > new Date(existing.createdAt)) {
-          map.set(partnerId, d)
+          // Нормализуем notReadCount диалога: он не может быть больше,
+          // чем общий notReadCount, который пришёл в ответе сервера.
+          const normalized: Dialog = {
+            ...d,
+            notReadCount:
+              typeof d.notReadCount === 'number'
+                ? Math.min(d.notReadCount, globalNotReadCount)
+                : 0
+          }
+          map.set(partnerId, normalized)
         }
       }
     }

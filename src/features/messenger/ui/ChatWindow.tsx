@@ -62,9 +62,14 @@ export const ChatWindow = ({ partnerId, partnerName, partnerAvatar }: Props) => 
     return (
       <div className={s.container}>
         <div className={s.header}>
-          <Typography variant="h3" color="light">
-            {partnerName || `User ${partnerId}`}
-          </Typography>
+          <div className={s.headerInfo}>
+            {partnerAvatar && (
+              <Avatar src={partnerAvatar} alt={partnerName || `User ${partnerId}`} size="small" />
+            )}
+            <Typography variant="h3" color="light">
+              {partnerName || `User ${partnerId}`}
+            </Typography>
+          </div>
         </div>
         <div className={s.loading}>
           <Spinner />
@@ -76,9 +81,14 @@ export const ChatWindow = ({ partnerId, partnerName, partnerAvatar }: Props) => 
   return (
     <div className={s.container}>
       <div className={s.header}>
-        <Typography variant="h3" color="light">
-          {partnerName || `User ${partnerId}`}
-        </Typography>
+        <div className={s.headerInfo}>
+          {partnerAvatar && (
+            <Avatar src={partnerAvatar} alt={partnerName || `User ${partnerId}`} size="small" />
+          )}
+          <Typography variant="h3" color="light">
+            {partnerName || `User ${partnerId}`}
+          </Typography>
+        </div>
       </div>
 
       <div className={s.messagesWrapper}>

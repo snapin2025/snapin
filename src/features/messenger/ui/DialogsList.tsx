@@ -14,16 +14,22 @@ type Props = {
 
 const formatTime = (dateStr: string) => {
   const date = new Date(dateStr)
-  const now = new Date()
-  const diff = now.getTime() - date.getTime()
-  const days = Math.floor(diff / (24 * 60 * 60 * 1000))
+  if (Number.isNaN(date.getTime())) return ''
 
-  if (days === 0) {
+  const now = new Date()
+
+  const isSameDay = date.toDateString() === now.toDateString()
+  const isSameYear = date.getFullYear() === now.getFullYear()
+
+  if (isSameDay) {
     return date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })
   }
-  if (days === 1) return 'Tue'
-  if (days < 7) return `${days} ${date.toLocaleDateString('ru-RU', { month: 'short' })}`
-  return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' })
+
+  return date.toLocaleDateString('ru-RU', {
+    day: '2-digit',
+    month: 'short',
+    ...(isSameYear ? {} : { year: 'numeric' })
+  })
 }
 
 export const DialogsList = ({ selectedPartnerId, onSelectPartner }: Props) => {
@@ -94,11 +100,9 @@ export const DialogsList = ({ selectedPartnerId, onSelectPartner }: Props) => {
               type="button"
               className={`${s.dialogItem} ${isSelected ? s.selected : ''}`}
               onClick={() => {
+                // Выбираем диалог. Статусы сообщений и notReadCount
+                // теперь обновляются в useMessages при открытии чата.
                 onSelectPartner(partnerId, dialog)
-                if (dialog.notReadCount > 0) {
-                  // Помечаем диалог как прочитанный (и на клиенте, и на сервере)
-                  markDialogRead([dialog.id])
-                }
               }}
             >
               <Avatar src={avatarUrl} alt={displayName} size="small" />

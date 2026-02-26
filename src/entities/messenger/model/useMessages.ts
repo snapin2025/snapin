@@ -52,21 +52,9 @@ export const useMessages = (dialoguePartnerId: number) => {
       queryClient.setQueryData<Cache>(queryKey, (old) => {
         if (!old?.pages?.length) return old
 
-        // Если сообщение с таким id уже есть — это апдейт (например, после UPDATE_MESSAGE или ack),
-        // просто обновляем его во всех страницах.
         const exists = old.pages.some((p) => p.items.some((m) => m.id === msg.id))
+        if (exists) return old
 
-        if (exists) {
-          return {
-            ...old,
-            pages: old.pages.map((page) => ({
-              ...page,
-              items: page.items.map((m) => (m.id === msg.id ? msg : m))
-            }))
-          }
-        }
-
-        // Новое сообщение — кладём в начало первой страницы и увеличиваем счётчик.
         const first = old.pages[0]
 
         return {
