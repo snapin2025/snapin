@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Input, Typography, Avatar, Spinner, Button } from '@/shared/ui'
 import { useDialogs } from '@/entities/messenger/model/useDialogs'
 import type { Dialog } from '@/entities/messenger'
@@ -32,7 +32,7 @@ export const DialogsList = ({ selectedPartnerId, onSelectPartner }: Props) => {
   const { user } = useAuth()
   const myId = user?.userId ?? 0
 
-  const { dialogs, isLoading, fetchNextPage, hasNextPage } = useDialogs(debouncedSearch)
+  const { dialogs, isLoading, fetchNextPage, hasNextPage, markDialogRead } = useDialogs(debouncedSearch)
 
   const getPartnerId = (d: Dialog) => (d.ownerId === myId ? d.receiverId : d.ownerId)
   const isFromMe = (d: Dialog) => d.ownerId === myId
@@ -42,6 +42,19 @@ export const DialogsList = ({ selectedPartnerId, onSelectPartner }: Props) => {
     const t = setTimeout(() => setDebouncedSearch(search), 300)
     return () => clearTimeout(t)
   }, [search])
+
+  // Автовыбор диалога при открытии по параметру ?partner=
+  const initializedRef = useRef(false)
+  useEffect(() => {
+    if (initializedRef.current) return
+    if (!selectedPartnerId || !dialogs.length) return
+
+    const dialog = dialogs.find((d) => getPartnerId(d) === selectedPartnerId)
+    if (!dialog) return
+
+    initializedRef.current = true
+    onSelectPartner(selectedPartnerId, dialog)
+  }, [selectedPartnerId, dialogs, onSelectPartner])
 
   if (isLoading) {
     return (
@@ -80,7 +93,13 @@ export const DialogsList = ({ selectedPartnerId, onSelectPartner }: Props) => {
               key={`${partnerId}-${dialog.id}`}
               type="button"
               className={`${s.dialogItem} ${isSelected ? s.selected : ''}`}
-              onClick={() => onSelectPartner(partnerId, dialog)}
+              onClick={() => {
+                onSelectPartner(partnerId, dialog)
+                if (dialog.notReadCount > 0) {
+                  // Помечаем диалог как прочитанный (и на клиенте, и на сервере)
+                  markDialogRead([dialog.id])
+                }
+              }}
             >
               <Avatar src={avatarUrl} alt={displayName} size="small" />
               <div className={s.dialogContent}>

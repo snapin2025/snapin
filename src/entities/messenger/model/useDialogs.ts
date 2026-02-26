@@ -51,10 +51,10 @@ export const useDialogs = (searchName?: string) => {
     onMutate: async (ids) => {
       await queryClient.cancelQueries({ queryKey: QUERY_KEY })
 
-      const prev = queryClient.getQueryData<Cache>(QUERY_KEY)
       const idSet = new Set(ids)
 
-      queryClient.setQueryData<Cache>(QUERY_KEY, (old) => {
+      // Обновляем все запросы диалогов (включая разные searchName)
+      queryClient.setQueriesData<Cache>({ queryKey: QUERY_KEY }, (old) => {
         if (!old) return old
 
         return {
@@ -65,11 +65,6 @@ export const useDialogs = (searchName?: string) => {
           }))
         }
       })
-
-      return { prev }
-    },
-    onError: (_err, _vars, ctx) => {
-      if (ctx?.prev) queryClient.setQueryData(QUERY_KEY, ctx.prev)
     }
   })
 

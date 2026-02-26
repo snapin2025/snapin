@@ -5,6 +5,7 @@ import { Typography, Avatar, Button, Input, Spinner } from '@/shared/ui'
 import { useMessages } from '@/entities/messenger/model/useMessages'
 import { useSendMessage } from '@/features/messenger/api/useSendMessage'
 import type { DialogMessage } from '@/entities/messenger'
+import { useDeleteMessage } from '@/features/messenger/api/useDeleteMessage'
 import s from './ChatWindow.module.css'
 import { useAuth } from '@/shared/lib'
 
@@ -25,6 +26,7 @@ export const ChatWindow = ({ partnerId, partnerName, partnerAvatar }: Props) => 
 
   const { messages, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useMessages(partnerId ?? 0)
   const { sendMessage } = useSendMessage()
+  const { mutate: deleteMessage, isPending: isDeleting } = useDeleteMessage()
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -90,7 +92,14 @@ export const ChatWindow = ({ partnerId, partnerName, partnerAvatar }: Props) => 
 
         <div className={s.messages}>
           {messages.map((msg) => (
-            <MessageBubble key={msg.id} message={msg} isOwn={msg.ownerId === myId} partnerAvatar={partnerAvatar} />
+            <MessageBubble
+              key={msg.id}
+              message={msg}
+              isOwn={msg.ownerId === myId}
+              partnerAvatar={partnerAvatar}
+              onDelete={() => deleteMessage(msg.id)}
+              disableActions={isDeleting}
+            />
           ))}
         </div>
 
@@ -117,9 +126,11 @@ type MessageBubbleProps = {
   message: DialogMessage
   isOwn: boolean
   partnerAvatar?: string
+  onDelete?: () => void
+  disableActions?: boolean
 }
 
-const MessageBubble = ({ message, isOwn, partnerAvatar }: MessageBubbleProps) => (
+const MessageBubble = ({ message, isOwn, partnerAvatar, onDelete, disableActions }: MessageBubbleProps) => (
   <div className={`${s.messageRow} ${isOwn ? s.own : s.other}`}>
     {!isOwn && (
       <div className={s.messageAvatar}>
@@ -130,10 +141,24 @@ const MessageBubble = ({ message, isOwn, partnerAvatar }: MessageBubbleProps) =>
       <Typography variant="regular_14" color="light">
         {message.messageText}
       </Typography>
-      <Typography color="light" className={s.time}>
-        {formatMessageTime(message.createdAt)}
-        {isOwn && message.status === 'SENT' && ' ✓'}
-      </Typography>
+      <div className={s.meta}>
+        <Typography color="light" className={s.time}>
+          {formatMessageTime(message.createdAt)}
+          {/* Показываем чек, когда сообщение реально прочитано собеседником */}
+          {isOwn && message.status === 'READ' && ' ✓'}
+        </Typography>
+        {isOwn && onDelete && (
+          <button
+            type="button"
+            className={s.iconButton}
+            disabled={disableActions}
+            aria-label="Delete message"
+            onClick={onDelete}
+          >
+            🗑
+          </button>
+        )}
+      </div>
     </div>
   </div>
 )
