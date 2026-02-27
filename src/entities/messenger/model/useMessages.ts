@@ -17,6 +17,26 @@ const key = (id: number) => ['messages', id] as const
 type Cache = InfiniteData<DialogMessagesResponse, number | null>
 type DialogsCache = InfiniteData<DialogsResponse, number | null | undefined>
 
+const isDialogMessage = (payload: unknown): payload is DialogMessage => {
+  if (!payload || typeof payload !== 'object') return false
+
+  const candidate = payload as Partial<DialogMessage>
+  return (
+    typeof candidate.id === 'number' &&
+    typeof candidate.ownerId === 'number' &&
+    typeof candidate.receiverId === 'number' &&
+    typeof candidate.messageText === 'string'
+  )
+}
+
+const extractDialogMessage = (payload: unknown): DialogMessage | null => {
+  if (isDialogMessage(payload)) return payload
+  if (!payload || typeof payload !== 'object' || !('message' in payload)) return null
+
+  const maybeMessage = (payload as { message?: unknown }).message
+  return isDialogMessage(maybeMessage) ? maybeMessage : null
+}
+
 const isMessageInDialog = (msg: DialogMessage, partnerId: number) =>
   msg.ownerId === partnerId || msg.receiverId === partnerId
 
@@ -130,20 +150,26 @@ export const useMessages = (dialoguePartnerId: number) => {
     }
 
     // RECEIVE_MESSAGE: sender gets saved message, or updated status after ack
-    const unsubReceive = subscribeToEvent<DialogMessage>(WS_EVENT.RECEIVE_MESSAGE, (msg) => {
+    const unsubReceive = subscribeToEvent<unknown>(WS_EVENT.RECEIVE_MESSAGE, (payload) => {
+      const msg = extractDialogMessage(payload)
+      if (!msg) return
       if (!isMessageInDialog(msg, dialoguePartnerId)) return
       addMessageToCache(msg)
     })
 
     // MESSAGE_SEND: recipient receives - must acknowledge with callback({message, receiverId})
     const unsubSend = subscribeToMessageSendWithAck((msg, ack) => {
+      if (!isDialogMessage(msg)) return
       if (!isMessageInDialog(msg, dialoguePartnerId)) return
       addMessageToCache(msg)
       ack({ message: msg, receiverId: myId })
     })
 
     // UPDATE_MESSAGE: message updated
-    const unsubUpdate = subscribeToEvent<DialogMessage>(WS_EVENT.UPDATE_MESSAGE, (updated) => {
+    const unsubUpdate = subscribeToEvent<unknown>(WS_EVENT.UPDATE_MESSAGE, (payload) => {
+      const updated = extractDialogMessage(payload)
+      if (!updated) return
+
       queryClient.setQueryData<Cache>(queryKey, (old) => {
         if (!old) return old
 

@@ -16,6 +16,26 @@ type Cache = InfiniteData<DialogsResponse, number | undefined>
 
 const getPartnerId = (d: Dialog | DialogMessage, myId: number) => (d.ownerId === myId ? d.receiverId : d.ownerId)
 
+const isDialogMessage = (payload: unknown): payload is DialogMessage => {
+  if (!payload || typeof payload !== 'object') return false
+
+  const candidate = payload as Partial<DialogMessage>
+  return (
+    typeof candidate.id === 'number' &&
+    typeof candidate.ownerId === 'number' &&
+    typeof candidate.receiverId === 'number' &&
+    typeof candidate.messageText === 'string'
+  )
+}
+
+const extractDialogMessage = (payload: unknown): DialogMessage | null => {
+  if (isDialogMessage(payload)) return payload
+  if (!payload || typeof payload !== 'object' || !('message' in payload)) return null
+
+  const maybeMessage = (payload as { message?: unknown }).message
+  return isDialogMessage(maybeMessage) ? maybeMessage : null
+}
+
 const messageToDialog = (msg: DialogMessage, existing?: Dialog): Dialog => ({
   ...msg,
   userName: existing?.userName ?? '',
@@ -53,6 +73,8 @@ export const useDialogs = (searchName?: string) => {
     for (const page of pages) {
       for (const d of page.items) {
         const partnerId = getPartnerId(d, myId)
+        if (!Number.isFinite(partnerId)) continue
+
         const existing = map.get(partnerId)
         if (!existing || new Date(d.createdAt) > new Date(existing.createdAt)) {
           // Нормализуем notReadCount диалога: он не может быть больше,
@@ -72,8 +94,13 @@ export const useDialogs = (searchName?: string) => {
   useEffect(() => {
     if (!myId) return
 
-    const handleMessage = (msg: DialogMessage) => {
+    const handleMessage = (payload: unknown) => {
+      const msg = extractDialogMessage(payload)
+      if (!msg) return
+
       const partnerId = getPartnerId(msg, myId)
+      if (!Number.isFinite(partnerId)) return
+
       const hasSearchFilter = Boolean(searchName?.trim())
       if (hasSearchFilter) {
         const currentData = queryClient.getQueryData<Cache>(dialogsQueryKey)
@@ -112,8 +139,8 @@ export const useDialogs = (searchName?: string) => {
       })
     }
 
-    const unsubReceive = subscribeToEvent<DialogMessage>(WS_EVENT.RECEIVE_MESSAGE, handleMessage)
-    const unsubSend = subscribeToEvent<DialogMessage>(WS_EVENT.MESSAGE_SEND, handleMessage)
+    const unsubReceive = subscribeToEvent<unknown>(WS_EVENT.RECEIVE_MESSAGE, handleMessage)
+    const unsubSend = subscribeToEvent<unknown>(WS_EVENT.MESSAGE_SEND, handleMessage)
 
     return () => {
       unsubReceive()
