@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { Input, Typography, Avatar, Spinner, Button } from '@/shared/ui'
 import { useDialogs } from '@/entities/messenger/model/useDialogs'
 import type { Dialog } from '@/entities/messenger'
@@ -38,9 +38,9 @@ export const DialogsList = ({ selectedPartnerId, onSelectPartner }: Props) => {
   const { user } = useAuth()
   const myId = user?.userId ?? 0
 
-  const { dialogs, isLoading, fetchNextPage, hasNextPage, markDialogRead } = useDialogs(debouncedSearch)
+  const { dialogs, isLoading, fetchNextPage, hasNextPage } = useDialogs(debouncedSearch)
 
-  const getPartnerId = (d: Dialog) => (d.ownerId === myId ? d.receiverId : d.ownerId)
+  const getPartnerId = useCallback((d: Dialog) => (d.ownerId === myId ? d.receiverId : d.ownerId), [myId])
   const isFromMe = (d: Dialog) => d.ownerId === myId
   const getPreview = (d: Dialog) => (isFromMe(d) ? `You: ${d.messageText}` : d.messageText)
 
@@ -60,7 +60,7 @@ export const DialogsList = ({ selectedPartnerId, onSelectPartner }: Props) => {
 
     initializedRef.current = true
     onSelectPartner(selectedPartnerId, dialog)
-  }, [selectedPartnerId, dialogs, onSelectPartner])
+  }, [selectedPartnerId, dialogs, onSelectPartner, getPartnerId])
 
   if (isLoading) {
     return (

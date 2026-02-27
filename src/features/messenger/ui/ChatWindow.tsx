@@ -21,6 +21,7 @@ const formatMessageTime = (dateStr: string) =>
 export const ChatWindow = ({ partnerId, partnerName, partnerAvatar }: Props) => {
   const [inputValue, setInputValue] = useState('')
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const lastMessageIdRef = useRef<number | null>(null)
   const { user } = useAuth()
   const myId = user?.userId ?? 0
 
@@ -29,7 +30,18 @@ export const ChatWindow = ({ partnerId, partnerName, partnerAvatar }: Props) => 
   const { mutate: deleteMessage, isPending: isDeleting } = useDeleteMessage()
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    lastMessageIdRef.current = null
+  }, [partnerId])
+
+  useEffect(() => {
+    const lastMessageId = messages.at(-1)?.id ?? null
+    const shouldScroll = lastMessageIdRef.current === null || lastMessageId !== lastMessageIdRef.current
+
+    if (shouldScroll) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    }
+
+    lastMessageIdRef.current = lastMessageId
   }, [messages])
 
   const handleSend = () => {
@@ -63,9 +75,7 @@ export const ChatWindow = ({ partnerId, partnerName, partnerAvatar }: Props) => 
       <div className={s.container}>
         <div className={s.header}>
           <div className={s.headerInfo}>
-            {partnerAvatar && (
-              <Avatar src={partnerAvatar} alt={partnerName || `User ${partnerId}`} size="small" />
-            )}
+            {partnerAvatar && <Avatar src={partnerAvatar} alt={partnerName || `User ${partnerId}`} size="small" />}
             <Typography variant="h3" color="light">
               {partnerName || `User ${partnerId}`}
             </Typography>
@@ -82,9 +92,7 @@ export const ChatWindow = ({ partnerId, partnerName, partnerAvatar }: Props) => 
     <div className={s.container}>
       <div className={s.header}>
         <div className={s.headerInfo}>
-          {partnerAvatar && (
-            <Avatar src={partnerAvatar} alt={partnerName || `User ${partnerId}`} size="small" />
-          )}
+          {partnerAvatar && <Avatar src={partnerAvatar} alt={partnerName || `User ${partnerId}`} size="small" />}
           <Typography variant="h3" color="light">
             {partnerName || `User ${partnerId}`}
           </Typography>

@@ -1,8 +1,8 @@
 'use client'
 
-import { useEffect, useMemo, useCallback, useRef } from 'react'
+import { useEffect, useMemo } from 'react'
 import type { InfiniteData } from '@tanstack/react-query'
-import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
 import { messengerApi } from '@/entities/messenger/api/messenger'
 import { subscribeToEvent } from '@/shared/socket/subscribeToEvent'
 import { WS_EVENT } from '@/entities/messenger/model/constants'
@@ -25,13 +25,13 @@ const messageToDialog = (msg: DialogMessage, existing?: Dialog): Dialog => ({
 
 export const useDialogs = (searchName?: string) => {
   const queryClient = useQueryClient()
-  const subscribedRef = useRef(false)
   const { user } = useAuth()
   const myId = user?.userId ?? 0
+  const dialogsQueryKey = useMemo(() => [...QUERY_KEY, searchName ?? ''] as const, [searchName])
 
   // ---------- QUERY ----------
   const query = useInfiniteQuery({
-    queryKey: [...QUERY_KEY, searchName ?? ''] as const,
+    queryKey: dialogsQueryKey,
     queryFn: ({ pageParam = null }) =>
       messengerApi.getDialogs({
         cursor: pageParam ?? undefined,
@@ -43,29 +43,6 @@ export const useDialogs = (searchName?: string) => {
       lastPage.items.length < PAGE_SIZE ? undefined : (lastPage.items.at(-1)?.id ?? undefined),
     staleTime: Infinity,
     refetchOnWindowFocus: false
-  })
-
-  // ---------- MUTATION ----------
-  const markReadMutation = useMutation({
-    mutationFn: (ids: number[]) => messengerApi.updateStatus({ ids }),
-    onMutate: async (ids) => {
-      await queryClient.cancelQueries({ queryKey: QUERY_KEY })
-
-      const idSet = new Set(ids)
-
-      // Обновляем все запросы диалогов (включая разные searchName)
-      queryClient.setQueriesData<Cache>({ queryKey: QUERY_KEY }, (old) => {
-        if (!old) return old
-
-        return {
-          ...old,
-          pages: old.pages.map((page) => ({
-            ...page,
-            items: page.items.map((d) => (idSet.has(d.id) ? { ...d, notReadCount: 0 } : d))
-          }))
-        }
-      })
-    }
   })
 
   // ---------- FLAT (dedupe by conversation partner) ----------
@@ -82,10 +59,7 @@ export const useDialogs = (searchName?: string) => {
           // чем общий notReadCount, который пришёл в ответе сервера.
           const normalized: Dialog = {
             ...d,
-            notReadCount:
-              typeof d.notReadCount === 'number'
-                ? Math.min(d.notReadCount, globalNotReadCount)
-                : 0
+            notReadCount: typeof d.notReadCount === 'number' ? Math.min(d.notReadCount, globalNotReadCount) : 0
           }
           map.set(partnerId, normalized)
         }
@@ -94,21 +68,28 @@ export const useDialogs = (searchName?: string) => {
     return Array.from(map.values()).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
   }, [query.data, myId])
 
-  // ---------- API ----------
-  const markDialogRead = useCallback((messageIds: number[]) => markReadMutation.mutate(messageIds), [markReadMutation])
-
   // ---------- SOCKET: RECEIVE_MESSAGE & MESSAGE_SEND ----------
   useEffect(() => {
-    if (!myId || subscribedRef.current) return
-    subscribedRef.current = true
+    if (!myId) return
 
     const handleMessage = (msg: DialogMessage) => {
-      queryClient.setQueriesData<Cache>({ queryKey: ['messenger', 'dialogs'] }, (old) => {
+      const partnerId = getPartnerId(msg, myId)
+      const hasSearchFilter = Boolean(searchName?.trim())
+      if (hasSearchFilter) {
+        const currentData = queryClient.getQueryData<Cache>(dialogsQueryKey)
+        const existsInCurrentList = currentData?.pages[0]?.items.some((d) => getPartnerId(d, myId) === partnerId)
+        if (!existsInCurrentList) {
+          queryClient.invalidateQueries({ queryKey: dialogsQueryKey })
+          return
+        }
+      }
+
+      queryClient.setQueryData<Cache>(dialogsQueryKey, (old) => {
         if (!old?.pages.length) return old
 
         const first = old.pages[0]
-        const partnerId = getPartnerId(msg, myId)
         const existing = first.items.find((d) => getPartnerId(d, myId) === partnerId)
+        if (hasSearchFilter && !existing) return old
 
         const newDialog = messageToDialog(msg, existing)
         const isFromPartner = msg.ownerId !== myId
@@ -137,16 +118,14 @@ export const useDialogs = (searchName?: string) => {
     return () => {
       unsubReceive()
       unsubSend()
-      subscribedRef.current = false
     }
-  }, [queryClient, myId])
+  }, [queryClient, dialogsQueryKey, myId, searchName])
 
   // ---------- RETURN ----------
   return {
     dialogs,
     isLoading: query.isPending,
     fetchNextPage: query.fetchNextPage,
-    hasNextPage: query.hasNextPage,
-    markDialogRead
+    hasNextPage: query.hasNextPage
   }
 }

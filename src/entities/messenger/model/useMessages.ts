@@ -1,9 +1,9 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import type { InfiniteData } from '@tanstack/react-query'
-import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
-import type { DialogMessagesResponse, DialogMessage } from '@/entities/messenger'
+import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import type { DialogMessagesResponse, DialogMessage, DialogsResponse } from '@/entities/messenger'
 import { subscribeToEvent } from '@/shared/socket/subscribeToEvent'
 import { subscribeToMessageSendWithAck } from '@/entities/messenger/api/messenger-socket'
 import { messengerApi } from '@/entities/messenger/api/messenger'
@@ -15,15 +15,73 @@ const PAGE_SIZE = 12
 const key = (id: number) => ['messages', id] as const
 
 type Cache = InfiniteData<DialogMessagesResponse, number | null>
+type DialogsCache = InfiniteData<DialogsResponse, number | null | undefined>
 
 const isMessageInDialog = (msg: DialogMessage, partnerId: number) =>
   msg.ownerId === partnerId || msg.receiverId === partnerId
 
 export const useMessages = (dialoguePartnerId: number) => {
   const queryClient = useQueryClient()
-  const queryKey = key(dialoguePartnerId)
+  const queryKey = useMemo(() => key(dialoguePartnerId), [dialoguePartnerId])
   const { user } = useAuth()
   const myId = user?.userId ?? 0
+
+  const { mutate: markMessagesRead } = useMutation({
+    mutationFn: (ids: number[]) => messengerApi.updateStatus({ ids }),
+    onMutate: async (ids) => {
+      if (!ids.length) return
+      const idSet = new Set(ids)
+
+      queryClient.setQueryData<Cache>(queryKey, (old) => {
+        if (!old) return old
+        return {
+          ...old,
+          pages: old.pages.map((page) => ({
+            ...page,
+            items: page.items.map((message) => (idSet.has(message.id) ? { ...message, status: 'READ' } : message))
+          }))
+        }
+      })
+
+      queryClient.setQueriesData<DialogsCache>({ queryKey: ['messenger', 'dialogs'] }, (old) => {
+        if (!old?.pages.length) return old
+
+        let isTargetDialogProcessed = false
+        let removedUnreadCount = 0
+
+        const pages = old.pages.map((page) => ({
+          ...page,
+          items: page.items.map((dialog) => {
+            const partnerId = dialog.ownerId === myId ? dialog.receiverId : dialog.ownerId
+            if (partnerId !== dialoguePartnerId) return dialog
+            if (!isTargetDialogProcessed) {
+              isTargetDialogProcessed = true
+              removedUnreadCount = Math.max(0, dialog.notReadCount ?? 0)
+            }
+            return dialog.notReadCount > 0 ? { ...dialog, notReadCount: 0 } : dialog
+          })
+        }))
+
+        if (removedUnreadCount === 0) {
+          return {
+            ...old,
+            pages
+          }
+        }
+
+        const first = pages[0]
+        pages[0] = {
+          ...first,
+          notReadCount: Math.max(0, first.notReadCount - removedUnreadCount)
+        }
+
+        return {
+          ...old,
+          pages
+        }
+      })
+    }
+  })
 
   // ---------- API ----------
   const query = useInfiniteQuery({
@@ -128,6 +186,20 @@ export const useMessages = (dialoguePartnerId: number) => {
   const messages = (query.data?.pages.flatMap((p) => p.items) ?? []).slice().sort((a, b) => {
     return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
   })
+
+  // ---------- MARK AS READ ----------
+  useEffect(() => {
+    if (!dialoguePartnerId || !myId) return
+
+    const unreadIds = messages
+      .filter(
+        (message) => message.ownerId === dialoguePartnerId && message.receiverId === myId && message.status !== 'READ'
+      )
+      .map((message) => message.id)
+
+    if (!unreadIds.length) return
+    markMessagesRead(unreadIds)
+  }, [dialoguePartnerId, myId, messages, markMessagesRead])
 
   return {
     messages,
