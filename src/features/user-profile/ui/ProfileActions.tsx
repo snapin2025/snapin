@@ -30,6 +30,7 @@ export const ProfileActions = ({
   const { user } = useAuth()
   const userId = user?.userId
   const { toggleFollow, isPending } = useToggleFollowUser(user?.userName)
+  const currentUserId = user?.userId
 
   return (
     <div className={s.buttonWrapper}>
@@ -56,10 +57,13 @@ export const ProfileActions = ({
           <Button variant="secondary">Send message</Button>
         </>
       ) : (
-        userId && (
+        currentUserId &&
+        profileUserId && (
           <>
             <Button variant="primary">Follow</Button>
-            <Button variant="secondary">Send message</Button>
+            <Button asChild variant="secondary">
+              <Link href={ROUTES.APP.MESSENGER_WITH_PARTNER(profileUserId)}>Send message</Link>
+            </Button>
           </>
         )
       )}

@@ -17,6 +17,7 @@ export const ROUTES = {
     },
     CREATE_POST: '/create',
     MESSENGER: '/messenger',
+    MESSENGER_WITH_PARTNER: (partnerId: number) => `/messenger?partner=${partnerId}`,
     SEARCH: '/search',
     STATISTICS: '/statistics',
     FAVORITES: '/favorites'
