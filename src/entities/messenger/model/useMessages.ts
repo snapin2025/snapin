@@ -9,6 +9,7 @@ import { subscribeToMessageSendWithAck } from '@/entities/messenger/api/messenge
 import { messengerApi } from '@/entities/messenger/api/messenger'
 import { WS_EVENT } from '@/entities/messenger/model/constants'
 import { useAuth } from '@/shared/lib'
+import { MESSENGER_DIALOGS_QUERY_KEY, MESSENGER_UNREAD_QUERY_KEY } from './queryKeys'
 
 const PAGE_SIZE = 12
 
@@ -63,7 +64,7 @@ export const useMessages = (dialoguePartnerId: number) => {
         }
       })
 
-      queryClient.setQueriesData<DialogsCache>({ queryKey: ['messenger', 'dialogs'] }, (old) => {
+      queryClient.setQueriesData<DialogsCache>({ queryKey: MESSENGER_DIALOGS_QUERY_KEY }, (old) => {
         if (!old?.pages.length) return old
 
         let isTargetDialogProcessed = false
@@ -100,6 +101,17 @@ export const useMessages = (dialoguePartnerId: number) => {
           pages
         }
       })
+
+      queryClient.setQueryData<number>(MESSENGER_UNREAD_QUERY_KEY, (oldValue) =>
+        Math.max(0, (oldValue ?? 0) - ids.length)
+      )
+    },
+    onSuccess: (_, ids) => {
+      if (!ids.length) return
+
+      void queryClient.invalidateQueries({ queryKey, exact: true })
+      void queryClient.invalidateQueries({ queryKey: MESSENGER_DIALOGS_QUERY_KEY })
+      void queryClient.invalidateQueries({ queryKey: MESSENGER_UNREAD_QUERY_KEY })
     }
   })
 
@@ -119,6 +131,7 @@ export const useMessages = (dialoguePartnerId: number) => {
 
     enabled: !!dialoguePartnerId,
     staleTime: Infinity,
+    refetchOnMount: 'always',
     refetchOnWindowFocus: false
   })
 
@@ -130,10 +143,27 @@ export const useMessages = (dialoguePartnerId: number) => {
       queryClient.setQueryData<Cache>(queryKey, (old) => {
         if (!old?.pages?.length) return old
 
-        const exists = old.pages.some((p) => p.items.some((m) => m.id === msg.id))
-        if (exists) return old
+        let exists = false
+        const pagesWithUpdate = old.pages.map((page) => {
+          let hasUpdate = false
+          const updatedItems = page.items.map((message) => {
+            if (message.id !== msg.id) return message
+            exists = true
+            hasUpdate = true
+            return msg
+          })
 
-        const first = old.pages[0]
+          return hasUpdate ? { ...page, items: updatedItems } : page
+        })
+
+        if (exists) {
+          return {
+            ...old,
+            pages: pagesWithUpdate
+          }
+        }
+
+        const first = pagesWithUpdate[0]
 
         return {
           ...old,
@@ -143,7 +173,7 @@ export const useMessages = (dialoguePartnerId: number) => {
               items: [msg, ...first.items],
               totalCount: first.totalCount + 1
             },
-            ...old.pages.slice(1)
+            ...pagesWithUpdate.slice(1)
           ]
         }
       })

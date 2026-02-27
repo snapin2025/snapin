@@ -37,6 +37,7 @@ export const DialogsList = ({ selectedPartnerId, onSelectPartner }: Props) => {
   const [debouncedSearch, setDebouncedSearch] = useState('')
   const { user } = useAuth()
   const myId = user?.userId ?? 0
+  const selectedDialogMetaRef = useRef<string | null>(null)
 
   const { dialogs, isLoading, fetchNextPage, hasNextPage } = useDialogs(debouncedSearch)
 
@@ -49,16 +50,20 @@ export const DialogsList = ({ selectedPartnerId, onSelectPartner }: Props) => {
     return () => clearTimeout(t)
   }, [search])
 
-  // Автовыбор диалога при открытии по параметру ?partner=
-  const initializedRef = useRef(false)
+  // Синхронизация выбранного диалога:
+  // если данные диалога дополнились (например, подтянулось userName после первого сообщения),
+  // обновляем selectedPartner в родителе, чтобы шапка чата показывала реальное имя.
   useEffect(() => {
-    if (initializedRef.current) return
     if (!selectedPartnerId || !dialogs.length) return
 
     const dialog = dialogs.find((d) => getPartnerId(d) === selectedPartnerId)
     if (!dialog) return
 
-    initializedRef.current = true
+    const avatarUrl = dialog.avatars?.[0]?.url ?? ''
+    const dialogMetaKey = `${selectedPartnerId}:${dialog.userName ?? ''}:${avatarUrl}`
+    if (selectedDialogMetaRef.current === dialogMetaKey) return
+
+    selectedDialogMetaRef.current = dialogMetaKey
     onSelectPartner(selectedPartnerId, dialog)
   }, [selectedPartnerId, dialogs, onSelectPartner, getPartnerId])
 

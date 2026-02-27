@@ -48,15 +48,6 @@ export const useToggleFollowUser = (currentUserName?: string | null) => {
           })
         )
       )
-
-      await Promise.all(
-        keysToRefresh.map((queryKey) =>
-          queryClient.refetchQueries({
-            queryKey,
-            type: 'all'
-          })
-        )
-      )
     }
   })
 

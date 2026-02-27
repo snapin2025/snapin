@@ -8,9 +8,9 @@ import { subscribeToEvent } from '@/shared/socket/subscribeToEvent'
 import { WS_EVENT } from '@/entities/messenger/model/constants'
 import type { Dialog, DialogsResponse, DialogMessage } from '@/entities/messenger/api/messenger-types'
 import { useAuth } from '@/shared/lib'
+import { MESSENGER_DIALOGS_QUERY_KEY } from './queryKeys'
 
 const PAGE_SIZE = 12
-const QUERY_KEY = ['messenger', 'dialogs'] as const
 
 type Cache = InfiniteData<DialogsResponse, number | undefined>
 
@@ -47,7 +47,7 @@ export const useDialogs = (searchName?: string) => {
   const queryClient = useQueryClient()
   const { user } = useAuth()
   const myId = user?.userId ?? 0
-  const dialogsQueryKey = useMemo(() => [...QUERY_KEY, searchName ?? ''] as const, [searchName])
+  const dialogsQueryKey = useMemo(() => [...MESSENGER_DIALOGS_QUERY_KEY, searchName ?? ''] as const, [searchName])
 
   // ---------- QUERY ----------
   const query = useInfiniteQuery({
@@ -62,6 +62,7 @@ export const useDialogs = (searchName?: string) => {
     getNextPageParam: (lastPage) =>
       lastPage.items.length < PAGE_SIZE ? undefined : (lastPage.items.at(-1)?.id ?? undefined),
     staleTime: Infinity,
+    refetchOnMount: 'always',
     refetchOnWindowFocus: false
   })
 
@@ -101,9 +102,12 @@ export const useDialogs = (searchName?: string) => {
       const partnerId = getPartnerId(msg, myId)
       if (!Number.isFinite(partnerId)) return
 
+      const currentData = queryClient.getQueryData<Cache>(dialogsQueryKey)
+      const existingInCache = currentData?.pages
+        .flatMap((page) => page.items)
+        .find((dialog) => getPartnerId(dialog, myId) === partnerId)
       const hasSearchFilter = Boolean(searchName?.trim())
       if (hasSearchFilter) {
-        const currentData = queryClient.getQueryData<Cache>(dialogsQueryKey)
         const existsInCurrentList = currentData?.pages[0]?.items.some((d) => getPartnerId(d, myId) === partnerId)
         if (!existsInCurrentList) {
           queryClient.invalidateQueries({ queryKey: dialogsQueryKey })
@@ -115,28 +119,40 @@ export const useDialogs = (searchName?: string) => {
         if (!old?.pages.length) return old
 
         const first = old.pages[0]
-        const existing = first.items.find((d) => getPartnerId(d, myId) === partnerId)
+        const allDialogs = old.pages.flatMap((page) => page.items)
+        const existing = allDialogs.find((dialog) => getPartnerId(dialog, myId) === partnerId)
         if (hasSearchFilter && !existing) return old
 
         const newDialog = messageToDialog(msg, existing)
         const isFromPartner = msg.ownerId !== myId
-        if (isFromPartner && existing) {
+        const isSameMessageEvent = existing?.id === msg.id
+        if (isFromPartner && existing && !isSameMessageEvent) {
           newDialog.notReadCount = (existing.notReadCount ?? 0) + 1
         }
 
-        const rest = first.items.filter((d) => getPartnerId(d, myId) !== partnerId)
+        const pagesWithoutPartner = old.pages.map((page) => ({
+          ...page,
+          items: page.items.filter((dialog) => getPartnerId(dialog, myId) !== partnerId)
+        }))
+        const firstPageWithoutPartner = pagesWithoutPartner[0]
         const updatedFirst = {
-          ...first,
-          items: [newDialog, ...rest],
+          ...firstPageWithoutPartner,
+          items: [newDialog, ...firstPageWithoutPartner.items],
           totalCount: existing ? first.totalCount : first.totalCount + 1,
-          notReadCount: isFromPartner ? first.notReadCount + 1 : first.notReadCount
+          notReadCount: isFromPartner && !isSameMessageEvent ? first.notReadCount + 1 : first.notReadCount
         }
 
         return {
           ...old,
-          pages: [updatedFirst, ...old.pages.slice(1)]
+          pages: [updatedFirst, ...pagesWithoutPartner.slice(1)]
         }
       })
+
+      // Новый диалог по сокету приходит без userName.
+      // Подтягиваем полный диалог из API, чтобы заменить "User {id}" на реальное имя.
+      if (!existingInCache) {
+        queryClient.invalidateQueries({ queryKey: dialogsQueryKey })
+      }
     }
 
     const unsubReceive = subscribeToEvent<unknown>(WS_EVENT.RECEIVE_MESSAGE, handleMessage)
