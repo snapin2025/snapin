@@ -1,50 +1,26 @@
 'use client'
 
-import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
-import { useSearchUsers } from '@/entities/user'
 import type { SearchUser } from '@/entities/user'
 import { ROUTES } from '@/shared/lib/routes'
-import { useInfiniteScroll } from '@/shared/lib'
 import { Avatar, Input, Spinner, Typography } from '@/shared/ui'
+import { useSearchPage } from '../model/useSearchPage'
 import s from './searchPage.module.css'
 
-const DEBOUNCE_MS = 400
-
 export const SearchPage = () => {
-  const [searchValue, setSearchValue] = useState('')
-  const [debouncedSearch, setDebouncedSearch] = useState('')
-  const observerTarget = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const timeoutId = window.setTimeout(() => {
-      setDebouncedSearch(searchValue.trim())
-    }, DEBOUNCE_MS)
-
-    return () => window.clearTimeout(timeoutId)
-  }, [searchValue])
-
-  const { data, isLoading, isFetching, isFetchingNextPage, hasNextPage, fetchNextPage, error } = useSearchUsers({
-    search: debouncedSearch
-  })
-
-  const users = useMemo(
-    () => data?.pages.flatMap((page) => (Array.isArray(page.items) ? page.items : [])) ?? [],
-    [data]
-  )
-  const showRecentRequests = debouncedSearch.length === 0
-
-  useInfiniteScroll({
-    targetRef: observerTarget,
-    hasNextPage: hasNextPage ?? false,
+  const {
+    searchValue,
+    users,
+    showRecentRequests,
+    observerTarget,
+    isLoading,
+    isFetching,
     isFetchingNextPage,
-    fetchNextPage: async () => {
-      await fetchNextPage()
-    },
-    threshold: 0.15,
-    rootMargin: '40px',
-    enabled: !showRecentRequests
-  })
+    hasNextPage,
+    error,
+    handleSearchChange,
+    handleClearSearch
+  } = useSearchPage()
 
   return (
     <section className={s.page}>
@@ -56,11 +32,8 @@ export const SearchPage = () => {
         type="search"
         placeholder="Search"
         value={searchValue}
-        onChange={(event) => setSearchValue(event.target.value)}
-        onClear={() => {
-          setSearchValue('')
-          setDebouncedSearch('')
-        }}
+        onChange={(event) => handleSearchChange(event.target.value)}
+        onClear={handleClearSearch}
       />
 
       {showRecentRequests ? (
