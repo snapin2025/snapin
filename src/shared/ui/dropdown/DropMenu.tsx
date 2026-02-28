@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Dropdown } from './Dropdown'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import s from './Dropdown.module.css'
-import { DeleteIcon, DotsIcon, EditIcon, FollowIcon, UnfollowIcon } from '@/shared/ui'
+import { CopyLinkIcon, DeleteIcon, DotsIcon, EditIcon, FollowIcon, UnfollowIcon } from '@/shared/ui'
 import { useAuth } from '@/shared/lib'
 
 type DropMenuProps = {
@@ -15,9 +15,19 @@ type DropMenuProps = {
   onCopyLink?: () => void
   ownerId: number
   currentUserId?: number | null
+  isFollowing?: boolean // Добавила длямоего файла
 }
 
-export const DropMenu = ({ onEdit, onDelete, onFollow, onUnfollow, ownerId, currentUserId }: DropMenuProps) => {
+export const DropMenu = ({
+  onEdit,
+  onDelete,
+  onFollow,
+  onUnfollow,
+  onCopyLink,
+  ownerId,
+  currentUserId,
+  isFollowing
+}: DropMenuProps) => {
   const [open, setOpen] = useState(false)
 
   const { user } = useAuth()
@@ -69,31 +79,57 @@ export const DropMenu = ({ onEdit, onDelete, onFollow, onUnfollow, ownerId, curr
       {canFollow && (
         <>
           {/* Пункт "Подписаться" (с иконкой плюса) */}
-          <DropdownMenu.Item
-            className={s.DropdownMenuItem}
-            onSelect={(event) => {
-              event.preventDefault()
-              setOpen(false)
-              onFollow?.()
-            }}
-          >
-            <FollowIcon className={s.icon} />
-            Follow
-          </DropdownMenu.Item>
-          {/* Пункт "Отписаться" (с иконкой минус) */}
-          <DropdownMenu.Item
-            className={s.DropdownMenuItem}
-            onSelect={(event) => {
-              event.preventDefault()
-              setOpen(false)
-              onUnfollow?.()
-            }}
-          >
-            <UnfollowIcon className={s.icon} />
-            Unfollow
-          </DropdownMenu.Item>
+          {isFollowing ? ( // дабавила сюда так надо менють пункт меню
+            // Если подписан - показываем Unfollow
+            <DropdownMenu.Item
+              className={s.DropdownMenuItem}
+              onSelect={(event) => {
+                event.preventDefault()
+                setOpen(false)
+                // onFollow?.()
+                onUnfollow?.() // дабавила
+              }}
+            >
+              {/*дабавила иконку UnfollowIcon */}
+              <UnfollowIcon className={s.icon} />
+              {/*<FollowIcon className={s.icon} />*/}
+              {/*Follow*/}
+              Unfollow
+            </DropdownMenu.Item>
+          ) : (
+            //дабавила сюда так меняем с одного на другой пунк
+            <DropdownMenu.Item
+              className={s.DropdownMenuItem}
+              onSelect={(event) => {
+                event.preventDefault()
+                setOpen(false)
+                onFollow?.()
+                // onUnfollow?.()
+              }}
+            >
+              {/*//было FollowIcon*/}
+              <FollowIcon className={s.icon} />
+              {/*<UnfollowIcon className={s.icon} />*/}
+              Follow
+              {/*было  Unfollow*/}
+              {/*Unfollow*/}
+            </DropdownMenu.Item>
+            // дабавила сюда скобку
+          )}
         </>
       )}
+      {/* ✅ CopyLink ВСЕГДА, вне canFollow */}
+      <DropdownMenu.Item
+        className={s.DropdownMenuItem}
+        onSelect={(event) => {
+          event.preventDefault()
+          setOpen(false)
+          onCopyLink?.()
+        }}
+      >
+        <CopyLinkIcon className={s.icon} />
+        Copy Link
+      </DropdownMenu.Item>
     </Dropdown>
   )
 }
