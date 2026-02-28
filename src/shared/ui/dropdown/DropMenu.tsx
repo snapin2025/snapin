@@ -15,9 +15,18 @@ type DropMenuProps = {
   onCopyLink?: () => void
   ownerId: number
   currentUserId?: number | null
+  isFollowing?: boolean
 }
 
-export const DropMenu = ({ onEdit, onDelete, onFollow, onUnfollow, ownerId, currentUserId }: DropMenuProps) => {
+export const DropMenu = ({
+  onEdit,
+  onDelete,
+  onFollow,
+  onUnfollow,
+  ownerId,
+  currentUserId,
+  isFollowing
+}: DropMenuProps) => {
   const [open, setOpen] = useState(false)
 
   const { user } = useAuth()
@@ -68,30 +77,32 @@ export const DropMenu = ({ onEdit, onDelete, onFollow, onUnfollow, ownerId, curr
 
       {canFollow && (
         <>
-          {/* Пункт "Подписаться" (с иконкой плюса) */}
-          <DropdownMenu.Item
-            className={s.DropdownMenuItem}
-            onSelect={(event) => {
-              event.preventDefault()
-              setOpen(false)
-              onFollow?.()
-            }}
-          >
-            <FollowIcon className={s.icon} />
-            Follow
-          </DropdownMenu.Item>
-          {/* Пункт "Отписаться" (с иконкой минус) */}
-          <DropdownMenu.Item
-            className={s.DropdownMenuItem}
-            onSelect={(event) => {
-              event.preventDefault()
-              setOpen(false)
-              onUnfollow?.()
-            }}
-          >
-            <UnfollowIcon className={s.icon} />
-            Unfollow
-          </DropdownMenu.Item>
+          {/* Показываем либо Follow, либо Unfollow в зависимости от isFollowing */}
+          {isFollowing ? (
+            <DropdownMenu.Item
+              className={s.DropdownMenuItem}
+              onSelect={(event) => {
+                event.preventDefault()
+                setOpen(false)
+                onUnfollow?.()
+              }}
+            >
+              <UnfollowIcon className={s.icon} />
+              Unfollow
+            </DropdownMenu.Item>
+          ) : (
+            <DropdownMenu.Item
+              className={s.DropdownMenuItem}
+              onSelect={(event) => {
+                event.preventDefault()
+                setOpen(false)
+                onFollow?.()
+              }}
+            >
+              <FollowIcon className={s.icon} />
+              Follow
+            </DropdownMenu.Item>
+          )}
         </>
       )}
     </Dropdown>
