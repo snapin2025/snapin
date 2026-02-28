@@ -15,9 +15,20 @@ type DropMenuProps = {
   onCopyLink?: () => void
   ownerId: number
   currentUserId?: number | null
+  isFollowing?: boolean | null
+  isFollowPending?: boolean
 }
 
-export const DropMenu = ({ onEdit, onDelete, onFollow, onUnfollow, ownerId, currentUserId }: DropMenuProps) => {
+export const DropMenu = ({
+  onEdit,
+  onDelete,
+  onFollow,
+  onUnfollow,
+  ownerId,
+  currentUserId,
+  isFollowing = null,
+  isFollowPending = false
+}: DropMenuProps) => {
   const [open, setOpen] = useState(false)
 
   const { user } = useAuth()
@@ -68,29 +79,26 @@ export const DropMenu = ({ onEdit, onDelete, onFollow, onUnfollow, ownerId, curr
 
       {canFollow && (
         <>
-          {/* Пункт "Подписаться" (с иконкой плюса) */}
           <DropdownMenu.Item
             className={s.DropdownMenuItem}
+            disabled={isFollowPending || isFollowing === null}
             onSelect={(event) => {
               event.preventDefault()
               setOpen(false)
+              if (isFollowing === null) {
+                return
+              }
+
+              if (isFollowing) {
+                onUnfollow?.()
+                return
+              }
+
               onFollow?.()
             }}
           >
-            <FollowIcon className={s.icon} />
-            Follow
-          </DropdownMenu.Item>
-          {/* Пункт "Отписаться" (с иконкой минус) */}
-          <DropdownMenu.Item
-            className={s.DropdownMenuItem}
-            onSelect={(event) => {
-              event.preventDefault()
-              setOpen(false)
-              onUnfollow?.()
-            }}
-          >
-            <UnfollowIcon className={s.icon} />
-            Unfollow
+            {isFollowing ? <UnfollowIcon className={s.icon} /> : <FollowIcon className={s.icon} />}
+            {isFollowing === null ? 'Loading...' : isFollowing ? 'Unfollow' : 'Follow'}
           </DropdownMenu.Item>
         </>
       )}

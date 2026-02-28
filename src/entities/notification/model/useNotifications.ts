@@ -4,9 +4,9 @@ import { useEffect, useMemo, useCallback } from 'react'
 import type { InfiniteData } from '@tanstack/react-query'
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { notificationApi } from '../api/notification'
-import type { Notification, NotificationsResponse } from '../api/notification-types'
+import type { Notification, NotificationsResponse } from '@/entities/notification'
 import { SOCKET_EVENTS } from '../api/notification-types'
-import { subscribeToEvent } from './socket/subscribeToEvent'
+import { subscribeToEvent } from '@/shared/socket/subscribeToEvent'
 
 const NOTIFICATIONS_PAGE_SIZE = 100
 const NOTIFICATIONS_QUERY_KEY = ['notifications', 'infinite', NOTIFICATIONS_PAGE_SIZE] as const

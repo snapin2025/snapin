@@ -1,6 +1,8 @@
 'use client'
 
+import { useToggleFollowUser, useUserProfile } from '@/entities/user'
 import { Avatar, Typography } from '@/shared/ui'
+import { useAuth } from '@/shared/lib'
 import DropMenu from '@/shared/ui/dropdown/DropMenu'
 import s from './PostModal.module.css'
 
@@ -21,6 +23,26 @@ export const PostModalHeader = ({
   onEdit,
   onDelete
 }: PostModalHeaderProps) => {
+  const { user } = useAuth()
+  const canToggleFollow = !!currentUserId && currentUserId !== ownerId
+  const {
+    data: relationProfile,
+    isLoading: isProfileLoading,
+    isFetching: isProfileFetching
+  } = useUserProfile(canToggleFollow && user ? userName : null)
+  const { toggleFollow, isPending } = useToggleFollowUser(user?.userName)
+
+  const isFollowing = canToggleFollow ? (relationProfile?.isFollowing ?? null) : null
+  const isFollowStatusLoading =
+    canToggleFollow && ((isProfileLoading && !relationProfile) || (isProfileFetching && isFollowing === null))
+  const handleToggleFollow = () =>
+    isFollowing !== null &&
+    toggleFollow({
+      profileId: ownerId,
+      userName,
+      isFollowing
+    })
+
   return (
     <div className={s.description}>
       <div className={s.avatar}>
@@ -31,7 +53,16 @@ export const PostModalHeader = ({
       </div>
       {currentUserId && (
         <div>
-          <DropMenu onEdit={onEdit} onDelete={onDelete} ownerId={ownerId} currentUserId={currentUserId} />
+          <DropMenu
+            onEdit={onEdit}
+            onDelete={onDelete}
+            onFollow={handleToggleFollow}
+            onUnfollow={handleToggleFollow}
+            isFollowing={isFollowing}
+            isFollowPending={isPending || isFollowStatusLoading}
+            ownerId={ownerId}
+            currentUserId={currentUserId}
+          />
         </div>
       )}
     </div>
