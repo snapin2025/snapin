@@ -1,0 +1,2 @@
+// реэкпорт
+export * from './PostLikes'
