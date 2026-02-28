@@ -1,9 +1,10 @@
 // кнопка для лайка
 import { Button } from '@/shared/ui'
-import { Heart, HeartRed } from '@/shared/ui/icons'
+import { HeartRed } from '@/shared/ui/icons'
 import s from './LikeButton.module.css'
 import { useLikePost } from '@/features/posts/view-post/model'
 import { useState } from 'react'
+import { Heart } from '@/shared/ui/icons/Heart'
 
 export type LikeButtonProps = {
   postId: number

@@ -1,7 +1,7 @@
 .postItem {
   position: relative;
-  width: 234px;
-  height: 390px;
+  width: 490px;
+  height: 504px;
   display: flex;
   flex-direction: column;
 }
