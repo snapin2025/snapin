@@ -1,6 +1,3 @@
-// хук для . Написать комментарий к публикации
-
-//2
 // хук для написания комментария к публикации
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { createComment } from '../api/createComment'

@@ -125,7 +125,7 @@ type DropMenuProps = {
   onCopyLink?: () => void
   ownerId: number
   currentUserId?: number | null
-  isFollowing?: boolean | null
+  isFollowing?: boolean //  не должно стоять нала
   isFollowPending?: boolean
 }
 
@@ -137,7 +137,7 @@ export const DropMenu = ({
   onCopyLink,
   ownerId,
   currentUserId,
-  isFollowing = null,
+  isFollowing = false, // по умолчанию стоит не null,а false
   isFollowPending = false
 }: DropMenuProps) => {
   const [open, setOpen] = useState(false)
@@ -186,17 +186,14 @@ export const DropMenu = ({
       {canFollow && (
         <DropdownMenu.Item
           className={s.DropdownMenuItem}
-          disabled={isFollowPending || isFollowing === null}
+          disabled={isFollowPending}
           onSelect={(event) => {
             event.preventDefault()
             setOpen(false)
-            if (isFollowing === null) return
             isFollowing ? onUnfollow?.() : onFollow?.()
           }}
         >
-          {isFollowing === null ? (
-            'Loading...'
-          ) : isFollowing ? (
+          {isFollowing ? (
             <>
               <UnfollowIcon className={s.icon} />
               Unfollow
