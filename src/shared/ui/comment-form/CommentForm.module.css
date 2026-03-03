@@ -1,0 +1,63 @@
+/*стили для  */
+.container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  background: none;
+  border: none;
+  color: #2f68cc;
+}
+
+.inputcoment {
+  border: none;
+  color: #fff;
+  min-width: 373px;
+  margin-right: 36px;
+}
+
+.inputcoment::placeholder {
+  color: #8D9094;
+}
+
+.inputcoment:focus {
+  border: none;
+  outline: none;
+}
+
+.inputcoment:hover {
+  border: none;
+  outline: none;
+}
+
+.buttoncoment {
+  background: none;
+  border: none;
+  color: #2f68cc;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.buttoncoment:focus,
+.buttoncoment:hover {
+  opacity: 0.8;
+  border: none;
+  color: #2f68cc;
+  background: none;
+}
+
+.buttoncoment:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  background: none;
+  color: #f1f5f9;
+}
+
+/*для ошибок*/
+.errorMessage {
+  color: #ff4d4f;
+  font-size: 12px;
+  margin-top: 4px;
+  display: block;
+}
+
