@@ -249,7 +249,7 @@ export const FeedPostCard = ({
       {/* ЛАЙКИ */}
       <PostLikes key={post.id} likesCount={post.likesCount} avatars={post.avatarWhoLikes} />
 
-      {/* 🔽 ИЗМЕНЕНО: показываем комментарии только если isCommentsOpen = true */}
+      {/*  показываем комментарии только если isCommentsOpen = true */}
       {isCommentsOpen && allComments.length > 0 && (
         <div className={s.commentsList}>
           {allComments.map((comment) => (
@@ -262,7 +262,7 @@ export const FeedPostCard = ({
         </div>
       )}
 
-      {/* 🔽 ИЗМЕНЕНО: счетчик теперь кликабельный */}
+      {/*счетчик теперь кликабельный */}
       <div className={s.commentsLink} onClick={() => setIsCommentsOpen(!isCommentsOpen)} style={{ cursor: 'pointer' }}>
         View All Comments ({totalCommentsCount})
       </div>
