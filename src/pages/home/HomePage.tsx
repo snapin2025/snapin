@@ -44,9 +44,7 @@ export const HomePage = async () => {
       <RegisteredUsers totalCount={totalCountUsers} />
       <ul className={s.userPostsList}>
         {limitedPosts?.map((post) => (
-          // <HomePostsList key={post.id} post={post} />
-          // моя компонента
-          <FeedPostCard key={post.id} post={post} isFollowing={false} />
+          <HomePostsList key={post.id} post={post} />
         ))}
       </ul>
     </div>
