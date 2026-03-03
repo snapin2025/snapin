@@ -1,0 +1,179 @@
+
+.container {
+  position: relative;
+  max-width: 490px;
+  margin: 0 auto 10px;
+
+}
+
+.menuContainer {
+  position: absolute;
+  top: 6px;
+  right: 12px;
+  z-index: 10;
+}
+
+/*для блока сверху*/
+.postHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.userInfo {
+  display: flex;
+  margin-top: 17px;
+  gap: 12px;
+}
+
+.userMeta {
+  align-items: center;
+  max-width: 443px;
+}
+
+.descriptionText {
+  word-break: break-word;
+  font-size: 14px;
+  line-height: 24px;
+}
+
+.userName {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 600;
+  margin-right: 2px;
+}
+
+.dot {
+  color: #fff;
+  font-size: 14px;
+  line-height: 2;
+  display: inline-block;
+  margin: 0 2px;
+}
+
+.time {
+  font-size: 12px;
+  line-height: 24px;
+  color: #8D9094;
+}
+
+/*блок соцсети*/
+.actionsContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  margin-top: 12px;
+}
+
+.actionsLeft {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+/* Скрываем ненужные блоки из чужого компонента */
+.container :global(.homePostsList-module__G6KuQG__userInfo) {
+  display: none;
+}
+
+.container :global(.homePostsList-module__G6KuQG__time) {
+  display: none;
+}
+
+.container :global(.homePostsList-module__G6KuQG__descriptionText) {
+  display: none;
+}
+
+.socialButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* переопределения стилей для кнопки */
+.socialButton:global(.button-module__6tk32G__primary):hover,
+.socialButton:global(.button-module__6tk32G__primary):focus,
+.socialButton:global(.button-module__6tk32G__primary) {
+  border: none;
+  outline: none;
+  padding: 0;
+  color: inherit;
+  background: none;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+}
+
+.likesCount {
+  font-weight: 600;
+  padding: 8px 16px 4px;
+  color: #ffffff;
+  margin-top: 30px;
+}
+
+.commentsLink {
+  color: #8e8e8e;
+  padding: 4px 16px;
+  cursor: pointer;
+}
+
+.addComment {
+  padding: 12px 16px;
+  border-top: 1px solid #2c2c2c;
+  color: #8e8e8e;
+  margin-top: 8px;
+}
+
+/*для коментарий */
+.commentsLink {
+  color: #8D9094;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 24px;
+  font-weight: 400;
+}
+
+.commentsLink:hover {
+  color: #ffffff;
+}
+
+.divider {
+  height: 2px;
+  background-color: #2c2c2c;
+  width: 100%;
+  margin-top: 8px;
+}
+
+/*стили для коментариев*/
+.commentsList {
+  max-width: 443px;
+  margin-top: 12px;
+
+}
+
+.commentItem {
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 12px;
+  flex-wrap: wrap;
+  margin-left: 15px;
+
+}
+
+.commentText {
+  color: #fff;
+  word-break: break-word;
+  flex: 1;
+}
+
+.userName {
+  color: #fff;
+  font-weight: 400;
+  white-space: nowrap;
+  min-width: fit-content;
+}

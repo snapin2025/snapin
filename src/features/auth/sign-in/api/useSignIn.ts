@@ -4,6 +4,7 @@ import { SignInForm } from '../model/validation'
 import { UseFormSetError } from 'react-hook-form'
 import { handleFormError } from '@/shared/lib/errors'
 import { userApi } from '@/entities/user'
+import { emitAccessTokenChanged } from '@/shared/lib/auth/accessTokenEvents'
 
 export const useLoginMutation = (setError: UseFormSetError<SignInForm>) => {
   const qc = useQueryClient()
@@ -12,6 +13,7 @@ export const useLoginMutation = (setError: UseFormSetError<SignInForm>) => {
     onSuccess: async (data) => {
       if (typeof window !== 'undefined') {
         localStorage.setItem('accessToken', data.accessToken)
+        emitAccessTokenChanged(data.accessToken)
       }
       await qc.invalidateQueries({ queryKey: ['me'] })
     },

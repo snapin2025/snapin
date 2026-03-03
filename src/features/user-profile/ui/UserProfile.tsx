@@ -17,7 +17,6 @@ type Props = {
 
 export const UserProfile = ({ userId, pageSize = 8 }: Props) => {
   const {
-    profileData,
     postsData,
     isPostsLoading,
     isFetchingNextPage,
@@ -27,6 +26,13 @@ export const UserProfile = ({ userId, pageSize = 8 }: Props) => {
     fetchNextPage,
     hasNextPage,
     profileOwner,
+    profileUserName,
+    isFollowing,
+    isProfileInfoLoading,
+    hasProfileInfo,
+    followingCount,
+    followersCount,
+    publicationsCount,
     displayName,
     avatarUrl,
     bio,
@@ -38,9 +44,9 @@ export const UserProfile = ({ userId, pageSize = 8 }: Props) => {
   const allPosts = postsData?.pages.flatMap((page) => page.items) ?? []
 
   const stats = {
-    following: profileData?.followingCount ?? 0,
-    followers: profileData?.followersCount ?? 0,
-    publications: profileData?.publicationsCount ?? 0
+    following: followingCount,
+    followers: followersCount,
+    publications: publicationsCount
   }
 
   // Обработка бесконечной прокрутки через Intersection Observer
@@ -54,7 +60,7 @@ export const UserProfile = ({ userId, pageSize = 8 }: Props) => {
   })
 
   // Показываем скелетон при начальной загрузке (ПОСЛЕ всех Hooks)
-  if (isLoading && !profileData && !postsData) {
+  if ((isLoading || isProfileInfoLoading) && !hasProfileInfo) {
     return <ProfileSkeleton />
   }
 
@@ -72,7 +78,13 @@ export const UserProfile = ({ userId, pageSize = 8 }: Props) => {
           <div className={s.titleRow}>
             <span className={s.userName}>{displayName}</span>
             <div className={s.actions}>
-              <ProfileActions profileOwner={profileOwner} />
+              <ProfileActions
+                profileOwner={profileOwner}
+                profileId={userId}
+                profileUserName={profileUserName}
+                isFollowing={isFollowing}
+                isProfileInfoLoading={isProfileInfoLoading}
+              />
             </div>
           </div>
 

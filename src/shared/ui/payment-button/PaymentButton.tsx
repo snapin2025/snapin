@@ -1,8 +1,10 @@
 import { ComponentPropsWithoutRef } from 'react'
 import { Button } from '../button'
-import { PayPal, Stripe } from '../icons'
+// import { PayPal, Stripe } from '../icons'
 import s from './payment-button.module.css'
 import { clsx } from 'clsx'
+import { PayPal } from '@/shared/ui/icons/PayPal'
+import { Stripe } from '@/shared/ui/icons/Stripe'
 
 type PaymentButtonProps = {
   variant: 'paypal' | 'stripe'
