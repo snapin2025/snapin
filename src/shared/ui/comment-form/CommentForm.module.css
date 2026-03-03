@@ -1,23 +1,30 @@
-/*стили для  */
 .container {
   display: flex;
   align-items: center;
   gap: 8px;
   width: 100%;
-  background: none;
+  background: transparent;
   border: none;
-  color: #2f68cc;
+  color: var(--color-accent-500);
+}
+
+.fieldcoment {
+  flex: 1;
+  min-width: 0;
 }
 
 .inputcoment {
+  width: 100%;
   border: none;
-  color: #fff;
-  min-width: 373px;
-  margin-right: 36px;
+  color: var(--color-light-100);
+  min-width: 0;
+  margin-right: 0;
+  padding: 0;
+  background: transparent;
 }
 
 .inputcoment::placeholder {
-  color: #8D9094;
+  color: var(--color-light-900);
 }
 
 .inputcoment:focus {
@@ -33,31 +40,32 @@
 .buttoncoment {
   background: none;
   border: none;
-  color: #2f68cc;
+  color: var(--color-accent-500);
   cursor: pointer;
   font-weight: 600;
+  padding: 0;
+  min-width: 64px;
+  text-align: right;
 }
 
 .buttoncoment:focus,
 .buttoncoment:hover {
   opacity: 0.8;
   border: none;
-  color: #2f68cc;
+  color: var(--color-accent-500);
   background: none;
 }
 
 .buttoncoment:disabled {
-  opacity: 0.3;
+  opacity: 0.55;
   cursor: not-allowed;
   background: none;
-  color: #f1f5f9;
+  color: var(--color-light-900);
 }
 
-/*для ошибок*/
 .errorMessage {
   color: #ff4d4f;
   font-size: 12px;
   margin-top: 4px;
   display: block;
 }
-

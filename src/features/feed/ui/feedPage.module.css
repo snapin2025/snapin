@@ -1,0 +1,27 @@
+.container {
+  width: 100%;
+  padding: 24px 0;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.item {
+  list-style: none;
+}
+
+.state {
+  min-height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-light-900);
+  text-align: center;
+  padding: 16px;
+}
