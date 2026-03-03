@@ -4,7 +4,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ComponentType, PropsWithChildren, useState } from 'react'
 import DropMenu from '@/shared/ui/dropdown/DropMenu'
 import type { User } from '@/entities/user'
-
 const QueryWrapper = ({ children }: PropsWithChildren) => {
   const [client] = useState(() => new QueryClient())
   return <QueryClientProvider client={client}>{children}</QueryClientProvider>
@@ -62,6 +61,7 @@ export const OtherUserPost: Story = {
   args: {
     ownerId: 456,
     currentUserId: 123,
+    isFollowing: false,
     onFollow: () => console.log('Follow clicked'),
     onUnfollow: () => console.log('Unfollow clicked')
   }

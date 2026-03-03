@@ -125,8 +125,7 @@ type DropMenuProps = {
   onCopyLink?: () => void
   ownerId: number
   currentUserId?: number | null
-  isFollowing?: boolean //  не должно стоять нала
-  isFollowPending?: boolean
+  isFollowing?: boolean // Добавила длямоего файла
 }
 
 export const DropMenu = ({
@@ -137,8 +136,7 @@ export const DropMenu = ({
   onCopyLink,
   ownerId,
   currentUserId,
-  isFollowing = false, // по умолчанию стоит не null,а false
-  isFollowPending = false
+  isFollowing
 }: DropMenuProps) => {
   const [open, setOpen] = useState(false)
 
@@ -184,30 +182,48 @@ export const DropMenu = ({
       )}
 
       {canFollow && (
-        <DropdownMenu.Item
-          className={s.DropdownMenuItem}
-          disabled={isFollowPending}
-          onSelect={(event) => {
-            event.preventDefault()
-            setOpen(false)
-            isFollowing ? onUnfollow?.() : onFollow?.()
-          }}
-        >
-          {isFollowing ? (
-            <>
+        <>
+          {/* Пункт "Подписаться" (с иконкой плюса) */}
+          {isFollowing ? ( // дабавила сюда так надо менють пункт меню
+            // Если подписан - показываем Unfollow
+            <DropdownMenu.Item
+              className={s.DropdownMenuItem}
+              onSelect={(event) => {
+                event.preventDefault()
+                setOpen(false)
+                // onFollow?.()
+                onUnfollow?.() // дабавила
+              }}
+            >
+              {/*дабавила иконку UnfollowIcon */}
               <UnfollowIcon className={s.icon} />
+              {/*<FollowIcon className={s.icon} />*/}
+              {/*Follow*/}
               Unfollow
-            </>
+            </DropdownMenu.Item>
           ) : (
-            <>
+            //дабавила сюда так меняем с одного на другой пунк
+            <DropdownMenu.Item
+              className={s.DropdownMenuItem}
+              onSelect={(event) => {
+                event.preventDefault()
+                setOpen(false)
+                onFollow?.()
+                // onUnfollow?.()
+              }}
+            >
+              {/*//было FollowIcon*/}
               <FollowIcon className={s.icon} />
+              {/*<UnfollowIcon className={s.icon} />*/}
               Follow
-            </>
+              {/*было  Unfollow*/}
+              {/*Unfollow*/}
+            </DropdownMenu.Item>
+            // дабавила сюда скобку
           )}
-        </DropdownMenu.Item>
+        </>
       )}
-
-      {/* Copy Link - всегда показываем */}
+      {/* ✅ CopyLink ВСЕГДА, вне canFollow */}
       <DropdownMenu.Item
         className={s.DropdownMenuItem}
         onSelect={(event) => {
