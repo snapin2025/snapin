@@ -37,7 +37,7 @@ export const Sidebar = () => {
   }
 
   const navItems: NavItem[] = [
-    { name: 'Feed', href: ROUTES.HOME, icon: Home },
+    { name: 'Feed', href: ROUTES.FEED, icon: Home },
     { name: 'Create', icon: PlusSquare, onClick: handleCreateClick },
     { name: 'My Profile', href: user ? ROUTES.APP.USER_PROFILE(user.userId) : '#', icon: Profile },
     { name: 'Messenger', href: ROUTES.APP.MESSENGER, icon: Message, badgeCount: unreadCount },

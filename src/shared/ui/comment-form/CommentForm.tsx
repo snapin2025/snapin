@@ -60,8 +60,8 @@ export const CommentForm = ({ postId, onSuccess }: CommentFormProps) => {
         />
         {errors.content && <span className={s.errorMessage}>{errors.content.message}</span>}
       </div>
-      <Button asChild variant="primary" className={s.buttoncoment} disabled={!isValid} type="submit">
-        <button>Publish</button>
+      <Button variant="textButton" className={s.buttoncoment} disabled={!isValid} type="submit">
+        Publish
       </Button>
     </form>
   )
