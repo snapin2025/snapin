@@ -6,10 +6,13 @@ import {
   ConfirmRequest,
   EmailResendingErrorResponse,
   EmailResendingRequest,
+  FollowUserPayload,
   LogoutResponse,
   PersonalData,
   PersonalDataRequest,
   PublicUserProfile,
+  SearchUsersParams,
+  SearchUsersResponse,
   ResendRecoveryEmailType,
   SendRecoveryEmailType,
   SetNewPasswordType,
@@ -91,6 +94,24 @@ export const userApi = {
   getPublicUserProfile: async (profileId: number): Promise<PublicUserProfile> => {
     const response = await api.get<PublicUserProfile>(`/public-user/profile/${profileId}`)
     return response.data
+  },
+  searchUsers: async (params: SearchUsersParams): Promise<SearchUsersResponse> => {
+    const response = await api.get<SearchUsersResponse>('/users', {
+      params: {
+        search: params.search,
+        pageSize: params.pageSize ?? 12,
+        pageNumber: params.pageNumber,
+        cursor: params.cursor ?? 0
+      }
+    })
+
+    return response.data
+  },
+  followUser: async (payload: FollowUserPayload): Promise<void> => {
+    await api.post('/users/following', payload)
+  },
+  unfollowUser: async (userId: number): Promise<void> => {
+    await api.delete(`/users/follower/${userId}`)
   }
 }
 //  для пользователя  при редактирования  своих даных в форме

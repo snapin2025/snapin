@@ -1,7 +1,13 @@
 export { userApi } from './api/user'
-export { useUserProfile } from './model/useUserProfile'
+export { useUserProfile, usePublicUserProfile } from './model/useUserProfile'
+export { useToggleFollowUser } from './model/useToggleFollowUser'
+export { useSearchUsers } from './model/useSearchUsers'
 export type {
   User,
+  PublicUserProfile,
+  SearchUser,
+  SearchUsersParams,
+  SearchUsersResponse,
   SignInRequest,
   SignInResponse,
   SignUpRequest,

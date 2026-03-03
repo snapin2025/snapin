@@ -41,9 +41,11 @@ export const useUserPosts = ({ userId, pageSize = 8 }: UseUserPostsParams) => {
     },
     initialPageParam: null, // Первый запрос без cursor
     enabled: Number.isFinite(userId) && userId > 0, // Запрос выполняется только при валидном userId
+    staleTime: 0, // Всегда получаем актуальные посты
+    gcTime: 30_000, // 30 секунд в кэше
     retry: 1, // Одна повторная попытка при ошибке
     refetchOnWindowFocus: false, // Не перезагружать при возврате на вкладку
-    refetchOnMount: false, // Не перезагружать при монтировании - предотвращает лишние запросы при закрытии модального окна поста
+    refetchOnMount: true, // Рефетч при монтировании для актуальных данных при навигации
     refetchOnReconnect: true // Обновлять при восстановлении соединения
   })
 }

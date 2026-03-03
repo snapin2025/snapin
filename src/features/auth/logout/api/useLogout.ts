@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import { userApi } from '@/entities/user'
 import { ROUTES } from '@/shared/lib/routes'
+import { emitAccessTokenChanged } from '@/shared/lib/auth/accessTokenEvents'
 
 export const useLogout = () => {
   const queryClient = useQueryClient()
@@ -13,6 +14,7 @@ export const useLogout = () => {
       // Удаляем токен из localStorage
       if (typeof window !== 'undefined') {
         localStorage.removeItem('accessToken')
+        emitAccessTokenChanged(null)
       }
 
       // Устанавливаем данные пользователя в null (без нового запроса)
@@ -31,6 +33,7 @@ export const useLogout = () => {
       // Даже при ошибке очищаем локальные данные
       if (typeof window !== 'undefined') {
         localStorage.removeItem('accessToken')
+        emitAccessTokenChanged(null)
       }
 
       // Устанавливаем данные пользователя в null

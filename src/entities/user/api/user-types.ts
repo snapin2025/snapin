@@ -22,6 +22,36 @@ export type UserProfileResponse = {
   publicationsCount: number
 }
 
+export type FollowUserPayload = {
+  selectedUserId: number
+}
+
+export type SearchUsersParams = {
+  search: string
+  pageSize?: number
+  pageNumber?: number
+  cursor?: number
+}
+
+export type SearchUser = {
+  id: number
+  userName: string
+  firstName: string
+  lastName: string
+  avatars: Avatar[]
+  createdAt: string
+}
+
+export type SearchUsersResponse = {
+  totalCount: number
+  pagesCount: number
+  page: number
+  pageSize: number
+  prevCursor: number
+  nextCursor: number
+  items: SearchUser[]
+}
+
 export type SignInRequest = {
   email: string
   password: string
