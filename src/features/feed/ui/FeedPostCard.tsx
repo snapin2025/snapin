@@ -15,6 +15,8 @@ import { PostLikes } from '@/features/posts/view-post/ui'
 import { LikeButton } from '@/shared/ui/like-button'
 import { CommentForm } from '@/shared/ui/comment-form'
 import { CreateCommentResponse } from '@/features/posts/post-comments/model/types'
+import { useComments } from '@/features/posts/post-comments/api/useComments'
+// добавляем хук для получения комментариев
 
 type FeedPostCardProps = {
   post: Post
@@ -32,8 +34,14 @@ export const FeedPostCard = ({
   // Состояние для новых комментариев
   const [newComments, setNewComments] = useState<CreateCommentResponse[]>([])
   // Состояние для счетчика
-  // Временно используем 0
   const [commentsCount, setCommentsCount] = useState(0)
+
+  // получаем комментарии с сервера
+  const { data: serverComments } = useComments({ postId: post.id })
+  // объединяем комментарии с сервера и новые
+  const allComments = [...(serverComments?.items || []), ...newComments]
+  // общее количество комментариев
+  const totalCommentsCount = (serverComments?.items?.length || 0) + newComments.length
 
   const { follow, unfollow } = useFollow()
   const [isFollowing, setIsFollowing] = useState(initialIsFollowing)
@@ -102,11 +110,12 @@ export const FeedPostCard = ({
       {/* ЛАЙКИ */}
       <PostLikes key={post.id} likesCount={post.likesCount} avatars={post.avatarWhoLikes} />
 
-      {/* Новые комментарии - С АВАТАРОМ КОММЕНТАТОРА */}
-      {newComments.length > 0 && (
+      {/* показываем все комментарии (и с сервера, и новые) */}
+      {allComments.length > 0 && (
         <div className={s.commentsList}>
-          {newComments.map((comment) => (
-            <div key={comment.id} className={s.commentItem}>
+          {allComments.map((comment) => (
+            <div key={`${comment.id}-${Math.random()}`} className={s.commentItem}>
+              {/*<div key={comment.id} className={s.commentItem}>*/}
               <Avatar src={comment.from?.avatars?.[0]?.url || ''} alt={comment.from?.username || 'User'} size="small" />
               <span className={s.userName}>{comment.from?.username}</span>
               <span className={s.commentText}>{comment.content}</span>
@@ -115,10 +124,10 @@ export const FeedPostCard = ({
         </div>
       )}
 
-      {/* Счетчик комментариев */}
-      <div className={s.commentsLink}>View All Comments ({commentsCount})</div>
+      {/* счетчик комментариев (обновленный) */}
+      <div className={s.commentsLink}>View All Comments ({totalCommentsCount})</div>
 
-      {/* Форма комментария */}
+      {/* форма комментария */}
       <CommentForm
         postId={post.id}
         onSuccess={(newComment: CreateCommentResponse) => {
