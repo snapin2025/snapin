@@ -78,6 +78,7 @@ export const DropMenu = ({
             // Если подписан - показываем Unfollow
             <DropdownMenu.Item
               className={s.DropdownMenuItem}
+             
               onSelect={(event) => {
                 event.preventDefault()
                 setOpen(false)
@@ -95,6 +96,7 @@ export const DropMenu = ({
             //дабавила сюда так меняем с одного на другой пунк
             <DropdownMenu.Item
               className={s.DropdownMenuItem}
+             
               onSelect={(event) => {
                 event.preventDefault()
                 setOpen(false)

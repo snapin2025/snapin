@@ -32,11 +32,11 @@ export const PostModalHeader = ({
   } = useUserProfile(canToggleFollow && user ? userName : null)
   const { toggleFollow, isPending } = useToggleFollowUser(user?.userName)
 
-  const isFollowing = canToggleFollow ? (relationProfile?.isFollowing ?? null) : null
+  const isFollowing = canToggleFollow ? relationProfile?.isFollowing : undefined
   const isFollowStatusLoading =
-    canToggleFollow && ((isProfileLoading && !relationProfile) || (isProfileFetching && isFollowing === null))
+    canToggleFollow && ((isProfileLoading && !relationProfile) || (isProfileFetching && isFollowing === undefined))
   const handleToggleFollow = () =>
-    isFollowing !== null &&
+    isFollowing !== undefined &&
     toggleFollow({
       profileId: ownerId,
       userName,
