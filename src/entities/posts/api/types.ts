@@ -52,7 +52,7 @@ export type Post = {
   images: ImagePost[]
   isLiked: boolean
   likesCount: number
-  location: null
+  location: string | null
   owner: Owner
   ownerId: number
   updatedAt: string
@@ -64,6 +64,22 @@ export type ResponsesPosts = {
   pageSize: number
   items: Post[]
   totalUsers: number
+}
+
+export type FeedPostsResponse = {
+  totalCount: number
+  pagesCount: number
+  page: number
+  pageSize: number
+  prevCursor: number
+  nextCursor: number
+  items: Post[]
+}
+
+export type GetFeedPostsParams = {
+  pageSize?: number
+  pageNumber?: number
+  endCursorPostId?: number
 }
 
 export type GetCommentsParams = {
