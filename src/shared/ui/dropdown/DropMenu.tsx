@@ -126,6 +126,7 @@ type DropMenuProps = {
   ownerId: number
   currentUserId?: number | null
   isFollowing?: boolean // Добавила длямоего файла
+  isFollowPending?: boolean
 }
 
 export const DropMenu = ({
@@ -136,7 +137,8 @@ export const DropMenu = ({
   onCopyLink,
   ownerId,
   currentUserId,
-  isFollowing
+  isFollowing,
+  isFollowPending = false
 }: DropMenuProps) => {
   const [open, setOpen] = useState(false)
 
@@ -188,6 +190,7 @@ export const DropMenu = ({
             // Если подписан - показываем Unfollow
             <DropdownMenu.Item
               className={s.DropdownMenuItem}
+              disabled={isFollowPending}
               onSelect={(event) => {
                 event.preventDefault()
                 setOpen(false)
@@ -205,6 +208,7 @@ export const DropMenu = ({
             //дабавила сюда так меняем с одного на другой пунк
             <DropdownMenu.Item
               className={s.DropdownMenuItem}
+              disabled={isFollowPending}
               onSelect={(event) => {
                 event.preventDefault()
                 setOpen(false)

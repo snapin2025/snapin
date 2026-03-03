@@ -5,6 +5,7 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 // import { Bell } from '@/shared/ui/icons'
 
 import { getTimeDifference } from '@/shared/lib/getTimeDifference'
+import { useInfiniteScroll } from '@/shared/lib'
 import { clsx } from 'clsx'
 import s from './NotificationBell.module.css'
 import { useNotifications } from '@/entities/notification/model/useNotifications'
