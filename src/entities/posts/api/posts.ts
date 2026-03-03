@@ -8,6 +8,8 @@ import {
   CreatePostPayload,
   CreatePostResponse,
   EditPost,
+  FeedPostsResponse,
+  GetFeedPostsParams,
   GetCommentsParams,
   Post,
   PostImagesPayload,
@@ -41,6 +43,24 @@ export const postsApi = {
       }
     })
     return data
+  },
+  getFeedPosts: async (params?: GetFeedPostsParams): Promise<FeedPostsResponse> => {
+    const { pageSize = 12, pageNumber, endCursorPostId = 0 } = params ?? {}
+    const { data } = await api.get<FeedPostsResponse>('/home/publications-followers', {
+      params: {
+        pageSize,
+        pageNumber,
+        endCursorPostId
+      }
+    })
+
+    return {
+      ...data,
+      items: data.items.map((post) => ({
+        ...post,
+        avatarWhoLikes: Array.isArray(post.avatarWhoLikes) ? post.avatarWhoLikes : []
+      }))
+    }
   },
   createPost: async (payload: CreatePostPayload): Promise<CreatePostResponse> => {
     const { data } = await api.post<CreatePostResponse>('/posts', payload)
