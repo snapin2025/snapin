@@ -16,7 +16,6 @@ import { LikeButton } from '@/shared/ui/like-button'
 import { CommentForm } from '@/shared/ui/comment-form'
 import { CreateCommentResponse } from '@/features/posts/post-comments/model/types'
 import { useComments } from '@/features/posts/post-comments/api/useComments'
-// добавляем хук для получения комментариев
 
 type FeedPostCardProps = {
   post: Post
