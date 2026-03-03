@@ -14,17 +14,20 @@ import { useAuth } from '@/shared/lib'
 import { CreatePostDialog } from '@/features/posts/create-post/ui/CreatePostDialog'
 import { PlusSquare } from '@/shared/ui/icons/PlusSquare'
 import { TrendingIcon } from '@/shared/ui/icons/TrendingIcon'
+import { useMessengerUnreadCount } from '@/entities/messenger'
 
 type NavItem = {
   name: string
   href?: string
   icon: React.ComponentType<React.SVGProps<SVGSVGElement>>
   onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void
+  badgeCount?: number
 }
 
 export const Sidebar = () => {
   const pathname = usePathname()
   const { user } = useAuth()
+  const { unreadCount } = useMessengerUnreadCount()
 
   const [isCreateOpen, setIsCreateOpen] = useState(false)
 
@@ -37,7 +40,7 @@ export const Sidebar = () => {
     { name: 'Feed', href: ROUTES.HOME, icon: Home },
     { name: 'Create', icon: PlusSquare, onClick: handleCreateClick },
     { name: 'My Profile', href: user ? ROUTES.APP.USER_PROFILE(user.userId) : '#', icon: Profile },
-    { name: 'Messenger', href: ROUTES.APP.MESSENGER, icon: Message },
+    { name: 'Messenger', href: ROUTES.APP.MESSENGER, icon: Message, badgeCount: unreadCount },
     { name: 'Search', href: ROUTES.APP.SEARCH, icon: Search },
     { name: 'Statistics', href: ROUTES.APP.STATISTICS, icon: TrendingIcon },
     { name: 'Favorites', href: ROUTES.APP.FAVORITES, icon: Bookmark }
@@ -67,7 +70,14 @@ export const Sidebar = () => {
                 prefetch={false}
                 className={clsx(s.link, active && s.active, isSearch && s.searchItem)}
               >
-                <Icon className={s.icon} />
+                <span className={s.iconWithBadge}>
+                  <Icon className={s.icon} />
+                  {!!item.badgeCount && (
+                    <span className={s.badge} aria-label={`${item.badgeCount} unread messages`}>
+                      {item.badgeCount > 99 ? '99+' : item.badgeCount}
+                    </span>
+                  )}
+                </span>
                 <span className={s.text}>{item.name}</span>
               </Link>
             )

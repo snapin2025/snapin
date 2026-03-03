@@ -1,5 +1,6 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios'
 import https from 'https'
+import { emitAccessTokenChanged } from '@/shared/lib/auth/accessTokenEvents'
 
 // Настройка для работы с самоподписанными сертификатами (только для SSR на сервере)
 // В браузере это не нужно, так как браузер сам обрабатывает сертификаты
@@ -49,6 +50,7 @@ api.interceptors.response.use(
         // Если это сам запрос на обновление токена вернул 401, значит refreshToken невалидный
         if (typeof window !== 'undefined') {
           localStorage.removeItem('accessToken')
+          emitAccessTokenChanged(null)
           window.location.href = '/sign-in'
         }
         return Promise.reject(error)
@@ -70,6 +72,7 @@ api.interceptors.response.use(
         // Сохраняем токен только на клиенте
         if (typeof window !== 'undefined') {
           localStorage.setItem('accessToken', newToken)
+          emitAccessTokenChanged(newToken)
         }
 
         // Повторяем оригинальный запрос с новым токеном
@@ -86,6 +89,7 @@ api.interceptors.response.use(
         // Если обновление токена не удалось (нет refreshToken или он невалидный)
         if (typeof window !== 'undefined') {
           localStorage.removeItem('accessToken')
+          emitAccessTokenChanged(null)
           // Для запросов на /auth/me не редиректим сразу, чтобы избежать циклов
           const isMeRequest = originalRequest?.url?.includes('/auth/me')
           if (!isMeRequest) {
@@ -100,6 +104,7 @@ api.interceptors.response.use(
     if (error.response?.status === 401 && originalRequest._retry) {
       if (typeof window !== 'undefined') {
         localStorage.removeItem('accessToken')
+        emitAccessTokenChanged(null)
         const isMeRequest = originalRequest?.url?.includes('/auth/me')
         if (!isMeRequest) {
           window.location.href = '/sign-in'

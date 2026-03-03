@@ -20,9 +20,11 @@ export const useUserProfile = (userName: string | null | undefined) => {
       return result
     },
     enabled: !!userName && userName.trim().length > 0,
-    staleTime: 2 * 60_000, // 2 минуты - данные профиля не меняются часто
-    gcTime: 5 * 60_000, // 5 минут в кэше
-    retry: 1
+    staleTime: 0, // Всегда считаем данные устаревшими
+    gcTime: 30_000, // 30 секунд в кэше (короткий период для актуальности)
+    retry: 1,
+    refetchOnMount: 'always', // ВСЕГДА рефетчим при монтировании
+    refetchOnWindowFocus: true // Обновляем при возврате на вкладку
   })
 }
 
@@ -38,8 +40,10 @@ export const usePublicUserProfile = (profileId: number | null | undefined) => {
     queryKey: ['public-user-profile', profileId],
     queryFn: () => userApi.getPublicUserProfile(profileId!),
     enabled: !!profileId && profileId > 0,
-    staleTime: 2 * 60_000, // 2 минуты - данные профиля не меняются часто
-    gcTime: 5 * 60_000, // 5 минут в кэше
-    retry: 1
+    staleTime: 0, // Всегда считаем данные устаревшими
+    gcTime: 30_000, // 30 секунд в кэше (короткий период для актуальности)
+    retry: 1,
+    refetchOnMount: 'always', // ВСЕГДА рефетчим при монтировании (не зависит от staleTime)
+    refetchOnWindowFocus: true // Обновляем при возврате на вкладку
   })
 }
