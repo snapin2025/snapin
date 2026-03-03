@@ -2,12 +2,13 @@
 
 import { useRef, useState, useCallback } from 'react'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
-import { Bell } from '@/shared/ui/icons'
-import { useInfiniteScroll } from '@/shared/lib/hooks/useInfiniteScroll'
+// import { Bell } from '@/shared/ui/icons'
+
 import { getTimeDifference } from '@/shared/lib/getTimeDifference'
 import { clsx } from 'clsx'
 import s from './NotificationBell.module.css'
 import { useNotifications } from '@/entities/notification/model/useNotifications'
+import { Bell } from '@/shared/ui/icons/Bell'
 
 export const NotificationBell = () => {
   const [open, setOpen] = useState(false)
