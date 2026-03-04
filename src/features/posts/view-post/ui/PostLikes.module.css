@@ -1,51 +1,9 @@
-/*стили для счетчика*/
-
-/*.likesBlock {*/
-/*  display: flex;*/
-/*  align-items: center;*/
-/*  gap: 8px;*/
-/*  margin: 30px 0 ;*/
-/*}*/
-
-/*.avatars {*/
-/*  display: flex;*/
-/*  align-items: center;*/
-/*  flex-direction: row-reverse;*/
-/*}*/
-
-/*!* Каждая аватарка накладывается на следующую *!*/
-/*.avatars > * {*/
-/*  margin-left: -5px;*/
-/*}*/
-
-/*!* Первая (теперь последняя) не сдвигается *!*/
-/*.avatars > *:last-child {*/
-/*  margin-left: 10px;*/
-/*}*/
-
-/*!* Стили для аватарок *!*/
-/*.avatars > * {*/
-/*  border: 1px solid #1a1a1a;*/
-/*  border-radius: 50%;*/
-/*}*/
-
-
-
-/*.count {*/
-/*  font-size: 14px;*/
-/*  line-height: 24px;*/
-/*  color: var(--color-light-100);*/
-/*  margin-left: 10px;*/
-/*}*/
-
-
-
-
 .likesBlock {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin: 30px 0 ;
+  margin: 4px 8px 10px;
+  min-height: 24px;
 }
 
 .avatars {
@@ -54,24 +12,24 @@
   flex-direction: row-reverse;
 }
 
-/* Стили для аватарок - добавил размеры */
 .avatars > * {
   width: 24px;
   height: 24px;
-  margin-left: -5px;
+  margin-left: -6px;
   border: 1px solid #1a1a1a;
   border-radius: 50%;
-  object-fit: cover;  /* чтобы картинка не сплющивалась */
+  object-fit: cover;
 }
 
-/* Первая (теперь последняя) не сдвигается */
 .avatars > *:last-child {
-  margin-left: 10px;
+  margin-left: 0;
 }
 
 .count {
   font-size: 14px;
-  line-height: 24px;  /* теперь одинаково с высотой аватарок */
+  line-height: 24px;
   color: var(--color-light-100);
-  margin-left: 10px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
 }

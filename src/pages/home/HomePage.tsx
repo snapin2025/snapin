@@ -2,8 +2,6 @@ import s from './homePage.module.css'
 import { RegisteredUsers } from '@/widgets/registeredUsers/RegisteredUsers'
 import { HomePostsList } from '@/widgets'
 import { ResponsesPosts } from '@/entities/posts/api/types'
-
-import { FeedPostCard } from '@/features/feed/ui/FeedPostCard' // 👈 импортируем твой компонент
 // SSG: Страница будет статически сгенерирована на этапе сборки
 // ISR: Страница будет перегенерирована каждые 60 секунд при запросах
 export const revalidate = 60
