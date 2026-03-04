@@ -14,6 +14,7 @@ import { LikeButton } from '@/shared/ui/like-button'
 import { CommentForm } from '@/shared/ui/comment-form'
 import { CreateCommentResponse } from '@/features/posts/post-comments/model/types'
 import { PostImageSlider } from '@/shared/lib/post-image-slider'
+import { useComments } from '@/features/posts/post-comments/api/useComments'
 
 type FeedPostCardProps = {
   post: Post
@@ -30,9 +31,13 @@ export const FeedPostCard = ({
 
   // Состояние для новых комментариев
   const [newComments, setNewComments] = useState<CreateCommentResponse[]>([])
-  // Состояние для счетчика
-  // Временно используем 0
-  const [commentsCount, setCommentsCount] = useState(0)
+
+  // получаем комментарии с сервера
+  const { data: serverComments } = useComments({ postId: post.id })
+  // объединяем комментарии с сервера и новые
+  const allComments = [...(serverComments?.items || []), ...newComments]
+  // общее количество комментариев
+  const totalCommentsCount = (serverComments?.items?.length || 0) + newComments.length
 
   const { follow, unfollow } = useFollow()
   const [isFollowing, setIsFollowing] = useState(initialIsFollowing)
@@ -117,8 +122,8 @@ export const FeedPostCard = ({
 
       {newComments.length > 0 && (
         <div className={s.commentsList}>
-          {newComments.map((comment) => (
-            <div key={comment.id} className={s.commentItem}>
+          {allComments.map((comment) => (
+            <div key={`${comment.id}-${Math.random()}`} className={s.commentItem}>
               <Avatar src={comment.from?.avatars?.[0]?.url || ''} alt={comment.from?.username || 'User'} size="small" />
               <span className={s.commentUserName}>{comment.from?.username}</span>
               <span className={s.commentText}>{comment.content}</span>
@@ -127,8 +132,16 @@ export const FeedPostCard = ({
         </div>
       )}
 
-      <div className={s.commentsLink}>View All Comments ({commentsCount})</div>
+      {/* счетчик комментариев (обновленный) */}
+      <div className={s.commentsLink}>View All Comments ({totalCommentsCount})</div>
 
+      {/* форма комментария */}
+      <CommentForm
+        postId={post.id}
+        onSuccess={(newComment: CreateCommentResponse) => {
+          setNewComments((prev) => [...prev, newComment])
+        }}
+      />
       <div className={s.likesBlock}>
         {likesAvatars.length > 0 && (
           <div className={s.likesAvatars}>
