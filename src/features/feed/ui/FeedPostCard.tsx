@@ -120,10 +120,10 @@ export const FeedPostCard = ({
         </div>
       </div>
 
-      {newComments.length > 0 && (
+      {allComments.length > 0 && (
         <div className={s.commentsList}>
           {allComments.map((comment) => (
-            <div key={`${comment.id}-${Math.random()}`} className={s.commentItem}>
+            <div key={`${comment.id}-${comment.createdAt}`} className={s.commentItem}>
               <Avatar src={comment.from?.avatars?.[0]?.url || ''} alt={comment.from?.username || 'User'} size="small" />
               <span className={s.commentUserName}>{comment.from?.username}</span>
               <span className={s.commentText}>{comment.content}</span>
@@ -135,13 +135,6 @@ export const FeedPostCard = ({
       {/* счетчик комментариев (обновленный) */}
       <div className={s.commentsLink}>View All Comments ({totalCommentsCount})</div>
 
-      {/* форма комментария */}
-      <CommentForm
-        postId={post.id}
-        onSuccess={(newComment: CreateCommentResponse) => {
-          setNewComments((prev) => [...prev, newComment])
-        }}
-      />
       <div className={s.likesBlock}>
         {likesAvatars.length > 0 && (
           <div className={s.likesAvatars}>
@@ -158,7 +151,6 @@ export const FeedPostCard = ({
           postId={post.id}
           onSuccess={(newComment: CreateCommentResponse) => {
             setNewComments((prev) => [...prev, newComment])
-            setCommentsCount((prev) => prev + 1)
           }}
         />
       </div>
