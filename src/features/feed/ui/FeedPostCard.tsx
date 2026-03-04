@@ -12,7 +12,6 @@ import { Bookmark, Button, Message, Telegram } from '@/shared/ui'
 import Link from 'next/link'
 import { LikeButton } from '@/shared/ui/like-button'
 import { CommentForm } from '@/shared/ui/comment-form'
-import { CreateCommentResponse } from '@/features/posts/post-comments/model/types'
 import { PostImageSlider } from '@/shared/lib/post-image-slider'
 import { useComments } from '@/features/posts/post-comments/api/useComments'
 
@@ -28,16 +27,20 @@ export const FeedPostCard = ({
   currentUserId: propCurrentUserId
 }: FeedPostCardProps) => {
   const { data: user } = useMe()
+  const [isAllCommentsVisible, setIsAllCommentsVisible] = useState(false)
 
-  // Состояние для новых комментариев
-  const [newComments, setNewComments] = useState<CreateCommentResponse[]>([])
-
-  // получаем комментарии с сервера
   const { data: serverComments } = useComments({ postId: post.id })
-  // объединяем комментарии с сервера и новые
-  const allComments = [...(serverComments?.items || []), ...newComments]
-  // общее количество комментариев
-  const totalCommentsCount = (serverComments?.items?.length || 0) + newComments.length
+  const allComments = Array.from(
+    new Map((serverComments?.items ?? []).map((comment) => [comment.id, comment])).values()
+  )
+  const latestComment =
+    allComments.length > 0
+      ? allComments.reduce((latest, comment) =>
+          new Date(comment.createdAt).getTime() > new Date(latest.createdAt).getTime() ? comment : latest
+        )
+      : null
+  const visibleComments = isAllCommentsVisible ? allComments : latestComment ? [latestComment] : []
+  const totalCommentsCount = allComments.length
 
   const { follow, unfollow } = useFollow()
   const [isFollowing, setIsFollowing] = useState(initialIsFollowing)
@@ -120,9 +123,9 @@ export const FeedPostCard = ({
         </div>
       </div>
 
-      {allComments.length > 0 && (
+      {visibleComments.length > 0 && (
         <div className={s.commentsList}>
-          {allComments.map((comment) => (
+          {visibleComments.map((comment) => (
             <div key={`${comment.id}-${comment.createdAt}`} className={s.commentItem}>
               <Avatar src={comment.from?.avatars?.[0]?.url || ''} alt={comment.from?.username || 'User'} size="small" />
               <span className={s.commentUserName}>{comment.from?.username}</span>
@@ -132,8 +135,15 @@ export const FeedPostCard = ({
         </div>
       )}
 
-      {/* счетчик комментариев (обновленный) */}
-      <div className={s.commentsLink}>View All Comments ({totalCommentsCount})</div>
+      {totalCommentsCount > 1 && (
+        <button className={s.commentsLink} type="button" onClick={() => setIsAllCommentsVisible((prev) => !prev)}>
+          {isAllCommentsVisible ? 'Hide Comments' : `View All Comments (${totalCommentsCount})`}
+        </button>
+      )}
+
+      <div className={s.commentForm}>
+        <CommentForm postId={post.id} />
+      </div>
 
       <div className={s.likesBlock}>
         {likesAvatars.length > 0 && (
@@ -144,15 +154,6 @@ export const FeedPostCard = ({
           </div>
         )}
         <span className={s.likesCount}>{likesLabel}</span>
-      </div>
-
-      <div className={s.commentForm}>
-        <CommentForm
-          postId={post.id}
-          onSuccess={(newComment: CreateCommentResponse) => {
-            setNewComments((prev) => [...prev, newComment])
-          }}
-        />
       </div>
 
       <div className={s.divider} />
