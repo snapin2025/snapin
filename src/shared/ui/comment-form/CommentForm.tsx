@@ -5,10 +5,11 @@ import { Input } from '@/shared/ui'
 import { Button } from '@/shared/ui/button/Button'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { CommentSchema } from '@/features/posts/post-comments/model/validation'
-import { useCreateComment } from '@/features/posts/post-comments/model/useCreateComment'
-import type { CreateCommentParams, CreateCommentResponse } from '@/features/posts/post-comments/model/types'
+import { CommentSchema } from '@/entities/posts/model/validation'
+import { useCreateComment } from '@/entities/posts/model/useCreateComment'
+
 import s from './CommentForm.module.css'
+import { CreateCommentParams, CreateCommentResponse } from '@/entities/posts/api/types'
 
 type CommentFormProps = {
   postId: number
