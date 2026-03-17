@@ -3,7 +3,7 @@
 import { CommentItem } from './CommentItem'
 import { CommentsSkeleton } from '@/shared/ui'
 import s from './CommentsList.module.css'
-import { useComments } from '@/features/posts/post-comments/api/useComments'
+import { useComments } from '@/entities/posts/model/useComments'
 
 type CommentsListProps = {
   postId: number
@@ -42,10 +42,10 @@ export const CommentsList = ({ postId, user }: CommentsListProps) => {
   }
 
   return (
-    <div className={s.commentsList}>
+    <ul className={s.commentsList}>
       {data.items.map((comment) => (
         <CommentItem user={user} key={comment.id} comment={comment} showLike={!!user} />
       ))}
-    </div>
+    </ul>
   )
 }

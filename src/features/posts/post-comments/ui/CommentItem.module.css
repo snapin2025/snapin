@@ -73,3 +73,9 @@
 .likeButton:hover {
   opacity: 0.8;
 }
+
+.answerBtn {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semi-bold);
+  color: var(--color-light-900)
+}

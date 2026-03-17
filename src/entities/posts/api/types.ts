@@ -166,3 +166,41 @@ export type AddAvatarPayload = {
 export type AddAvatarResponse = {
   avatars: Avatar[]
 }
+
+export type CreateCommentParams = {
+  postId: number
+  content: string
+}
+
+// Типы ответа от сервера
+export type CommentAuthor = {
+  id: number
+  username: string
+  avatars: Array<{ url?: string }> // или массив объектов с аватарками
+}
+
+export type CreateCommentResponse = {
+  id: number
+  postId: number
+  from: CommentAuthor
+  content: string
+  createdAt: string
+  answerCount: number
+  likeCount: number
+  isLiked: boolean
+}
+
+export type CreateAnswerParams = {
+  postId: number
+  commentId: number
+  content: string
+}
+
+export type GetAnswersParams = {
+  postId: number
+  commentId: number
+  pageSize?: number
+  pageNumber?: number
+  sortBy?: string
+  sortDirection?: 'asc' | 'desc'
+}

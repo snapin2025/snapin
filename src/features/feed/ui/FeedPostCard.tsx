@@ -13,7 +13,7 @@ import Link from 'next/link'
 import { LikeButton } from '@/shared/ui/like-button'
 import { CommentForm } from '@/shared/ui/comment-form'
 import { PostImageSlider } from '@/shared/lib/post-image-slider'
-import { useComments } from '@/features/posts/post-comments/api/useComments'
+import { useComments } from '@/entities/posts/model/useComments'
 
 type FeedPostCardProps = {
   post: Post

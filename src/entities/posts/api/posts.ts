@@ -16,10 +16,18 @@ import {
   PostImagesResponse,
   ResponsesPosts,
   AddAvatarPayload,
-  AddAvatarResponse
+  AddAvatarResponse,
+  CreateCommentParams,
+  CreateCommentResponse,
+  CreateAnswerParams,
+  GetAnswersParams
 } from '@/entities/posts/api/types'
 
 export const postsApi = {
+  createPost: async (payload: CreatePostPayload): Promise<CreatePostResponse> => {
+    const { data } = await api.post<CreatePostResponse>('/posts', payload)
+    return data
+  },
   deletePost: async (id: number): Promise<void> => {
     await api.delete<void>(`/posts/${id}`)
   },
@@ -32,6 +40,11 @@ export const postsApi = {
     const { data } = await api.get<Post>(`/posts/id/${postId}`)
     return data
   },
+  createComment: ({ postId, content }: CreateCommentParams) => {
+    return api.post<CreateCommentResponse>(`/posts/${postId}/comments`, {
+      content
+    })
+  },
   getComments: async (params: GetCommentsParams): Promise<CommentsResponse> => {
     const { postId, pageSize, pageNumber, sortBy, sortDirection } = params
     const { data } = await api.get<CommentsResponse>(`/posts/${postId}/comments`, {
@@ -42,6 +55,27 @@ export const postsApi = {
         sortBy: sortBy ?? ''
       }
     })
+    return data
+  },
+  createAnswer: async ({ postId, commentId, content }: CreateAnswerParams): Promise<CreateCommentResponse> => {
+    const { data } = await api.post<CreateCommentResponse>(`/posts/${postId}/comments/${commentId}/answers`, {
+      content
+    })
+
+    return data
+  },
+  getAnswers: async (params: GetAnswersParams): Promise<CommentsResponse> => {
+    const { postId, commentId, pageSize, pageNumber, sortBy, sortDirection } = params
+
+    const { data } = await api.get<CommentsResponse>(`/posts/${postId}/comments/${commentId}/answers`, {
+      params: {
+        pageSize: pageSize ?? 6,
+        pageNumber: pageNumber ?? 1,
+        sortBy: sortBy ?? 'createdAt', // по умолчанию сортировка по дате создания
+        sortDirection: sortDirection ?? 'desc' // новые ответы сверху
+      }
+    })
+
     return data
   },
   getFeedPosts: async (params?: GetFeedPostsParams): Promise<FeedPostsResponse> => {
@@ -61,10 +95,6 @@ export const postsApi = {
         avatarWhoLikes: Array.isArray(post.avatarWhoLikes) ? post.avatarWhoLikes : []
       }))
     }
-  },
-  createPost: async (payload: CreatePostPayload): Promise<CreatePostResponse> => {
-    const { data } = await api.post<CreatePostResponse>('/posts', payload)
-    return data
   },
 
   createPostImage: async (payload: PostImagesPayload): Promise<PostImagesResponse> => {

@@ -8,6 +8,7 @@ import { Post } from '@/entities/posts/api/types'
 import { Avatar } from '@/shared/ui'
 import { formatDistanceToNowStrict } from 'date-fns'
 import s from './PostModal.module.css'
+import { CreateCommentForm } from '@/entities/posts/ui/CreateCommentForm'
 
 type PostModalContentProps = {
   post: Post
@@ -68,7 +69,7 @@ export const PostModalContent = ({ post, currentUserId, onEdit, onDelete }: Post
           )}
           <CommentsList postId={post.id} user={currentUserId ?? undefined} />
         </section>
-
+        <CreateCommentForm postId={post.id} />
         <PostModalFooter avatarWhoLikes={post.avatarWhoLikes} likesCount={post.likesCount} createdAt={post.createdAt} />
       </div>
     </div>

@@ -19,3 +19,11 @@
 .error {
   color: rgba(255, 107, 107, 0.8);
 }
+
+
+.showAnswers {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semi-bold);
+  color: var(--color-light-900);
+  text-align: left;
+}
